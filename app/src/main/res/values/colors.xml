@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="brightTextColor">#0067C6</color>
+    <color name="brightTextClickedColor">#660067C6</color>
+    <color name="dividerColor">#B6B6B6</color>
+    <color name="placeholderTextColor">#8affffff</color>
+    <color name="appsCardColor">#33C4C4C4</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="white_alpha_90">#E6FFFFFF</color>
+</resources>

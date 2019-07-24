@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chekh.paysage.ui.view.RoundedView xmlns:android="http://schemas.android.com/apk/res/android"
+                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                       android:id="@+id/parent"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent"
+                                       app:topLeftCornerRadius="@dimen/default_corner_radius"
+                                       app:topRightCornerRadius="@dimen/default_corner_radius"
+                                       android:background="@drawable/background_white_top_rounded">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoryRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/default_big_margin"
+            android:layout_marginStart="@dimen/default_small_margin"
+            android:layout_marginEnd="@dimen/default_small_margin"/>
+</com.chekh.paysage.ui.view.RoundedView>
