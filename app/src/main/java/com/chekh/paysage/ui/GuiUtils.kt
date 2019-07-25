@@ -1,7 +1,7 @@
 package com.chekh.paysage.ui
 
 import android.content.Context
-import android.graphics.Point
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
@@ -39,9 +39,15 @@ fun View.getMarginTop(): Int {
 
 fun convertHeightDpToPercentage(dp: Float): Float {
     val metrics = instance.resources.displayMetrics
-    return  convertDpToPx(dp) / metrics.heightPixels.toFloat()
+    return convertDpToPx(dp) / metrics.heightPixels
 }
 
 fun convertDpToPx(dp: Float): Float {
-    return dp * instance.resources.displayMetrics.density
+    val metrics = instance.resources.displayMetrics
+    return dp * metrics.density
+}
+
+fun convertPxToDp(px: Float): Float {
+    val metrics = instance.resources.displayMetrics
+    return px / metrics.density
 }

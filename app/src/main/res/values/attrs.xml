@@ -28,4 +28,14 @@
         <attr name="bottomLeftCornerRadius" format="dimension" />
         <attr name="bottomRightCornerRadius" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ArrowItemView">
+        <attr name="titleText" format="string" />
+        <attr name="colorTitleText" format="color" />
+        <attr name="sizeTitleText" format="dimension" />
+        <attr name="fontTitleText" format="reference" />
+        <attr name="icon" format="reference" />
+        <attr name="isArrowVisible" format="boolean" />
+        <attr name="arrowTint" format="color" />
+    </declare-styleable>
 </resources>

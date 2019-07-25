@@ -18,14 +18,14 @@ class RoundedView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private var bottomRightCornerRadius: Float = 0f
 
     init {
-        val typedArray = context.obtainStyledAttributes( attrs, R.styleable.RoundedView)
-        typedArray.apply {
+        val attributes = context.obtainStyledAttributes( attrs, R.styleable.RoundedView)
+        attributes.apply {
             topLeftCornerRadius = getDimension(R.styleable.RoundedView_topLeftCornerRadius, 0f)
             topRightCornerRadius = getDimension(R.styleable.RoundedView_topRightCornerRadius, 0f)
             bottomLeftCornerRadius = getDimension(R.styleable.RoundedView_bottomLeftCornerRadius, 0f)
             bottomRightCornerRadius = getDimension(R.styleable.RoundedView_bottomRightCornerRadius, 0f)
         }
-        typedArray.recycle()
+        attributes.recycle()
         setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 

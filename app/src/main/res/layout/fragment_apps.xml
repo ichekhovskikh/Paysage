@@ -6,6 +6,7 @@
                                        android:layout_height="match_parent"
                                        app:topLeftCornerRadius="@dimen/default_corner_radius"
                                        app:topRightCornerRadius="@dimen/default_corner_radius"
+                                       android:elevation="4dp"
                                        android:background="@drawable/background_white_top_rounded">
 
     <androidx.recyclerview.widget.RecyclerView

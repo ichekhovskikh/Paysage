@@ -1,0 +1,118 @@
+package com.chekh.paysage.ui.view
+
+import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.res.ColorStateList
+import android.content.res.TypedArray
+import android.graphics.drawable.Drawable
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.RelativeLayout
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
+import com.chekh.paysage.R
+import com.chekh.paysage.ui.convertPxToDp
+import kotlinx.android.synthetic.main.view_arrow_item.view.*
+
+class ArrowItemView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    RelativeLayout(context, attrs, defStyle) {
+
+    private var expanded = false
+    private var onExpandedListener: OnExpandedClickListener? = null
+
+    init {
+        LayoutInflater.from(getContext()).inflate(R.layout.view_arrow_item, this, true)
+        initAttributes(attrs, defStyle)
+        initOnExpandedListener()
+    }
+
+    private fun initAttributes(attrs: AttributeSet?, defStyle: Int) {
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView, defStyle, 0)
+        setTittleAttributes(attributes)
+        setTitleIconAttributes(attributes)
+        setArrowAttributes(attributes)
+        attributes.recycle()
+    }
+
+    private fun setTittleAttributes(attributes: TypedArray) {
+        titleTextView.text = attributes.getString(R.styleable.ArrowItemView_titleText)
+        if (attributes.hasValue(R.styleable.ArrowItemView_colorTitleText)) {
+            titleTextView.setTextColor(attributes.getColor(R.styleable.ArrowItemView_colorTitleText, -1))
+        }
+        if (attributes.hasValue(R.styleable.ArrowItemView_sizeTitleText)) {
+            val sizePx = attributes.getDimension(R.styleable.ArrowItemView_sizeTitleText, -1f)
+            titleTextView.textSize = convertPxToDp(sizePx)
+        }
+        if (attributes.hasValue(R.styleable.ArrowItemView_fontTitleText)) {
+            val fontId = attributes.getResourceId(R.styleable.ArrowItemView_fontTitleText, -1)
+            titleTextView.typeface = ResourcesCompat.getFont(context, fontId)
+        }
+    }
+
+    private fun setTitleIconAttributes(attributes: TypedArray) {
+        if (attributes.hasValue(R.styleable.ArrowItemView_icon)) {
+            titleIcon.setImageDrawable(attributes.getDrawable(R.styleable.ArrowItemView_icon))
+            titleIcon.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setArrowAttributes(attributes: TypedArray) {
+        val isIconVisible = attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true)
+        arrowIcon.visibility = if (isIconVisible) View.VISIBLE else View.GONE
+        if (attributes.hasValue(R.styleable.ArrowItemView_arrowTint)) {
+            val tintColor = attributes.getColor(R.styleable.ArrowItemView_arrowTint, -1)
+            arrowIcon.backgroundTintList = ColorStateList.valueOf(tintColor)
+        }
+    }
+
+    private fun initOnExpandedListener() {
+        arrowIcon.setOnClickListener {
+            isExpanded = !isExpanded
+            onExpandedListener?.onExpandedClick(isExpanded)
+        }
+    }
+
+    fun setTitleText(text: CharSequence) {
+        titleTextView.text = text
+    }
+
+    fun setTitleText(@StringRes resId: Int) {
+        titleTextView.setText(resId)
+    }
+
+    fun setIcon(drawable: Drawable) {
+        titleIcon.setImageDrawable(drawable)
+    }
+
+    fun setIcon(@DrawableRes resId: Int) {
+        titleIcon.setImageResource(resId)
+    }
+
+    var isExpanded
+        get() = expanded
+        set(value) {
+            expanded = value
+            val duration: Long = 300
+            val start = if (expanded) 0f else 90f
+            val end = if (expanded) 90f else 0f
+            ObjectAnimator.ofFloat(arrowIcon, "rotation", start, end).setDuration(duration).start()
+        }
+
+    fun setOnExpandedClickListener(listener: (Boolean) -> Unit) {
+        onExpandedListener = object : OnExpandedClickListener {
+            override fun onExpandedClick(isExpanded: Boolean) {
+                listener(isExpanded)
+            }
+        }
+    }
+
+    fun setOnExpandedClickListener(listener: OnExpandedClickListener) {
+        onExpandedListener = listener
+    }
+
+    interface OnExpandedClickListener {
+        fun onExpandedClick(isExpanded: Boolean)
+    }
+}

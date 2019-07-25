@@ -1,50 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_big_margin">
 
-    <ImageView
-            android:id="@+id/icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="@dimen/default_small_margin"
-            android:layout_marginEnd="@dimen/default_small_margin"
-            tools:src="@color/colorPrimary"
-            tools:ignore="ContentDescription"/>
-
-    <TextView
+    <com.chekh.paysage.ui.view.ArrowItemView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@color/black"
-            android:layout_toEndOf="@id/icon"
-            android:layout_toStartOf="@id/hideButton"
-            tools:text="Музыка"/>
-
-    <TextView
-            android:id="@+id/hideButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
             android:layout_marginStart="@dimen/default_small_margin"
             android:layout_marginEnd="@dimen/default_small_margin"
-            android:focusable="true"
-            android:clickable="true"
-            android:background="@android:color/transparent"
-            android:textColor="@color/bright_text_color_selector"
-            android:layout_alignParentEnd="true"
-            android:text="@string/expand"/>
+            app:sizeTitleText="@dimen/default_text_size"
+            app:fontTitleText="@font/roboto_medium"
+            app:colorTitleText="@color/black"
+            tools:titleText="Музыка"
+            tools:icon="@color/colorPrimary"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/appsRecycler"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/icon"
+            android:layout_below="@id/title"
             android:layout_marginTop="4dp"
             android:padding="@dimen/default_small_margin"
             android:background="@drawable/background_grey_rounded"/>

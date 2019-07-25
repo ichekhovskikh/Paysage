@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chekh.paysage.R
 import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
 import kotlinx.android.synthetic.main.fragment_apps.*
-import com.chekh.paysage.ui.addStatusBarMarginTop
 
 class AppsFragment : BaseFragment() {
 
@@ -20,7 +19,7 @@ class AppsFragment : BaseFragment() {
     private fun initCategoryRecycler() {
         categoryRecycler.layoutManager = LinearLayoutManager(context)
         categoryRecycler.overScrollMode = OVER_SCROLL_NEVER
-        //categoryRecycler.adapter = AppsCategoryAdapter(listOf("", "", "", "", "", "", "", "", ""))
+        categoryRecycler.adapter = AppsCategoryAdapter(listOf("", "", "", "", "", "", "", "", ""))
     }
 
     companion object {
