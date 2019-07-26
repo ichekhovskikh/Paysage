@@ -22,10 +22,16 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var expanded = false
     private var onExpandedListener: OnExpandedClickListener? = null
 
+    private val defaultClickListener: OnClickListener by lazy {
+        OnClickListener {
+            isExpanded = !isExpanded
+            onExpandedListener?.onExpandedClick(isExpanded)
+        }
+    }
+
     init {
         LayoutInflater.from(getContext()).inflate(R.layout.view_arrow_item, this, true)
         initAttributes(attrs, defStyle)
-        initOnExpandedListener()
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyle: Int) {
@@ -59,18 +65,10 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private fun setArrowAttributes(attributes: TypedArray) {
-        val isIconVisible = attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true)
-        arrowIcon.visibility = if (isIconVisible) View.VISIBLE else View.GONE
+        isArrowVisible(attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true))
         if (attributes.hasValue(R.styleable.ArrowItemView_arrowTint)) {
             val tintColor = attributes.getColor(R.styleable.ArrowItemView_arrowTint, -1)
-            arrowIcon.backgroundTintList = ColorStateList.valueOf(tintColor)
-        }
-    }
-
-    private fun initOnExpandedListener() {
-        arrowIcon.setOnClickListener {
-            isExpanded = !isExpanded
-            onExpandedListener?.onExpandedClick(isExpanded)
+            arrowIcon.imageTintList = ColorStateList.valueOf(tintColor)
         }
     }
 
@@ -90,14 +88,26 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         titleIcon.setImageResource(resId)
     }
 
+    fun isArrowVisible(isVisible: Boolean, expanded: Boolean = false) {
+        isExpanded = expanded
+        if (isVisible) {
+            arrowIcon.visibility = View.VISIBLE
+            setOnClickListener(defaultClickListener)
+        } else {
+            arrowIcon.visibility = View.GONE
+            setOnClickListener(null)
+        }
+    }
+
     var isExpanded
         get() = expanded
         set(value) {
+            if (value == expanded) return
             expanded = value
             val duration: Long = 300
             val start = if (expanded) 0f else 90f
             val end = if (expanded) 90f else 0f
-            ObjectAnimator.ofFloat(arrowIcon, "rotation", start, end).setDuration(duration).start()
+            ObjectAnimator.ofFloat(arrowIcon, View.ROTATION, start, end).setDuration(duration).start()
         }
 
     fun setOnExpandedClickListener(listener: (Boolean) -> Unit) {

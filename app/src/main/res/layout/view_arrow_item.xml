@@ -3,6 +3,8 @@
        xmlns:tools="http://schemas.android.com/tools"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
+       android:focusable="true"
+       android:clickable="true"
        tools:parentTag="android.widget.RelativeLayout">
 
     <ImageView
@@ -23,13 +25,15 @@
             android:layout_toStartOf="@id/arrowIcon"
             tools:text="Заголовок"/>
 
-    <Button
+    <ImageView
             android:id="@+id/arrowIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:focusable="false"
+            android:clickable="false"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
             tools:rotation="90"
             tools:ignore="ContentDescription"/>
 </merge>

@@ -4,7 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_big_margin">
+                android:layout_marginTop="@dimen/default_big_margin"
+                android:layout_marginBottom="@dimen/default_big_margin">
 
     <com.chekh.paysage.ui.view.ArrowItemView
             android:id="@+id/title"
@@ -15,13 +16,13 @@
             app:sizeTitleText="@dimen/default_text_size"
             app:fontTitleText="@font/roboto_medium"
             app:colorTitleText="@color/black"
-            tools:titleText="Музыка"
-            tools:icon="@color/colorPrimary"/>
+            app:titleText="Музыка"
+            app:icon="@color/colorPrimary"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/appsRecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:orientation="horizontal"
             android:layout_below="@id/title"
             android:layout_marginTop="4dp"

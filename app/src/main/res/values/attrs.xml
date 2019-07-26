@@ -22,7 +22,8 @@
         <attr name="scrollInterpolator" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="RoundedView">
+    <declare-styleable name="RoundedFrameLayout">
+        <attr name="cornerRadius" format="dimension" />
         <attr name="topLeftCornerRadius" format="dimension" />
         <attr name="topRightCornerRadius" format="dimension" />
         <attr name="bottomLeftCornerRadius" format="dimension" />
