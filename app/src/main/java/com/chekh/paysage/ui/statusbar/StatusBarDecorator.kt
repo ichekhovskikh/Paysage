@@ -13,7 +13,6 @@ abstract class StatusBarDecorator {
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-
         val decorView = activity.window.decorView
         decorView.systemUiVisibility = View.SYSTEM_UI_LAYOUT_FLAGS
     }
