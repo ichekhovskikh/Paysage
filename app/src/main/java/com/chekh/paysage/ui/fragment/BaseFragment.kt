@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 abstract class BaseFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(getLayoutId(), null)
+        return inflater.inflate(layoutId, null)
     }
 
-    @LayoutRes
-    protected abstract fun getLayoutId(): Int
+    @get:LayoutRes
+    protected abstract val layoutId: Int
 
     open fun onBackPressed(): Boolean {
         return false

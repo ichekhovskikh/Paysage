@@ -3,22 +3,25 @@ package com.chekh.paysage.ui.fragment
 import android.os.Bundle
 import android.view.View
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.addStatusBarMarginTop
+import com.chekh.paysage.ui.util.addStatusBarMarginTop
 import com.chekh.paysage.ui.handler.SearchBarSlideHandler
 import kotlinx.android.synthetic.main.fragment_home.*
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.chekh.paysage.ui.inTransaction
+import com.chekh.paysage.ui.handler.SlidingPanelBackPressedHandler
+import com.chekh.paysage.ui.util.inTransaction
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
 import kotlinx.android.synthetic.main.fragment_apps.*
+import com.chekh.paysage.ui.util.statusDarkBarMode
 
 class HomeFragment : BaseFragment() {
 
     private lateinit var desktopFragment: DesktopFragment
     private lateinit var appsFragment: AppsFragment
+    private lateinit var backPressedHandler: SlidingPanelBackPressedHandler
 
-    override fun getLayoutId() = R.layout.fragment_home
+    override val layoutId = R.layout.fragment_home
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -35,6 +38,7 @@ class HomeFragment : BaseFragment() {
             replace(R.id.slideable, appsFragment)
         }
         slidingPanel.addPanelSlideListener(onSlideListener)
+        backPressedHandler = SlidingPanelBackPressedHandler(slidingPanel)
     }
 
     private fun initializeFragmentsIfNeed() {
@@ -61,10 +65,10 @@ class HomeFragment : BaseFragment() {
         private val searchBarSlideHandler by lazy { SearchBarSlideHandler(searchBar) }
 
         override fun onPanelSlide(panel: View?, slideOffset: Float) {
-            if (slideOffset >= slidingPanel.anchorPoint) {
-                //TODO change status icon color dark
+            if (slideOffset >= slidingPanel.anchorPoint - 0.1) {
+                activity?.statusDarkBarMode(true)
             } else {
-                //TODO change status icon color light
+                activity?.statusDarkBarMode(false)
             }
             searchBarSlideHandler.slideFromTop(transformOffset(slideOffset))
         }
@@ -73,6 +77,10 @@ class HomeFragment : BaseFragment() {
             val anchor = slidingPanel.anchorPoint
             return if (offset > anchor) (1 - offset) / (1 - anchor) else offset / anchor
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        return if (::backPressedHandler.isInitialized) backPressedHandler.onBackPressed() else super.onBackPressed()
     }
 
     companion object {

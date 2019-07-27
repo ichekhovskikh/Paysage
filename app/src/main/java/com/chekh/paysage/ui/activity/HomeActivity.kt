@@ -1,12 +1,14 @@
 package com.chekh.paysage.ui.activity
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.ui.fragment.BaseFragment
 import com.chekh.paysage.ui.fragment.HomeFragment
-import com.chekh.paysage.ui.inTransaction
+import com.chekh.paysage.ui.util.inTransaction
+import com.chekh.paysage.ui.util.setTransparentStatusBar
 
 class HomeActivity : AppCompatActivity() {
 
@@ -15,6 +17,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        setTransparentStatusBar()
         addFragmentIfNeed()
     }
 

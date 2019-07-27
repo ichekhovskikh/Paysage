@@ -1,36 +1,49 @@
-package com.chekh.paysage.ui
+package com.chekh.paysage.ui.util
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.chekh.paysage.PaysageApp.Companion.instance
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.*
+import android.app.Activity
+import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
+import com.chekh.paysage.ui.statusbar.StatusBarDecorator
+import android.view.*
 
 private const val LINE_THICKNESS = 15f
+private val statusBarDecorator: StatusBarDecorator = CommonStatusBarDecorator()
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
 }
 
-fun getStatusBarHeight(context: Context): Int {
-    var result = 0
-    val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-    if (resourceId > 0) {
-        result = context.resources.getDimensionPixelSize(resourceId)
-    }
-    return result
-}
+fun Activity.statusDarkBarMode(isDark: Boolean): Boolean = statusBarDecorator.statusBarDarkMode(this, isDark)
+
+fun Activity.setTransparentStatusBar() = statusBarDecorator.setTransparentStatusBar(this)
 
 fun addStatusBarMarginTop(view: View) {
-    val params = view.layoutParams as ViewGroup.MarginLayoutParams
-    params.topMargin += getStatusBarHeight(instance)
+    view.setOnApplyWindowInsetsListener { _, insets ->
+        view.addMarginTop(insets.systemWindowInsetTop)
+        insets
+    }
+}
+
+fun addNavigationBarPaddingBottom(view: View) {
+    view.setOnApplyWindowInsetsListener { _, insets ->
+        val height = insets.systemWindowInsetBottom
+        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom + height)
+        insets
+    }
+}
+
+fun addNavigationBarMarginBottom(view: View) {
+    view.setOnApplyWindowInsetsListener { _, insets ->
+        val height = insets.systemWindowInsetBottom
+        val params = view.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin += height
+        insets
+    }
 }
 
 fun View.addMarginTop(top: Int) {

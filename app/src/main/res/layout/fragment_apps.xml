@@ -13,6 +13,9 @@
             android:id="@+id/categoryRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/default_small_margin"
+            android:paddingBottom="@dimen/default_big_margin"
             android:layout_marginStart="@dimen/default_small_margin"
             android:layout_marginEnd="@dimen/default_small_margin"/>
 </com.chekh.paysage.ui.view.RoundedFrameLayout>
