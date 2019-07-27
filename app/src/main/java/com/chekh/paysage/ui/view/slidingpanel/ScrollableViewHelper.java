@@ -57,7 +57,7 @@ public class ScrollableViewHelper {
             } else {
                 View lastChild = rv.getChildAt(rv.getChildCount() - 1);
                 // Approximate the scroll position based on the bottom child and the last visible item
-                return (rv.getAdapter().getItemCount() - 1) * lm.getDecoratedMeasuredHeight(lastChild) + lm.getDecoratedBottom(lastChild);
+                return (rv.getAdapter().getItemCount() - 1) * lm.getDecoratedMeasuredHeight(lastChild) + lm.getDecoratedBottom(lastChild) - rv.getBottom();
             }
         } else {
             return 0;
