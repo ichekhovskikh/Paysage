@@ -11,9 +11,12 @@ abstract class StatusBarDecorator {
     fun setTransparentStatusBar(activity: Activity) {
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
-        activity.window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_LAYOUT_FLAGS
+    }
 
-        val decorView = activity.window.decorView
-        decorView.systemUiVisibility = View.SYSTEM_UI_LAYOUT_FLAGS
+    protected fun setSystemUiVisibilityFlag(activity: Activity, bits: Int, enabled: Boolean) {
+        var uiVisibility = activity.window.decorView.systemUiVisibility
+        uiVisibility = if (enabled) uiVisibility or bits else uiVisibility and bits.inv()
+        activity.window.decorView.systemUiVisibility = uiVisibility
     }
 }

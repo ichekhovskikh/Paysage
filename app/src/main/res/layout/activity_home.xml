@@ -2,9 +2,29 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.activity.HomeActivity">
 
+    <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    </FrameLayout>
+
+    <com.chekh.paysage.ui.view.ShadowView
+            android:id="@+id/statusShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            app:shadowDrawable="@drawable/status_shadow"/>
+
+    <com.chekh.paysage.ui.view.ShadowView
+            android:id="@+id/navigationShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:shadowDrawable="@drawable/navigation_shadow"/>
 </FrameLayout>

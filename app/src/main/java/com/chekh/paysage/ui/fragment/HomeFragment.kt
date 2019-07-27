@@ -3,36 +3,40 @@ package com.chekh.paysage.ui.fragment
 import android.os.Bundle
 import android.view.View
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.util.addStatusBarMarginTop
 import com.chekh.paysage.ui.handler.SearchBarSlideHandler
-import kotlinx.android.synthetic.main.fragment_home.*
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.handler.SlidingPanelBackPressedHandler
-import com.chekh.paysage.ui.util.inTransaction
+import com.chekh.paysage.ui.util.*
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
-import kotlinx.android.synthetic.main.fragment_apps.*
-import com.chekh.paysage.ui.util.statusDarkBarMode
+import com.chekh.paysage.viewmodel.HomeViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : ViewModelFragment<HomeViewModel>() {
 
     private lateinit var desktopFragment: DesktopFragment
     private lateinit var appsFragment: AppsFragment
     private lateinit var backPressedHandler: SlidingPanelBackPressedHandler
 
     override val layoutId = R.layout.fragment_home
+    override val viewModelClass = HomeViewModel::class.java
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSlidingPanel()
-        addStatusBarMarginTop(searchBar)
+    }
+
+    override fun onViewModelCreated(savedInstanceState: Bundle?) {
+        super.onViewModelCreated(savedInstanceState)
+        val defaultSearchMarginTop = searchBar.getMarginTop()
+        val defaultSlideableMarginTop = slideable.getMarginTop()
+        viewModel.statusBarHeightLiveData.observe(this) { height ->
+            searchBar.setMarginTop(defaultSearchMarginTop + height)
+            slideable.setMarginTop(defaultSlideableMarginTop + height)
+        }
     }
 
     private fun setupSlidingPanel() {
-        initializeFragmentsIfNeed()
-        setScrollableViewWhenBeCreated()
-        addStatusBarMarginTop(slideable)
+        initFragmentsIfNeed()
         childFragmentManager.inTransaction {
             replace(R.id.main, desktopFragment)
             replace(R.id.slideable, appsFragment)
@@ -41,23 +45,14 @@ class HomeFragment : BaseFragment() {
         backPressedHandler = SlidingPanelBackPressedHandler(slidingPanel)
     }
 
-    private fun initializeFragmentsIfNeed() {
+    private fun initFragmentsIfNeed() {
         if (!::desktopFragment.isInitialized) {
             desktopFragment = DesktopFragment.instance()
         }
         if (!::appsFragment.isInitialized) {
             appsFragment = AppsFragment.instance()
+            appsFragment.setOnRecyclerCreatedListener { slidingPanel.setScrollableView(it) }
         }
-    }
-
-    private fun setScrollableViewWhenBeCreated() {
-        appsFragment.lifecycle.addObserver(object : LifecycleObserver {
-            @OnLifecycleEvent(Lifecycle.Event.ON_START)
-            fun onStart() {
-                slidingPanel.setScrollableView(appsFragment.categoryRecycler)
-                appsFragment.lifecycle.removeObserver(this)
-            }
-        })
     }
 
     private val onSlideListener = object : SlidingUpPanelLayout.SimplePanelSlideListener() {

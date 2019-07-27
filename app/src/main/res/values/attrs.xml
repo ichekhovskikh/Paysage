@@ -39,4 +39,8 @@
         <attr name="isArrowVisible" format="boolean" />
         <attr name="arrowTint" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="ShadowView">
+        <attr name="shadowDrawable" format="reference" />>
+    </declare-styleable>
 </resources>

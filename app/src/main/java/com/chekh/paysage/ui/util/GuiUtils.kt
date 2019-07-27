@@ -10,6 +10,9 @@ import android.app.Activity
 import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import android.view.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 
 private const val LINE_THICKNESS = 15f
 private val statusBarDecorator: StatusBarDecorator = CommonStatusBarDecorator()
@@ -18,38 +21,19 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
     beginTransaction().func().commit()
 }
 
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (data: T) -> Unit) {
+    observe(owner, Observer<T> { data ->
+        data?.let { callback.invoke(it) }
+    })
+}
+
 fun Activity.statusDarkBarMode(isDark: Boolean): Boolean = statusBarDecorator.statusBarDarkMode(this, isDark)
 
 fun Activity.setTransparentStatusBar() = statusBarDecorator.setTransparentStatusBar(this)
 
-fun addStatusBarMarginTop(view: View) {
-    view.setOnApplyWindowInsetsListener { _, insets ->
-        view.addMarginTop(insets.systemWindowInsetTop)
-        insets
-    }
-}
-
-fun addNavigationBarPaddingBottom(view: View) {
-    view.setOnApplyWindowInsetsListener { _, insets ->
-        val height = insets.systemWindowInsetBottom
-        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom + height)
-        insets
-    }
-}
-
-fun addNavigationBarMarginBottom(view: View) {
-    view.setOnApplyWindowInsetsListener { _, insets ->
-        val height = insets.systemWindowInsetBottom
-        val params = view.layoutParams as ViewGroup.MarginLayoutParams
-        params.bottomMargin += height
-        insets
-    }
-}
-
-fun View.addMarginTop(top: Int) {
+fun View.setMarginTop(top: Int) {
     val params = layoutParams as ViewGroup.MarginLayoutParams
-    params.topMargin += top
-    layoutParams = params
+    params.topMargin = top
 }
 
 fun View.getMarginTop(): Int {
@@ -57,9 +41,13 @@ fun View.getMarginTop(): Int {
     return params.topMargin
 }
 
-fun convertHeightDpToPercentage(dp: Float): Float {
-    val metrics = instance.resources.displayMetrics
-    return convertDpToPx(dp) / metrics.heightPixels
+fun View.applyPadding(
+    left: Int = paddingLeft,
+    top: Int = paddingTop,
+    right: Int = paddingRight,
+    bottom: Int = paddingBottom
+) {
+    setPadding(left, top, right, bottom)
 }
 
 fun convertDpToPx(dp: Float): Float {

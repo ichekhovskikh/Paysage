@@ -1,4 +1,4 @@
-package com.chekh.paysage.ui.fragment
+package com.chekh.paysage.ui.fragment.core
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : Fragment() {
 
+    @get:LayoutRes
+    protected abstract val layoutId: Int
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layoutId, null)
     }
-
-    @get:LayoutRes
-    protected abstract val layoutId: Int
 
     open fun onBackPressed(): Boolean {
         return false
