@@ -13,7 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.convertPxToDp
+import com.chekh.paysage.ui.util.convertPxToDp
 import kotlinx.android.synthetic.main.view_arrow_item.view.*
 
 class ArrowItemView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :

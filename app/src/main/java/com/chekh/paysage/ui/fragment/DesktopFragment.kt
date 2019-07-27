@@ -4,7 +4,7 @@ import com.chekh.paysage.R
 
 class DesktopFragment : BaseFragment() {
 
-    override fun getLayoutId() = R.layout.fragment_desktop
+    override val layoutId = R.layout.fragment_desktop
 
     companion object {
         fun instance() = DesktopFragment()

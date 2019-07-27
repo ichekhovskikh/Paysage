@@ -4,8 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_big_margin"
-                android:layout_marginBottom="@dimen/default_big_margin">
+                android:layout_marginTop="@dimen/default_small_margin"
+                android:layout_marginBottom="@dimen/default_small_margin">
 
     <com.chekh.paysage.ui.view.ArrowItemView
             android:id="@+id/title"
