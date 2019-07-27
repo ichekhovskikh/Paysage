@@ -1,6 +1,7 @@
 package com.chekh.paysage.ui.view.slidingpanel;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,11 +51,13 @@ public class ScrollableViewHelper {
             if (isSlidingUp) {
                 View firstChild = rv.getChildAt(0);
                 // Approximate the scroll position based on the top child and the first visible item
-                return rv.getChildLayoutPosition(firstChild) * lm.getDecoratedMeasuredHeight(firstChild) - lm.getDecoratedTop(firstChild);
+                int marginTop = ((ViewGroup.MarginLayoutParams) rv.getLayoutParams()).topMargin;
+                marginTop += rv.getPaddingTop() + lm.getPaddingTop();
+                return rv.getChildLayoutPosition(firstChild) * lm.getDecoratedMeasuredHeight(firstChild) - lm.getDecoratedTop(firstChild) + marginTop;
             } else {
                 View lastChild = rv.getChildAt(rv.getChildCount() - 1);
                 // Approximate the scroll position based on the bottom child and the last visible item
-                return (rv.getAdapter().getItemCount() - 1) * lm.getDecoratedMeasuredHeight(lastChild) + lm.getDecoratedBottom(lastChild) - rv.getBottom();
+                return (rv.getAdapter().getItemCount() - 1) * lm.getDecoratedMeasuredHeight(lastChild) + lm.getDecoratedBottom(lastChild);
             }
         } else {
             return 0;
