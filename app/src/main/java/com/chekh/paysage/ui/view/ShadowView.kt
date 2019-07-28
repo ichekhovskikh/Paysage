@@ -1,7 +1,6 @@
 package com.chekh.paysage.ui.view
 
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageView

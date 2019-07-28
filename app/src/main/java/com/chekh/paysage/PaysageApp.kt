@@ -7,11 +7,11 @@ class PaysageApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        launcher = this
         BlurKit.init(this)
     }
 
     companion object {
-        lateinit var instance: PaysageApp private set
+        lateinit var launcher: PaysageApp private set
     }
 }

@@ -12,8 +12,8 @@ import com.chekh.paysage.R
 class RoundedFrameLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+    defStyle: Int = 0
+) : FrameLayout(context, attrs, defStyle) {
 
     private var topLeftCornerRadius: Float = 0f
     private var topRightCornerRadius: Float = 0f
