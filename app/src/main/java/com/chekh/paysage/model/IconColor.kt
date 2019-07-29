@@ -5,7 +5,7 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.palette.graphics.Palette
 
-enum class IconColor(@ColorInt color: Int) {
+enum class IconColor(@ColorInt val color: Int) {
     ALL(Color.TRANSPARENT),
     RED(Color.RED),
     YELLOW(Color.YELLOW),
@@ -20,7 +20,9 @@ enum class IconColor(@ColorInt color: Int) {
         private const val LIGHTNESS_INDEX = 2
 
         fun getIconColor(icon: Bitmap): IconColor {
-            val palette = Palette.from(icon).clearFilters()
+            val palette = Palette
+                .from(icon)
+                .clearFilters()
                 .addFilter { _, hsl -> filter(hsl) }
                 .generate()
 
@@ -59,16 +61,13 @@ enum class IconColor(@ColorInt color: Int) {
 
         private fun getColorsPopulation(palette: Palette): HashMap<IconColor, Int> {
             val colorsPopulation = hashMapOf<IconColor, Int>()
-            var swatchColorType: IconColor
             palette.swatches.forEach { swatch ->
-                swatchColorType = getColorType(swatch.hsl)
+                val swatchColorType = getColorType(swatch.hsl)
                 if (colorsPopulation.containsKey(swatchColorType)) {
                     colorsPopulation[swatchColorType]?.let {
                         colorsPopulation[swatchColorType] = it + swatch.population
                     }
-                } else {
-                    colorsPopulation[swatchColorType] = swatch.population
-                }
+                } else colorsPopulation[swatchColorType] = swatch.population
             }
             return colorsPopulation
         }

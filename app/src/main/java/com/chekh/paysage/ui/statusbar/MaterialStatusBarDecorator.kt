@@ -9,27 +9,26 @@ class MaterialStatusBarDecorator : StatusBarDecorator() {
 
     override fun statusBarDarkMode(activity: Activity, isDark: Boolean): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            statusBarModeVersionO(activity, isDark)
+            statusBarDarkModeVersionO(activity, isDark)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            statusBarModeVersionM(activity, isDark)
+            statusBarDarkModeVersionM(activity, isDark)
         }
         return true
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun statusBarModeVersionO(activity: Activity, dark: Boolean) {
-        if (dark) {
-            setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, true)
+    private fun statusBarDarkModeVersionO(activity: Activity, isDark: Boolean) {
+        statusBarDarkModeVersionM(activity, isDark)
+        if (isDark) {
             setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR, true)
         } else {
-            setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, false)
             setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR, false)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun statusBarModeVersionM(activity: Activity, dark: Boolean) {
-        if (dark) {
+    private fun statusBarDarkModeVersionM(activity: Activity, isDark: Boolean) {
+        if (isDark) {
             setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, true)
         } else {
             setSystemUiVisibilityFlag(activity, View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, false)
