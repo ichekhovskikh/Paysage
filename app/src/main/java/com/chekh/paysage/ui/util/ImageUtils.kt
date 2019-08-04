@@ -7,6 +7,7 @@ import android.util.Base64
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import com.chekh.paysage.PaysageApp
 import java.io.ByteArrayOutputStream
 
@@ -19,13 +20,9 @@ fun Bitmap.toBase64(): String {
     return Base64.encodeToString(byteArray, Base64.DEFAULT)
 }
 
-fun toBitmap(base64: String): Bitmap? {
-    return try {
-        val encodeByte = Base64.decode(base64, Base64.DEFAULT)
-        BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
-    } catch (e: Exception) {
-        null
-    }
+fun createBitmap(base64: String): Bitmap {
+    val encodeByte = Base64.decode(base64, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
 }
 
 fun View.makeBitmapDrawableScreenshot(): BitmapDrawable {
@@ -41,7 +38,7 @@ fun View.makeBitmapBorder(@ColorRes colorRes: Int): Bitmap {
     val paint = Paint().apply {
         style = Paint.Style.STROKE
         strokeWidth = LINE_THICKNESS
-        color = PaysageApp.launcher.resources.getColor(colorRes)
+        color = ContextCompat.getColor(context, colorRes)
     }
     val canvas = Canvas(bitmap)
     canvas.drawBitmap(bitmap, 0f, 0f, null)

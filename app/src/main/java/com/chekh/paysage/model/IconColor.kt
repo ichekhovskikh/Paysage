@@ -6,7 +6,7 @@ import androidx.annotation.ColorInt
 import androidx.palette.graphics.Palette
 
 enum class IconColor(@ColorInt val color: Int) {
-    ALL(Color.TRANSPARENT),
+    NOTHING(Color.TRANSPARENT),
     RED(Color.RED),
     YELLOW(Color.YELLOW),
     GREEN(Color.GREEN),
@@ -19,6 +19,8 @@ enum class IconColor(@ColorInt val color: Int) {
         private const val SATURATION_INDEX = 1
         private const val LIGHTNESS_INDEX = 2
 
+        fun get(@ColorInt color: Int) = values().find { it.color == color } ?: NOTHING
+
         fun getIconColor(icon: Bitmap): IconColor {
             val palette = Palette
                 .from(icon)
@@ -30,12 +32,12 @@ enum class IconColor(@ColorInt val color: Int) {
                 return BLACK
             }
             val colorsPopulation = getColorsPopulation(palette)
-            var iconColorType = ALL
-            var prevIconColorType: IconColor = ALL
+            var iconColorType = NOTHING
+            var prevIconColorType: IconColor = NOTHING
             var maxPopulation = 0
             var prevMaxPopulation = 0
             for ((colorType, population) in colorsPopulation) {
-                if (colorType != ALL) {
+                if (colorType != NOTHING) {
                     if (population >= maxPopulation) {
                         prevIconColorType = iconColorType
                         prevMaxPopulation = maxPopulation
@@ -74,14 +76,14 @@ enum class IconColor(@ColorInt val color: Int) {
 
         private fun getColorType(hsl: FloatArray): IconColor {
             return when {
-                isWhite(hsl) -> ALL
+                isWhite(hsl) -> NOTHING
                 isBlack(hsl) -> BLACK
                 isRed(hsl) -> RED
                 isYellow(hsl) -> YELLOW
                 isGreen(hsl) -> GREEN
                 isBlue(hsl) -> BLUE
                 isPurple(hsl) -> PURPLE
-                else -> ALL
+                else -> NOTHING
             }
         }
 
