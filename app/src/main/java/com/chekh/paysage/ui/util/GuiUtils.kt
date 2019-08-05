@@ -7,20 +7,11 @@ import android.app.Activity
 import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import android.view.*
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 
 private val statusBarDecorator: StatusBarDecorator = CommonStatusBarDecorator()
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
-}
-
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (data: T) -> Unit) {
-    observe(owner, Observer<T> { data ->
-        data?.let { callback.invoke(it) }
-    })
 }
 
 fun Activity.statusDarkBarMode(isDark: Boolean): Boolean = statusBarDecorator.statusBarDarkMode(this, isDark)

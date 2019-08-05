@@ -1,6 +1,5 @@
 package com.chekh.paysage.model
 
-import android.content.Intent
 import android.graphics.Bitmap
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,10 +7,10 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "app")
 data class AppInfo(
     @PrimaryKey
-    val id: Long,
+    val packageName: String,
     var title: String,
     var icon: Bitmap,
-    var intent: Intent,
+    var className: String,
     var categoryId: Int,
     var position: Int,
     var isHidden: Boolean,

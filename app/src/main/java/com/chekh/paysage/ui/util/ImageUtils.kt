@@ -8,10 +8,17 @@ import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.chekh.paysage.PaysageApp
 import java.io.ByteArrayOutputStream
+import android.graphics.Bitmap
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
+import com.chekh.paysage.PaysageApp.Companion.launcher
 
 private const val LINE_THICKNESS = 15f
+
+private val renderScript: RenderScript by lazy { RenderScript.create(launcher) }
 
 fun Bitmap.toBase64(): String {
     val byteArrayOutputStream = ByteArrayOutputStream()
@@ -50,6 +57,30 @@ fun View.makeBitmapScreenshot(): Bitmap {
     return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888).also {
         draw(Canvas(it))
     }
+}
+
+fun View.makeBitmapScreenshot(scaleFactor: Float): Bitmap {
+    val bitmap = Bitmap.createBitmap(
+        (measuredWidth * scaleFactor).toInt(),
+        (measuredHeight * scaleFactor).toInt(),
+        Bitmap.Config.ARGB_8888
+    )
+    val canvas = Canvas(bitmap)
+    val matrix = Matrix()
+    matrix.preScale(scaleFactor, scaleFactor)
+    canvas.setMatrix(matrix)
+    draw(canvas)
+    return bitmap
+}
+
+fun Bitmap.blur(radius: Float) {
+    val input = Allocation.createFromBitmap(renderScript, this)
+    val output = Allocation.createTyped(renderScript, input.type)
+    val script = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+    script.setRadius(radius)
+    script.setInput(input)
+    script.forEach(output)
+    output.copyTo(this)
 }
 
 @ColorInt

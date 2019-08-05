@@ -10,7 +10,10 @@ interface CategoryDao {
     fun getById(id: Long): AppsCategoryInfo
 
     @Query("SELECT * FROM category")
-    fun getAll(): LiveData<List<AppsCategoryInfo>>
+    fun getAll(): List<AppsCategoryInfo>
+
+    @Query("SELECT * FROM category")
+    fun getLiveAll(): LiveData<List<AppsCategoryInfo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(category: AppsCategoryInfo)

@@ -6,11 +6,14 @@ import com.chekh.paysage.model.AppInfo
 
 @Dao
 interface AppDao {
-    @Query("SELECT * FROM app WHERE id = :id")
-    fun getById(id: Long): AppInfo
+    @Query("SELECT * FROM app WHERE packageName = :packageName")
+    fun getByPackageName(packageName: String): AppInfo
 
     @Query("SELECT * FROM app")
-    fun getAll(): LiveData<List<AppInfo>>
+    fun getAll(): List<AppInfo>
+
+    @Query("SELECT * FROM app")
+    fun getLiveAll(): LiveData<List<AppInfo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(app: AppInfo)
@@ -26,4 +29,7 @@ interface AppDao {
 
     @Delete
     fun remove(app: AppInfo)
+
+    @Query("DELETE FROM app")
+    fun removeAll()
 }

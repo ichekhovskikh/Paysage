@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.ui.fragment.HomeFragment
 import com.chekh.paysage.ui.util.inTransaction
-import com.chekh.paysage.ui.util.observe
+import com.chekh.paysage.util.observe
 import com.chekh.paysage.ui.util.setTransparentStatusBar
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.activity_home.*

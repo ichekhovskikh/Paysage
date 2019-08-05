@@ -8,7 +8,7 @@ import com.chekh.paysage.R
 import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.util.applyPadding
-import com.chekh.paysage.ui.util.observe
+import com.chekh.paysage.util.observe
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_apps.*
 
