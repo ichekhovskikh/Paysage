@@ -43,6 +43,8 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
             viewModel.navigationBarHeightLiveData.value = insets.systemWindowInsetBottom
             insets
         }
+        viewModel.initApps()
+        viewModel.enableObserveAppsChanging()
     }
 
     private fun addFragmentIfNeed() {
@@ -53,5 +55,10 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
                 add(R.id.content, fragment!!)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.disableObserveAppsChanging()
     }
 }

@@ -34,12 +34,12 @@ object Convectors {
 
     class CategoryTitleTypeConverter {
         @TypeConverter
-        fun toCategoryTitle(value: Long): CategoryTitle {
+        fun toCategoryTitle(value: String): CategoryTitle {
             return CategoryTitle.get(value)
         }
 
         @TypeConverter
-        fun toLong(value: CategoryTitle): Long {
+        fun toString(value: CategoryTitle): String {
             return value.id
         }
     }

@@ -2,6 +2,7 @@ package com.chekh.paysage.viewmodel
 
 import android.os.UserHandle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.chekh.paysage.PaysageApp
@@ -10,7 +11,8 @@ import com.chekh.paysage.db.PaysageDatabase
 import com.chekh.paysage.model.AppInfo
 import com.chekh.paysage.model.AppsCategoryInfo
 import com.chekh.paysage.util.AppManager
-import com.chekh.paysage.util.uiObserve
+import com.chekh.paysage.util.observe
+import com.chekh.paysage.util.zip
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -22,18 +24,31 @@ class HomeViewModel : ViewModel() {
     val navigationBarHeightLiveData = MutableLiveData<Int>()
     val statusBarHeightLiveData = MutableLiveData<Int>()
 
-    fun getAllApps(owner: LifecycleOwner, callback: (apps: List<AppInfo>) -> Unit) {
+    fun initApps() {
         GlobalScope.launch {
-            appDao.getLiveAll().uiObserve(owner, callback)
             val activityInfos = appManager.getAllApps()
             DatabaseHelper.updateApps(activityInfos)
         }
     }
 
-    fun getAllCategories(owner: LifecycleOwner, callback: (apps: List<AppsCategoryInfo>) -> Unit) {
-        GlobalScope.launch {
-            categoryDao.getLiveAll().uiObserve(owner, callback)
-        }
+    fun getAllApps(owner: LifecycleOwner, callback: (apps: List<AppInfo>) -> Unit) {
+        appDao.getLiveAll().observe(owner, callback)
+    }
+
+    fun getAllCategories(owner: LifecycleOwner, callback: (categories: List<AppsCategoryInfo>) -> Unit) {
+        categoryDao.getLiveAll().observe(owner, callback)
+    }
+
+    fun getAppsAndCategories(
+        owner: LifecycleOwner,
+        callback: (apps: List<AppInfo>, categories: List<AppsCategoryInfo>) -> Unit
+    ) {
+        zip(appDao.getLiveAll(), categoryDao.getLiveAll()) { apps, categories -> Pair(apps, categories) }
+            .observe(owner) { (apps, categories) ->
+                if (apps != null && categories != null) {
+                    callback(apps, categories)
+                }
+            }
     }
 
     fun enableObserveAppsChanging() {

@@ -15,6 +15,7 @@ import com.chekh.paysage.db.Convectors.BooleanTypeConverter
 import com.chekh.paysage.db.Convectors.IconColorTypeConverter
 import com.chekh.paysage.db.Convectors.CategoryTitleTypeConverter
 import com.chekh.paysage.db.Convectors.BitmapTypeConverter
+import com.chekh.paysage.model.CategoryTitle
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -38,12 +39,13 @@ abstract class PaysageDatabase : RoomDatabase() {
                 .addMigrations(*Migrations.get())
                 .build()
 
-
         private val prepopulateDatabaseCallback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 GlobalScope.launch {
-                    //TODO PrePopulate
+                    var position = 0
+                    val categories = CategoryTitle.values().map { AppsCategoryInfo(it.id, it, position++, false) }
+                    instance.categoryDao().add(categories)
                 }
             }
         }

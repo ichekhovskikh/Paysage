@@ -1,9 +1,12 @@
 package com.chekh.paysage.util
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (data: T) -> Unit) {
+    observe(owner, Observer<T> { data ->
+        data?.let { callback.invoke(it) }
+    })
+}
 
 fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
     observeForever(OnceObserver(this, observer))
@@ -34,22 +37,17 @@ fun <X> LiveData<X>.filter(condition: (X?) -> Boolean): LiveData<X> {
     return result
 }
 
+fun <X, Y, Z> zip(x: LiveData<X>, z: LiveData<Z>, merge: (x: X?, z: Z?) -> Y?): LiveData<Y> {
+    val mergeLiveData = MediatorLiveData<Y>()
+    mergeLiveData.addSource(x) { xValue ->
+        mergeLiveData.value = merge(xValue, z.value)
+    }
+    mergeLiveData.addSource(z) { zValue ->
+        mergeLiveData.value = merge(x.value, zValue)
+    }
+    return mergeLiveData
+}
+
 fun <T> MutableLiveData<T>.recharge() {
     value = value
-}
-
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (data: T) -> Unit) {
-    observe(owner, Observer<T> { data ->
-        data?.let { callback.invoke(it) }
-    })
-}
-
-fun <T> LiveData<T>.uiObserve(owner: LifecycleOwner, callback: (data: T) -> Unit) {
-    observe(owner, Observer<T> { data ->
-        data?.let {
-            GlobalScope.launch(Dispatchers.Main) {
-                callback.invoke(it)
-            }
-        }
-    })
 }

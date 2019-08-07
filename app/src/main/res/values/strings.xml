@@ -3,4 +3,22 @@
     <string name="search_apps">\ \ \ \ Поиск приложений</string>
     <string name="expand">Показать все</string>
     <string name="collapse">Свернуть</string>
+
+    <string name="category_messaging">Общение</string>
+    <string name="category_media_and_video">Медиа</string>
+    <string name="category_photo">Фото</string>
+    <string name="category_games">Игры</string>
+    <string name="category_google">Google</string>
+    <string name="category_productivity">Работа</string>
+    <string name="category_education">Образование</string>
+    <string name="category_finance_and_business">Финансы и бизнес</string>
+    <string name="category_news">Новости</string>
+    <string name="category_transportation">Транспорт</string>
+    <string name="category_travel_and_local">Путешестия</string>
+    <string name="category_shopping">Покупки</string>
+    <string name="category_food_and_drink">Еда и напитки</string>
+    <string name="category_sport">Спорт</string>
+    <string name="category_personalization">Персонализация</string>
+    <string name="category_tools">Инструменты</string>
+    <string name="category_other">Другое</string>
 </resources>

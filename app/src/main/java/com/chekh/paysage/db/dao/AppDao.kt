@@ -19,13 +19,13 @@ interface AppDao {
     fun add(app: AppInfo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(app: List<AppInfo>)
+    fun add(apps: List<AppInfo>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(app: AppInfo)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(app: List<AppInfo>)
+    fun update(apps: List<AppInfo>)
 
     @Delete
     fun remove(app: AppInfo)

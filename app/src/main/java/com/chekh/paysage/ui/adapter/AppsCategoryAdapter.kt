@@ -5,8 +5,22 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import com.chekh.paysage.R
+import com.chekh.paysage.model.AppInfo
+import com.chekh.paysage.model.AppsCategoryInfo
+import com.chekh.paysage.ui.view.ArrowItemView
 
-class AppsCategoryAdapter(private val appsCategory: List<String>) : RecyclerView.Adapter<AppsCategoryAdapter.AppsViewHolder>() {
+class AppsCategoryAdapter :
+    RecyclerView.Adapter<AppsCategoryAdapter.AppsViewHolder>() {
+
+    private lateinit var appsCategory: List<AppsCategoryInfo>
+    private lateinit var apps: List<AppInfo>
+
+    fun setApps(apps: List<AppInfo>, appsCategory: List<AppsCategoryInfo>) {
+        this.apps = apps
+        this.appsCategory = appsCategory
+        sortByPosition()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.apps_category_view_holder, parent, false)
@@ -14,12 +28,23 @@ class AppsCategoryAdapter(private val appsCategory: List<String>) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: AppsViewHolder, position: Int) {
-
+        holder.bind(appsCategory[position])
     }
 
     override fun getItemCount(): Int {
-        return appsCategory.size
+        return if (::appsCategory.isInitialized) appsCategory.size else 0
     }
 
-    inner class AppsViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private fun sortByPosition() {
+        appsCategory = appsCategory.sortedBy { it.position }
+    }
+
+    inner class AppsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        fun bind(category: AppsCategoryInfo) {
+            val headerView = itemView.findViewById<ArrowItemView>(R.id.title)
+            headerView.setIcon(category.title.iconRes)
+            headerView.setTitleText(category.title.titleRes)
+        }
+    }
 }
