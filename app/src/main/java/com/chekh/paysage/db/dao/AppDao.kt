@@ -6,8 +6,11 @@ import com.chekh.paysage.model.AppInfo
 
 @Dao
 interface AppDao {
+    @Query("SELECT * FROM app WHERE id = :packageName || :className")
+    fun getByUnique(packageName: String, className: String): AppInfo
+
     @Query("SELECT * FROM app WHERE packageName = :packageName")
-    fun getByPackageName(packageName: String): AppInfo
+    fun getByPackageName(packageName: String): List<AppInfo>
 
     @Query("SELECT * FROM app")
     fun getAll(): List<AppInfo>
@@ -32,4 +35,7 @@ interface AppDao {
 
     @Query("DELETE FROM app")
     fun removeAll()
+
+    @Query("DELETE FROM app WHERE packageName = :packageName")
+    fun removeByPackageName(packageName: String)
 }

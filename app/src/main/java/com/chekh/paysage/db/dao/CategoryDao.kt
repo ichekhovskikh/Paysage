@@ -2,31 +2,35 @@ package com.chekh.paysage.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.chekh.paysage.model.AppsCategoryInfo
+import com.chekh.paysage.model.CategoryInfo
+import com.chekh.paysage.model.AppsGroupByCategory
 
 @Dao
 interface CategoryDao {
     @Query("SELECT * FROM category WHERE id = :id")
-    fun getById(id: String): AppsCategoryInfo
+    fun getById(id: String): CategoryInfo
 
     @Query("SELECT * FROM category")
-    fun getAll(): List<AppsCategoryInfo>
+    fun getAll(): List<CategoryInfo>
 
     @Query("SELECT * FROM category")
-    fun getLiveAll(): LiveData<List<AppsCategoryInfo>>
+    fun getLiveAll(): LiveData<List<CategoryInfo>>
+
+    @Query("SELECT * FROM category")
+    fun getGroupByCategories(): LiveData<List<AppsGroupByCategory>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(category: AppsCategoryInfo)
+    fun add(category: CategoryInfo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(categories: List<AppsCategoryInfo>)
+    fun add(categories: List<CategoryInfo>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(category: AppsCategoryInfo)
+    fun update(category: CategoryInfo)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(categories: List<AppsCategoryInfo>)
+    fun update(categories: List<CategoryInfo>)
 
     @Delete
-    fun remove(category: AppsCategoryInfo)
+    fun remove(category: CategoryInfo)
 }

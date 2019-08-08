@@ -1,12 +1,13 @@
 package com.chekh.paysage.model
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "category")
-data class AppsCategoryInfo(
+@Entity(tableName = "category", indices = [Index(value = ["title"], unique = true)])
+data class CategoryInfo(
     @PrimaryKey
-    val id: String,
+    var id: String,
     var title: CategoryTitle,
     var position: Int,
     var isHidden: Boolean

@@ -5,18 +5,15 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import com.chekh.paysage.R
-import com.chekh.paysage.model.AppInfo
-import com.chekh.paysage.model.AppsCategoryInfo
+import com.chekh.paysage.model.AppsGroupByCategory
 import com.chekh.paysage.ui.view.ArrowItemView
 
 class AppsCategoryAdapter :
     RecyclerView.Adapter<AppsCategoryAdapter.AppsViewHolder>() {
 
-    private lateinit var appsCategory: List<AppsCategoryInfo>
-    private lateinit var apps: List<AppInfo>
+    private lateinit var appsCategory: List<AppsGroupByCategory>
 
-    fun setApps(apps: List<AppInfo>, appsCategory: List<AppsCategoryInfo>) {
-        this.apps = apps
+    fun setAppsCategories(appsCategory: List<AppsGroupByCategory>) {
         this.appsCategory = appsCategory
         sortByPosition()
         notifyDataSetChanged()
@@ -36,15 +33,15 @@ class AppsCategoryAdapter :
     }
 
     private fun sortByPosition() {
-        appsCategory = appsCategory.sortedBy { it.position }
+        appsCategory = appsCategory.sortedBy { it.category.position }
     }
 
     inner class AppsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(category: AppsCategoryInfo) {
+        fun bind(category: AppsGroupByCategory) {
             val headerView = itemView.findViewById<ArrowItemView>(R.id.title)
-            headerView.setIcon(category.title.iconRes)
-            headerView.setTitleText(category.title.titleRes)
+            headerView.setIcon(category.category.title.iconRes)
+            headerView.setTitleText(category.category.title.titleRes)
         }
     }
 }

@@ -5,8 +5,7 @@ import android.view.View.OVER_SCROLL_NEVER
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.model.AppInfo
-import com.chekh.paysage.model.AppsCategoryInfo
+import com.chekh.paysage.model.AppsGroupByCategory
 import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.util.applyPadding
@@ -45,8 +44,8 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     private fun onAppsAdapterCreated() {
         categoryRecycler.adapter = adapter
-        viewModel.getAppsAndCategories(this) { apps: List<AppInfo>, categories: List<AppsCategoryInfo> ->
-            adapter.setApps(apps, categories)
+        viewModel.getAppsGroupByCategories(this) { categories: List<AppsGroupByCategory> ->
+            adapter.setAppsCategories(categories)
         }
     }
 

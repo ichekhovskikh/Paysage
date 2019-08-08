@@ -21,7 +21,7 @@ enum class IconColor(@ColorInt val color: Int) {
 
         fun get(@ColorInt color: Int) = values().find { it.color == color } ?: NOTHING
 
-        fun getIconColor(icon: Bitmap): IconColor {
+        fun get(icon: Bitmap): IconColor {
             val palette = Palette
                 .from(icon)
                 .clearFilters()

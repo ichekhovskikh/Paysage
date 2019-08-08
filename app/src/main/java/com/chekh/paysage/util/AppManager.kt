@@ -12,10 +12,8 @@ class AppManager(context: Context) {
     private val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
     val packageManager: PackageManager = context.packageManager
 
-    fun getApp(packageName: String): ApplicationInfo? {
-        val activityList = launcherApps.getActivityList(packageName, Process.myUserHandle())
-        val activityInfo = activityList.firstOrNull()
-        return activityInfo?.applicationInfo
+    fun getApps(packageName: String, userHandle: UserHandle = Process.myUserHandle()): List<LauncherActivityInfo> {
+        return launcherApps.getActivityList(packageName, userHandle)
     }
 
     fun getAllApps(): List<LauncherActivityInfo> {
