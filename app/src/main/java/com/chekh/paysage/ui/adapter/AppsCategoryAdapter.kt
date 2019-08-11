@@ -9,9 +9,15 @@ import com.chekh.paysage.ui.view.core.stickyheader.StickyRecyclerAdapter
 class AppsCategoryAdapter : StickyRecyclerAdapter<AppsHeaderView, AppsDataView>() {
 
     private lateinit var items: List<AppsGroupByCategory>
+    private val expandedStates = mutableMapOf<String, Boolean>()
 
     fun setAppsCategories(appsCategory: List<AppsGroupByCategory>) {
         items = appsCategory.sortedBy { it.category.position }
+        notifyDataSetChanged()
+    }
+
+    fun collapseAll() {
+        expandedStates.clear()
         notifyDataSetChanged()
     }
 
@@ -23,12 +29,19 @@ class AppsCategoryAdapter : StickyRecyclerAdapter<AppsHeaderView, AppsDataView>(
         return AppsDataView(parent.context)
     }
 
-    override fun onBindHeaderView(view: AppsHeaderView, position: Int) {
-        view.bind(items[position].category)
-    }
-
-    override fun onBindDataView(view: AppsDataView, position: Int) {
-        view.bind(items[position].apps)
+    override fun onBindViews(header: AppsHeaderView, data: AppsDataView, position: Int) {
+        val item = items[position]
+        val categoryId = item.category.id
+        header.bind(item.category)
+        data.bind(item.apps)
+        expandedStates[categoryId]?.let {
+            header.arrowItemView.nonAnimationExpand(it)
+            data.expand(it)
+        }
+        header.arrowItemView.setOnExpandedClickListener { expanded ->
+            expandedStates[categoryId] = expanded
+            data.animationExpand(expanded)
+        }
     }
 
     override fun getItemCount(): Int {

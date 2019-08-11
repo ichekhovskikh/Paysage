@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import com.chekh.paysage.ui.fragment.core.BaseFragment
+import com.chekh.paysage.ui.handler.ContainerBackPressedHandler
 
 abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
 
@@ -15,8 +15,11 @@ abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
     @get:LayoutRes
     protected abstract val layoutId: Int
 
+    private var backPressedHandler: ContainerBackPressedHandler? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        backPressedHandler = ContainerBackPressedHandler(supportFragmentManager)
         setContentView(layoutId)
         createViewModel(savedInstanceState)
         initViewModel()
@@ -32,16 +35,6 @@ abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
     protected open fun initViewModel() {}
 
     override fun onBackPressed() {
-        val fragments = supportFragmentManager.fragments
-        var handled = false
-        for (fragment in fragments) {
-            if (fragment is BaseFragment) {
-                handled = fragment.onBackPressed()
-                if (handled) break
-            }
-        }
-        if (!handled) {
-            super.onBackPressed()
-        }
+        backPressedHandler?.onBackPressed() ?: super.onBackPressed()
     }
 }

@@ -18,7 +18,7 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
     override val layoutId = R.layout.fragment_apps
     override val viewModelClass = HomeViewModel::class.java
 
-    private lateinit var adapter: AppsCategoryAdapter
+    private var adapter: AppsCategoryAdapter? = null
     private var recyclerCreatedListener: ((RecyclerView) -> Unit)? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -30,12 +30,12 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
     private fun onAppsAdapterCreated() {
         initCategoryRecycler()
         viewModel.getAppsGroupByCategories(this) { categories: List<AppsGroupByCategory> ->
-            adapter.setAppsCategories(categories)
+            adapter?.setAppsCategories(categories)
         }
     }
 
     private fun initCategoryRecycler() {
-        categoryRecycler.adapter = adapter
+        categoryRecycler.adapter = adapter!!
         categoryRecycler.apply {
             layoutManager = LinearLayoutManager(context)
             overScrollMode = OVER_SCROLL_NEVER
@@ -53,6 +53,10 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     fun setOnRecyclerCreatedListener(action: (RecyclerView) -> Unit) {
         recyclerCreatedListener = action
+    }
+
+    fun collapseAllCategories() {
+        adapter?.collapseAll()
     }
 
     companion object {

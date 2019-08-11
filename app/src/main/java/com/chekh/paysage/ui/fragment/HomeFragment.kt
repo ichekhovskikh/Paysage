@@ -8,15 +8,16 @@ import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.handler.SlidingPanelBackPressedHandler
 import com.chekh.paysage.ui.util.*
 import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout
+import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout.PanelState
 import com.chekh.paysage.util.observe
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : ViewModelFragment<HomeViewModel>() {
 
-    private lateinit var desktopFragment: DesktopFragment
-    private lateinit var appsFragment: AppsFragment
-    private lateinit var backPressedHandler: SlidingPanelBackPressedHandler
+    private var desktopFragment: DesktopFragment? = null
+    private var appsFragment: AppsFragment? = null
+    private var backPressedHandler: SlidingPanelBackPressedHandler? = null
 
     override val layoutId = R.layout.fragment_home
     override val viewModelClass = HomeViewModel::class.java
@@ -39,20 +40,20 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
     private fun setupSlidingPanel() {
         initFragmentsIfNeed()
         childFragmentManager.inTransaction {
-            replace(R.id.main, desktopFragment)
-            replace(R.id.slideable, appsFragment)
+            replace(R.id.main, desktopFragment!!)
+            replace(R.id.slideable, appsFragment!!)
         }
         slidingPanel.addPanelSlideListener(onSlideListener)
-        backPressedHandler = SlidingPanelBackPressedHandler(slidingPanel)
+        backPressedHandler = SlidingPanelBackPressedHandler(slidingPanel, childFragmentManager)
     }
 
     private fun initFragmentsIfNeed() {
-        if (!::desktopFragment.isInitialized) {
+        if (desktopFragment == null) {
             desktopFragment = DesktopFragment.instance()
         }
-        if (!::appsFragment.isInitialized) {
+        if (appsFragment == null) {
             appsFragment = AppsFragment.instance()
-            appsFragment.setOnRecyclerCreatedListener { slidingPanel.setScrollableView(it) }
+            appsFragment?.setOnRecyclerCreatedListener { slidingPanel.setScrollableView(it) }
         }
     }
 
@@ -69,6 +70,12 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
             searchBarSlideHandler.slideFromTop(transformOffset(slideOffset))
         }
 
+        override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
+            if (newState == PanelState.HIDDEN || newState == PanelState.COLLAPSED) {
+                appsFragment?.collapseAllCategories()
+            }
+        }
+
         private fun transformOffset(offset: Float): Float {
             val anchor = slidingPanel.anchorPoint
             return if (offset > anchor) (1 - offset) / (1 - anchor) else offset / anchor
@@ -76,7 +83,7 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
     }
 
     override fun onBackPressed(): Boolean {
-        return if (::backPressedHandler.isInitialized) backPressedHandler.onBackPressed() else super.onBackPressed()
+        return backPressedHandler?.onBackPressed() ?: super.onBackPressed()
     }
 
     companion object {

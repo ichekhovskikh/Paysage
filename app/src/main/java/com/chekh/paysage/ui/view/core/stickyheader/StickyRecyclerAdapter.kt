@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.chekh.paysage.R
 
-abstract class StickyRecyclerAdapter<Header : View, Data : View> :
+abstract class StickyRecyclerAdapter<Header : StickyHeaderView, Data : View> :
     RecyclerView.Adapter<StickyRecyclerAdapter.StickyViewHolder<Header, Data>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StickyViewHolder<Header, Data> {
@@ -16,17 +16,14 @@ abstract class StickyRecyclerAdapter<Header : View, Data : View> :
     }
 
     override fun onBindViewHolder(holder: StickyViewHolder<Header, Data>, position: Int) {
-        onBindHeaderView(holder.headerView, position)
-        onBindDataView(holder.dataView, position)
+        onBindViews(holder.headerView, holder.dataView, position)
     }
 
     abstract fun onCreateHeaderView(parent: ViewGroup, viewType: Int): Header
 
     abstract fun onCreateDataView(parent: ViewGroup, viewType: Int): Data
 
-    abstract fun onBindHeaderView(view: Header, position: Int)
-
-    abstract fun onBindDataView(view: Data, position: Int)
+    abstract fun onBindViews(header: Header, data: Data, position: Int)
 
     class StickyViewHolder<Header : View, Data : View>(parent: ViewGroup, val headerView: Header, val dataView: Data) :
         RecyclerView.ViewHolder(

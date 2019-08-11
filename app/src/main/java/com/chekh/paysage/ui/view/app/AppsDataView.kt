@@ -3,6 +3,7 @@ package com.chekh.paysage.ui.view.app
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import com.chekh.paysage.R
 import com.chekh.paysage.model.AppInfo
@@ -15,11 +16,20 @@ class AppsDataView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyle) {
 
     init {
-        layoutParams = MarginLayoutParams(MATCH_PARENT, convertDpToPx(80f).toInt())
+        layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        minimumHeight = convertDpToPx(80f).toInt()
         setBackgroundResource(R.drawable.background_grey_rounded)
     }
 
     fun bind(apps: List<AppInfo>) {
+
+    }
+
+    fun expand(expanded: Boolean) {
+
+    }
+
+    fun animationExpand(expanded: Boolean) {
 
     }
 }

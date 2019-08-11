@@ -4,7 +4,6 @@ import android.graphics.Canvas
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
-import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 
 class StickyHeaderDecoration(private val alwaysTopHeaderView: StickyHeaderView) : RecyclerView.ItemDecoration() {
@@ -19,12 +18,11 @@ class StickyHeaderDecoration(private val alwaysTopHeaderView: StickyHeaderView) 
         if (topChildPosition == RecyclerView.NO_POSITION) return
         if (cachedTopChild != topChild) {
             cachedTopChild = topChild
-            cachedTopHeader?.visibility = View.VISIBLE
             cachedTopHeader = findHeader(topChild)
             cachedTopHeader?.let {
+                alwaysTopHeaderView.visibility = View.VISIBLE
                 alwaysTopHeaderView.copyState(it)
                 alwaysTopHeaderView.delegateEvents(it)
-                alwaysTopHeaderView.translationY = (-topChild.marginTop).toFloat()
             }
         }
         moveHeader(topChild)
@@ -33,9 +31,7 @@ class StickyHeaderDecoration(private val alwaysTopHeaderView: StickyHeaderView) 
     private fun moveHeader(topView: View) {
         val bottomPosition = topView.bottom
         val headerHeight = alwaysTopHeaderView.measuredHeight
-        if (alwaysTopHeaderView.top < topView.top + headerHeight) {
-            alwaysTopHeaderView.visibility = View.VISIBLE
-            cachedTopHeader?.visibility = View.INVISIBLE
+        if (topView.top + headerHeight > 0) {
             alwaysTopHeaderView.translationY = 0f
         } else if (headerHeight >= bottomPosition) {
             alwaysTopHeaderView.translationY = (bottomPosition - headerHeight).toFloat()

@@ -17,50 +17,34 @@ class AppsHeaderView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : StickyHeaderView(context, attrs, defStyle) {
 
+    val arrowItemView: ArrowItemView
+
     init {
         LayoutInflater.from(context).inflate(R.layout.view_apps_category_header, this, true)
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        background = context.getDrawable(R.color.white_alpha_80)
+        background = context.getDrawable(R.color.white)
+        arrowItemView = findViewById(R.id.title)
     }
 
-    var cachedArrowItemView: ArrowItemView? = null
-
-    val arrowItemView: ArrowItemView?
-        get() {
-            if (cachedArrowItemView != null) {
-                return cachedArrowItemView
-            }
-            for (index in 0 until childCount) {
-                val child = getChildAt(index)
-                if (child is ArrowItemView) {
-                    return child
-                }
-            }
-            return null
-        }
-
     fun bind(category: CategoryInfo) {
-        arrowItemView?.let {
-            it.setIcon(category.title.iconRes)
-            it.setTitleText(category.title.titleRes)
-        }
+        arrowItemView.setIcon(category.title.iconRes)
+        arrowItemView.setTitleText(category.title.titleRes)
     }
 
     override fun delegateEvents(view: View) {
         if (view is AppsHeaderView) {
-            arrowItemView?.setOnExpandedClickListener {
-                view.arrowItemView?.isExpanded = it
+            arrowItemView.setOnExpandedClickListener {
+                view.arrowItemView.nonAnimationExpand(it)
             }
         }
     }
 
     override fun copyState(view: View) {
-        if (view is AppsHeaderView && view.arrowItemView != null) {
-            val copyArrowItemView = view.arrowItemView as ArrowItemView
-            arrowItemView?.let {
-                it.nonAnimationExpand(copyArrowItemView.isExpanded)
-                it.setIcon(copyArrowItemView.icon)
-                it.setTitleText(copyArrowItemView.title)
+        if (view is AppsHeaderView) {
+            arrowItemView.apply {
+                nonAnimationExpand(view.arrowItemView.isExpanded)
+                setIcon(view.arrowItemView.icon)
+                setTitleText(view.arrowItemView.title)
             }
         }
     }
