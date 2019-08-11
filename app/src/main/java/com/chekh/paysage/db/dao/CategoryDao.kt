@@ -16,6 +16,7 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getLiveAll(): LiveData<List<CategoryInfo>>
 
+    @Transaction
     @Query("SELECT * FROM category")
     fun getGroupByCategories(): LiveData<List<AppsGroupByCategory>>
 

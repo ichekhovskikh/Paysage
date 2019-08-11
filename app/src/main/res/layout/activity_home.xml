@@ -14,14 +14,14 @@
             android:layout_height="match_parent">
     </FrameLayout>
 
-    <com.chekh.paysage.ui.view.ShadowView
+    <com.chekh.paysage.ui.view.core.ShadowView
             android:id="@+id/statusShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             app:shadowDrawable="@drawable/status_shadow"/>
 
-    <com.chekh.paysage.ui.view.ShadowView
+    <com.chekh.paysage.ui.view.core.ShadowView
             android:id="@+id/navigationShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

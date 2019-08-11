@@ -4,7 +4,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
+    <com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout
             android:id="@+id/slidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-    </com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout>
+    </com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/searchBar"

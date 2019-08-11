@@ -7,7 +7,7 @@ import com.chekh.paysage.ui.handler.SearchBarSlideHandler
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.handler.SlidingPanelBackPressedHandler
 import com.chekh.paysage.ui.util.*
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
+import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout
 import com.chekh.paysage.util.observe
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*

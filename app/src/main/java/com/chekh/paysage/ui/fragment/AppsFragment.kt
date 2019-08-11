@@ -25,13 +25,22 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
         super.onActivityCreated(savedInstanceState)
         adapter = AppsCategoryAdapter()
         onAppsAdapterCreated()
+    }
+
+    private fun onAppsAdapterCreated() {
         initCategoryRecycler()
+        viewModel.getAppsGroupByCategories(this) { categories: List<AppsGroupByCategory> ->
+            adapter.setAppsCategories(categories)
+        }
     }
 
     private fun initCategoryRecycler() {
-        categoryRecycler.layoutManager = LinearLayoutManager(context)
-        categoryRecycler.overScrollMode = OVER_SCROLL_NEVER
-        recyclerCreatedListener?.invoke(categoryRecycler)
+        categoryRecycler.adapter = adapter
+        categoryRecycler.apply {
+            layoutManager = LinearLayoutManager(context)
+            overScrollMode = OVER_SCROLL_NEVER
+            recyclerCreatedListener?.invoke(this)
+        }
     }
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {
@@ -39,13 +48,6 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
         val defaultRecyclerPaddingBottom = categoryRecycler.paddingBottom
         viewModel.navigationBarHeightLiveData.observe(this) { height ->
             categoryRecycler.applyPadding(bottom = defaultRecyclerPaddingBottom + height)
-        }
-    }
-
-    private fun onAppsAdapterCreated() {
-        categoryRecycler.adapter = adapter
-        viewModel.getAppsGroupByCategories(this) { categories: List<AppsGroupByCategory> ->
-            adapter.setAppsCategories(categories)
         }
     }
 

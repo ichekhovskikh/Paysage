@@ -16,14 +16,9 @@ import com.chekh.paysage.db.Convectors.IconColorTypeConverter
 import com.chekh.paysage.db.Convectors.CategoryTitleTypeConverter
 import com.chekh.paysage.db.Convectors.BitmapTypeConverter
 import com.chekh.paysage.db.dao.PackageDao
-import com.chekh.paysage.model.CategoryTitle
 import com.chekh.paysage.model.PackageInfo
-import com.chekh.paysage.util.CATEGORIES_FILE_NAME
-import com.chekh.paysage.util.readDefaultPackages
-import com.chekh.paysage.util.readFromAssets
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 @Database(entities = [AppInfo::class, CategoryInfo::class, PackageInfo::class], version = 3)
 @TypeConverters(

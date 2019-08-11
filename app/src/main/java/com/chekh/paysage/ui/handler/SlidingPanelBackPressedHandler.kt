@@ -1,7 +1,7 @@
 package com.chekh.paysage.ui.handler
 
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
+import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout
+import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout.PanelState
 
 class SlidingPanelBackPressedHandler(private val slidingPanel: SlidingUpPanelLayout) {
 

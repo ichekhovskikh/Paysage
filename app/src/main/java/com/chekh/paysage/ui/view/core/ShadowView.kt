@@ -1,4 +1,4 @@
-package com.chekh.paysage.ui.view
+package com.chekh.paysage.ui.view.core
 
 import android.content.Context
 import android.util.AttributeSet

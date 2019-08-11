@@ -1,47 +1,37 @@
 package com.chekh.paysage.ui.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
-import android.view.LayoutInflater
-import android.view.View
-import com.chekh.paysage.R
 import com.chekh.paysage.model.AppsGroupByCategory
-import com.chekh.paysage.ui.view.ArrowItemView
+import com.chekh.paysage.ui.view.app.AppsDataView
+import com.chekh.paysage.ui.view.app.AppsHeaderView
+import com.chekh.paysage.ui.view.core.stickyheader.StickyRecyclerAdapter
 
-class AppsCategoryAdapter :
-    RecyclerView.Adapter<AppsCategoryAdapter.AppsViewHolder>() {
+class AppsCategoryAdapter : StickyRecyclerAdapter<AppsHeaderView, AppsDataView>() {
 
-    private lateinit var appsCategory: List<AppsGroupByCategory>
+    private lateinit var items: List<AppsGroupByCategory>
 
     fun setAppsCategories(appsCategory: List<AppsGroupByCategory>) {
-        this.appsCategory = appsCategory
-        sortByPosition()
+        items = appsCategory.sortedBy { it.category.position }
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.apps_category_view_holder, parent, false)
-        return AppsViewHolder(view)
+    override fun onCreateHeaderView(parent: ViewGroup, viewType: Int): AppsHeaderView {
+        return AppsHeaderView(parent.context)
     }
 
-    override fun onBindViewHolder(holder: AppsViewHolder, position: Int) {
-        holder.bind(appsCategory[position])
+    override fun onCreateDataView(parent: ViewGroup, viewType: Int): AppsDataView {
+        return AppsDataView(parent.context)
+    }
+
+    override fun onBindHeaderView(view: AppsHeaderView, position: Int) {
+        view.bind(items[position].category)
+    }
+
+    override fun onBindDataView(view: AppsDataView, position: Int) {
+        view.bind(items[position].apps)
     }
 
     override fun getItemCount(): Int {
-        return if (::appsCategory.isInitialized) appsCategory.size else 0
-    }
-
-    private fun sortByPosition() {
-        appsCategory = appsCategory.sortedBy { it.category.position }
-    }
-
-    inner class AppsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        fun bind(category: AppsGroupByCategory) {
-            val headerView = itemView.findViewById<ArrowItemView>(R.id.title)
-            headerView.setIcon(category.category.title.iconRes)
-            headerView.setTitleText(category.category.title.titleRes)
-        }
+        return if (::items.isInitialized) items.size else 0
     }
 }

@@ -1,4 +1,4 @@
-package com.chekh.paysage.ui.view.slidingpanel;
+package com.chekh.paysage.ui.view.core.slidingpanel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

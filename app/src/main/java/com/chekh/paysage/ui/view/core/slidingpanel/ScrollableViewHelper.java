@@ -1,4 +1,4 @@
-package com.chekh.paysage.ui.view.slidingpanel;
+package com.chekh.paysage.ui.view.core.slidingpanel;
 
 import android.view.View;
 import android.view.ViewGroup;

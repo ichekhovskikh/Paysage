@@ -1,4 +1,4 @@
-package com.chekh.paysage.ui.view
+package com.chekh.paysage.ui.view.core
 
 import android.animation.ObjectAnimator
 import android.content.Context
@@ -20,6 +20,7 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
     RelativeLayout(context, attrs, defStyle) {
 
     private var expanded = false
+    private var duration = DEFAULT_DURATION
     private var onExpandedListener: OnExpandedClickListener? = null
 
     private val defaultClickListener: OnClickListener by lazy {
@@ -72,6 +73,12 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
+    val title: CharSequence
+        get() = titleTextView.text
+
+    val icon: Drawable
+        get() = titleIcon.drawable
+
     fun setTitleText(text: CharSequence) {
         titleTextView.text = text
     }
@@ -82,10 +89,12 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     fun setIcon(drawable: Drawable) {
         titleIcon.setImageDrawable(drawable)
+        titleIcon.visibility = View.VISIBLE
     }
 
     fun setIcon(@DrawableRes resId: Int) {
         titleIcon.setImageResource(resId)
+        titleIcon.visibility = View.VISIBLE
     }
 
     fun isArrowVisible(isVisible: Boolean, expanded: Boolean = false) {
@@ -99,12 +108,21 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
     }
 
+    fun setAnimationDuration(duration: Long) {
+        this.duration = duration
+    }
+
+    fun nonAnimationExpand(expanded: Boolean) {
+        if (expanded == this.expanded) return
+        this.expanded = expanded
+        arrowIcon.rotation = if (expanded) 90f else 0f
+    }
+
     var isExpanded
         get() = expanded
         set(value) {
             if (value == expanded) return
             expanded = value
-            val duration: Long = 300
             val start = if (expanded) 0f else 90f
             val end = if (expanded) 90f else 0f
             ObjectAnimator.ofFloat(arrowIcon, View.ROTATION, start, end).setDuration(duration).start()
@@ -124,5 +142,9 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     interface OnExpandedClickListener {
         fun onExpandedClick(isExpanded: Boolean)
+    }
+
+    companion object {
+        private const val DEFAULT_DURATION = 300L
     }
 }

@@ -33,7 +33,7 @@
             android:clickable="false"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:src="@drawable/ic_arrow"
             tools:rotation="90"
             tools:ignore="ContentDescription"/>
 </merge>

@@ -19,11 +19,13 @@ object AppRepository {
     fun removeApps(packageName: String) = database.appDao().removeByPackageName(packageName)
 
     fun reInitApps(activityInfos: List<LauncherActivityInfo>) {
-        val recentApps = database.appDao().getAll()
-        val allApps = mergeApps(activityInfos, recentApps)
-        database.runInTransaction {
-            database.appDao().removeAll()
-            database.appDao().add(allApps)
+        if (activityInfos.isNotEmpty()) {
+            val recentApps = database.appDao().getAll()
+            val allApps = mergeApps(activityInfos, recentApps)
+            database.runInTransaction {
+                database.appDao().removeAll()
+                database.appDao().add(allApps)
+            }
         }
     }
 
