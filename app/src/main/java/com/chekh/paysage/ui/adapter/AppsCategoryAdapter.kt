@@ -34,10 +34,11 @@ class AppsCategoryAdapter : StickyRecyclerAdapter<AppsHeaderView, AppsDataView>(
         val categoryId = item.category.id
         header.bind(item.category)
         data.bind(item.apps)
-        expandedStates[categoryId]?.let {
-            header.arrowItemView.nonAnimationExpand(it)
-            data.expand(it)
-        }
+
+        val state = expandedStates[categoryId] ?: false
+        header.arrowItemView.nonAnimationExpand(state)
+        data.expand(state)
+
         header.arrowItemView.setOnExpandedClickListener { expanded ->
             expandedStates[categoryId] = expanded
             data.animationExpand(expanded)
