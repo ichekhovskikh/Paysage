@@ -17,6 +17,8 @@ import com.chekh.paysage.db.Convectors.CategoryTitleTypeConverter
 import com.chekh.paysage.db.Convectors.BitmapTypeConverter
 import com.chekh.paysage.db.dao.PackageDao
 import com.chekh.paysage.model.PackageInfo
+import com.chekh.paysage.provider.DefaultCategoriesProvider
+import com.chekh.paysage.provider.DefaultPackagesProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -45,9 +47,26 @@ abstract class PaysageDatabase : RoomDatabase() {
         private val prepopulateDatabaseCallback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                db.enableWal()
                 GlobalScope.launch {
-                    AppRepository.prepopulate()
+                    prepopulateCategories()
+                    prepopulatePackages()
                 }
+            }
+
+            private fun SupportSQLiteDatabase.enableWal() {
+                enableWriteAheadLogging()
+                execSQL("PRAGMA synchronous=NORMAL")
+            }
+
+            private fun prepopulateCategories() {
+                val categories = DefaultCategoriesProvider.getDefaultCategories()
+                instance.categoryDao().add(categories)
+            }
+
+            private fun prepopulatePackages() {
+                val packages = DefaultPackagesProvider.getDefaultPackages()
+                instance.packageDao().add(packages)
             }
         }
     }

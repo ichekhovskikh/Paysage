@@ -2,14 +2,17 @@ package com.chekh.paysage.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.marginTop
 import com.chekh.paysage.R
+import com.chekh.paysage.extension.inTransaction
 import com.chekh.paysage.ui.handler.SearchBarSlideHandler
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.handler.SlidingPanelBackPressedHandler
-import com.chekh.paysage.ui.util.*
 import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout
 import com.chekh.paysage.ui.view.core.slidingpanel.SlidingUpPanelLayout.PanelState
-import com.chekh.paysage.util.observe
+import com.chekh.paysage.extension.observe
+import com.chekh.paysage.extension.setMarginTop
+import com.chekh.paysage.extension.statusDarkBarMode
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -29,8 +32,8 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {
         super.onViewModelCreated(savedInstanceState)
-        val defaultSearchMarginTop = searchBar.getMarginTop()
-        val defaultSlideableMarginTop = slideable.getMarginTop()
+        val defaultSearchMarginTop = searchBar.marginTop
+        val defaultSlideableMarginTop = slideable.marginTop
         viewModel.statusBarHeightLiveData.observe(this) { height ->
             searchBar.setMarginTop(defaultSearchMarginTop + height)
             slideable.setMarginTop(defaultSlideableMarginTop + height)

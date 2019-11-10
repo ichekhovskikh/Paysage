@@ -1,4 +1,4 @@
-package com.chekh.paysage.util
+package com.chekh.paysage.extension
 
 import androidx.lifecycle.*
 

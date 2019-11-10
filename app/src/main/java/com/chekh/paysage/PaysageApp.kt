@@ -4,13 +4,9 @@ import android.app.Application
 import android.app.UiModeManager
 import android.content.Context
 import com.chekh.paysage.db.PaysageDatabase
-import com.chekh.paysage.util.AppManager
+import com.chekh.paysage.manager.AppManager
 
 class PaysageApp : Application() {
-
-    private lateinit var uiManager: UiModeManager
-
-    val nightMode get() = uiManager.nightMode
 
     override fun onCreate() {
         super.onCreate()
@@ -23,6 +19,7 @@ class PaysageApp : Application() {
     companion object {
         lateinit var launcher: PaysageApp private set
         lateinit var appManager: AppManager private set
+        lateinit var uiManager: UiModeManager private set
         lateinit var database: PaysageDatabase private set
     }
 }

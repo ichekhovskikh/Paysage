@@ -5,11 +5,10 @@ import android.view.View.OVER_SCROLL_NEVER
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.model.AppsGroupByCategory
-import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
+import com.chekh.paysage.extension.applyPadding
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
-import com.chekh.paysage.ui.util.applyPadding
-import com.chekh.paysage.util.observe
+import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
+import com.chekh.paysage.extension.observe
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_apps.*
 
@@ -29,18 +28,20 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     private fun onAppsAdapterCreated() {
         initCategoryRecycler()
-        viewModel.getAppsGroupByCategories(this) { categories: List<AppsGroupByCategory> ->
+        viewModel.getAppsGroupByCategories(this) { categories ->
             adapter?.setAppsCategories(categories)
         }
     }
 
     private fun initCategoryRecycler() {
-        categoryRecycler.adapter = adapter!!
         categoryRecycler.apply {
             layoutManager = LinearLayoutManager(context)
             overScrollMode = OVER_SCROLL_NEVER
-            recyclerCreatedListener?.invoke(this)
         }
+        categoryRecycler.adapter = adapter
+        adapter?.setScrollToTopHeaderAction { categoryRecycler.scrollToTopHeader() }
+        adapter?.setAnimationItemChangedAction { categoryRecycler.scheduleLayoutAnimation() }
+        recyclerCreatedListener?.invoke(categoryRecycler)
     }
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {

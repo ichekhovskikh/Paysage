@@ -13,7 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.util.convertPxToDp
+import com.chekh.paysage.ui.util.MetricsConvector
 import kotlinx.android.synthetic.main.view_arrow_item.view.*
 
 class ArrowItemView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -21,14 +21,7 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     private var expanded = false
     private var duration = DEFAULT_DURATION
-    private var onExpandedListener: OnExpandedClickListener? = null
-
-    private val defaultClickListener: OnClickListener by lazy {
-        OnClickListener {
-            isExpanded = !isExpanded
-            onExpandedListener?.onExpandedClick(isExpanded)
-        }
-    }
+    var onExpandedListener: OnExpandedClickListener? = null
 
     init {
         LayoutInflater.from(getContext()).inflate(R.layout.view_arrow_item, this, true)
@@ -50,7 +43,7 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_sizeTitleText)) {
             val sizePx = attributes.getDimension(R.styleable.ArrowItemView_sizeTitleText, -1f)
-            titleTextView.textSize = convertPxToDp(sizePx)
+            titleTextView.textSize = MetricsConvector.convertPxToDp(sizePx)
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_fontTitleText)) {
             val fontId = attributes.getResourceId(R.styleable.ArrowItemView_fontTitleText, -1)
@@ -101,7 +94,7 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         isExpanded = expanded
         if (isVisible) {
             arrowIcon.visibility = View.VISIBLE
-            setOnClickListener(defaultClickListener)
+            setOnClickListener { isExpanded = !isExpanded }
         } else {
             arrowIcon.visibility = View.GONE
             setOnClickListener(null)
@@ -113,9 +106,9 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     fun nonAnimationExpand(expanded: Boolean) {
-        if (expanded == this.expanded) return
         this.expanded = expanded
         arrowIcon.rotation = if (expanded) 90f else 0f
+        onExpandedListener?.onExpandedClick(expanded)
     }
 
     var isExpanded
@@ -126,25 +119,15 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
             val start = if (expanded) 0f else 90f
             val end = if (expanded) 90f else 0f
             ObjectAnimator.ofFloat(arrowIcon, View.ROTATION, start, end).setDuration(duration).start()
+            onExpandedListener?.onAnimateExpandedClick(expanded)
         }
-
-    fun setOnExpandedClickListener(listener: (Boolean) -> Unit) {
-        onExpandedListener = object : OnExpandedClickListener {
-            override fun onExpandedClick(isExpanded: Boolean) {
-                listener(isExpanded)
-            }
-        }
-    }
-
-    fun setOnExpandedClickListener(listener: OnExpandedClickListener) {
-        onExpandedListener = listener
-    }
 
     interface OnExpandedClickListener {
         fun onExpandedClick(isExpanded: Boolean)
+        fun onAnimateExpandedClick(isExpanded: Boolean)
     }
 
     companion object {
-        private const val DEFAULT_DURATION = 300L
+        private const val DEFAULT_DURATION = 250L
     }
 }

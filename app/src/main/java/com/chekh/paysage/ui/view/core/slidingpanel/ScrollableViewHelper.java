@@ -51,9 +51,7 @@ public class ScrollableViewHelper {
             if (isSlidingUp) {
                 View firstChild = rv.getChildAt(0);
                 // Approximate the scroll position based on the top child and the first visible item
-                int marginTop = ((ViewGroup.MarginLayoutParams) rv.getLayoutParams()).topMargin;
-                marginTop += rv.getPaddingTop() + lm.getPaddingTop();
-                return rv.getChildLayoutPosition(firstChild) * lm.getDecoratedMeasuredHeight(firstChild) - lm.getDecoratedTop(firstChild) + marginTop;
+                return rv.getChildLayoutPosition(firstChild) * lm.getDecoratedMeasuredHeight(firstChild) - lm.getDecoratedTop(firstChild);
             } else {
                 View lastChild = rv.getChildAt(rv.getChildCount() - 1);
                 // Approximate the scroll position based on the bottom child and the last visible item

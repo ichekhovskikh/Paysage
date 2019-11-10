@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
-import android.widget.LinearLayout.HORIZONTAL
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.model.AppInfo
 import com.chekh.paysage.ui.adapter.AppsListAdapter
-import com.chekh.paysage.ui.util.convertDpToPx
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chekh.paysage.ui.anim.TransformAnimation
+import com.chekh.paysage.ui.util.MetricsConvector
 
 class AppsDataView @JvmOverloads constructor(
     context: Context,
@@ -31,6 +31,15 @@ class AppsDataView @JvmOverloads constructor(
 
     var isExpanded = false
         private set
+
+    var appsScrollX = 0
+        get() = if (::appsView.isInitialized) appsView.computeHorizontalScrollOffset() else 0
+        set(value) {
+            if (::appsView.isInitialized) {
+                field = value
+                linearLayoutManager.scrollToPositionWithOffset(0, -value)
+            }
+        }
 
     init {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -50,14 +59,14 @@ class AppsDataView @JvmOverloads constructor(
             overScrollMode = View.OVER_SCROLL_NEVER
             layoutManager = linearLayoutManager
             clipToPadding = false
-            val padding = convertDpToPx(6f).toInt()
+            val padding = MetricsConvector.convertDpToPx(6f)
             setPadding(padding, padding, padding, padding)
         }
         adapter = AppsListAdapter()
         appsView.adapter = adapter
     }
 
-    fun bind(apps: List<AppInfo>) {
+    fun setApps(apps: List<AppInfo>) {
         adapter.setApps(apps)
     }
 

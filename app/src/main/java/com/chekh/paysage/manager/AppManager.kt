@@ -1,4 +1,4 @@
-package com.chekh.paysage.util
+package com.chekh.paysage.manager
 
 import android.content.Context
 import android.content.pm.LauncherActivityInfo

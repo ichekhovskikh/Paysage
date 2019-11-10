@@ -7,7 +7,7 @@ import com.chekh.paysage.ui.view.app.AppView
 
 class AppsListAdapter : RecyclerView.Adapter<AppsListAdapter.AppViewHolder>() {
 
-    private lateinit var apps: List<AppInfo>
+    private var apps: List<AppInfo> = listOf()
 
     fun setApps(apps: List<AppInfo>) {
         this.apps = apps
@@ -22,9 +22,7 @@ class AppsListAdapter : RecyclerView.Adapter<AppsListAdapter.AppViewHolder>() {
         holder.setApp(apps[position])
     }
 
-    override fun getItemCount(): Int {
-        return if (::apps.isInitialized) apps.size else 0
-    }
+    override fun getItemCount() = apps.size
 
     class AppViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(AppView(parent.context)) {
         private val appView = itemView as AppView

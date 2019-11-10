@@ -9,13 +9,13 @@ class SlidingPanelBackPressedHandler(private val slidingPanel: SlidingUpPanelLay
     private val containerBackPressedHandler = ContainerBackPressedHandler(fragmentManager)
 
     fun onBackPressed(): Boolean {
-        return if (containerBackPressedHandler.onBackPressed()) {
-            true
-        } else if (isSlidingPanelOpen(slidingPanel)) {
-            slidingPanel.panelState = PanelState.COLLAPSED
-            true
-        } else {
-            false
+        return when {
+            containerBackPressedHandler.onBackPressed() -> true
+            isSlidingPanelOpen(slidingPanel) -> {
+                slidingPanel.panelState = PanelState.COLLAPSED
+                true
+            }
+            else -> false
         }
     }
 

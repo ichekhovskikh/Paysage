@@ -1,14 +1,16 @@
-package com.chekh.paysage.ui.util
+package com.chekh.paysage.extension
 
+import android.app.Activity
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.chekh.paysage.PaysageApp.Companion.launcher
-import android.app.Activity
 import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
-import android.view.*
 
-private val statusBarDecorator: StatusBarDecorator = CommonStatusBarDecorator()
+private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
@@ -23,10 +25,8 @@ fun View.setMarginTop(top: Int) {
     params.topMargin = top
 }
 
-fun View.getMarginTop(): Int {
-    val params = layoutParams as ViewGroup.MarginLayoutParams
-    return params.topMargin
-}
+inline val View.absoluteHeight: Int
+    get() = measuredHeight + marginTop + marginBottom
 
 fun View.applyPadding(
     left: Int = paddingLeft,
@@ -35,14 +35,4 @@ fun View.applyPadding(
     bottom: Int = paddingBottom
 ) {
     setPadding(left, top, right, bottom)
-}
-
-fun convertDpToPx(dp: Float): Float {
-    val metrics = launcher.resources.displayMetrics
-    return dp * metrics.density
-}
-
-fun convertPxToDp(px: Float): Float {
-    val metrics = launcher.resources.displayMetrics
-    return px / metrics.density
 }

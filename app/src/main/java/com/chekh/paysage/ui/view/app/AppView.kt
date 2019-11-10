@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.chekh.paysage.R
 import com.chekh.paysage.model.AppInfo
-import com.chekh.paysage.ui.util.convertDpToPx
+import com.chekh.paysage.ui.util.MetricsConvector
 
 class AppView @JvmOverloads constructor(
     context: Context,
@@ -28,7 +28,7 @@ class AppView @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.view_app, this, true)
         layoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         orientation = VERTICAL
-        val padding = convertDpToPx(6f).toInt()
+        val padding = MetricsConvector.convertDpToPx(6f)
         setPadding(padding, padding, padding, padding)
         iconView = findViewById(R.id.icon)
         titleView = findViewById(R.id.title)
