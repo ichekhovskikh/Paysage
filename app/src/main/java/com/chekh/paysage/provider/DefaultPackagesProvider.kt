@@ -15,10 +15,8 @@ object DefaultPackagesProvider {
 
     fun getDefaultPackages(): List<PackageInfo> {
         val packages = mutableListOf<PackageInfo>()
-        val json =
-            readDefaultPackagesFromAssets()
-        val jsonObject = JSONObject(json)
-        val categoriesJsonObject = jsonObject.getJSONArray(CATEGORIES_NAME)
+        val json = readDefaultPackagesFromAssets()
+        val categoriesJsonObject = JSONObject(json).getJSONArray(CATEGORIES_NAME)
         val categoriesSize = categoriesJsonObject.length()
         for (categoriesIndex in 0 until categoriesSize) {
             val categoryJsonObject = categoriesJsonObject.getJSONObject(categoriesIndex)

@@ -6,10 +6,10 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_small_margin"
-            android:layout_marginBottom="@dimen/default_small_margin"
-            android:layout_marginStart="@dimen/default_small_margin"
-            android:layout_marginEnd="@dimen/default_small_margin"
+            android:paddingTop="@dimen/default_small_margin"
+            android:paddingBottom="@dimen/default_small_margin"
+            android:paddingStart="@dimen/default_small_margin"
+            android:paddingEnd="@dimen/default_small_margin"
             app:sizeTitleText="@dimen/default_text_size"
             app:fontTitleText="@font/roboto_medium"/>
 </merge>

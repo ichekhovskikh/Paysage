@@ -58,6 +58,7 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     fun collapseAllCategories() {
         adapter?.collapseAll()
+        categoryRecycler.scrollToPosition(0)
     }
 
     companion object {

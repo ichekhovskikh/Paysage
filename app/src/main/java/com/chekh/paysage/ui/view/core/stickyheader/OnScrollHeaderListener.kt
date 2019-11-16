@@ -3,11 +3,12 @@ package com.chekh.paysage.ui.view.core.stickyheader
 import android.widget.AbsListView
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.extension.absoluteHeight
+import com.chekh.paysage.ui.view.core.stickyheader.StickyAdapter.StickyViewHolder
 
 class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
 
     private var scrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-    var cachedTopItemHolder: StickyAdapter.StickyViewHolder<*, *>? = null
+    var cachedTopItemHolder: StickyViewHolder<*, *>? = null
         private set
 
     override fun onScrollStateChanged(recyclerView: RecyclerView, scrollState: Int) {
@@ -15,14 +16,11 @@ class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
     }
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            return
-        }
-        val item = recyclerView.getChildAt(0) ?: return
-        val completelyVisible = item.top >= 0
-        if (item != cachedTopItemHolder?.itemView || completelyVisible) {
+        val holder = recyclerView.getChildAt(0).tag as StickyViewHolder<*, *>? ?: return
+        val completelyVisible = holder.itemView.top >= 0
+        if (holder != cachedTopItemHolder || completelyVisible) {
             cachedTopItemHolder?.header?.itemView?.translationY = 0f
-            cachedTopItemHolder = item.tag as StickyAdapter.StickyViewHolder<*, *>
+            cachedTopItemHolder = holder
         }
         if (!completelyVisible) {
             moveHeader()
@@ -30,8 +28,9 @@ class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
     }
 
     private fun moveHeader() {
-        val header = cachedTopItemHolder?.header?.itemView!!
-        val item = cachedTopItemHolder?.itemView!!
+        val topItemHolder = cachedTopItemHolder ?: return
+        val header = topItemHolder.header.itemView
+        val item = topItemHolder.itemView
         val headerHeight = header.absoluteHeight
         if (item.top < 0 && headerHeight <= item.bottom) {
             header.translationY = -item.top.toFloat()

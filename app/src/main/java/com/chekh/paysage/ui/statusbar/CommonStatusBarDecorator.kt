@@ -4,15 +4,9 @@ import android.app.Activity
 
 class CommonStatusBarDecorator : StatusBarDecorator() {
 
-    private val materialDecorator: StatusBarDecorator
-    private val meizuDecorator: StatusBarDecorator
-    private val xiaomiDecorator: StatusBarDecorator
-
-    init {
-        materialDecorator = MaterialStatusBarDecorator()
-        meizuDecorator = MeizuStatusBarDecorator()
-        xiaomiDecorator = XiaomiStatusBarDecorator(materialDecorator)
-    }
+    private val materialDecorator by lazy { MaterialStatusBarDecorator() }
+    private val meizuDecorator by lazy { MeizuStatusBarDecorator() }
+    private val xiaomiDecorator by lazy { XiaomiStatusBarDecorator(materialDecorator) }
 
     override fun statusBarDarkMode(activity: Activity, isDark: Boolean): Boolean {
         return when {

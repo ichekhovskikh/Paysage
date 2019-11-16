@@ -20,7 +20,6 @@ class StickyRecyclerView @JvmOverloads constructor(
         val holder = scrollListener.cachedTopItemHolder
         holder?.itemView?.let {
             val position = getChildLayoutPosition(it)
-            holder.header.itemView.translationY = 0f
             scrollToPosition(position)
         }
     }

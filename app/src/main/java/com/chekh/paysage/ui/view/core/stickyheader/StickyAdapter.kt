@@ -16,11 +16,7 @@ abstract class StickyAdapter<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.V
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StickyViewHolder<HVH, CVH> {
         val headerHolder = onCreateHeaderViewHolder(parent, viewType)
         val dataHolder = onCreateContentViewHolder(parent, viewType)
-        return StickyViewHolder(
-            parent,
-            headerHolder,
-            dataHolder
-        )
+        return StickyViewHolder(parent, headerHolder, dataHolder)
     }
 
     override fun onBindViewHolder(holder: StickyViewHolder<HVH, CVH>, position: Int) {
