@@ -16,11 +16,21 @@ class StickyRecyclerView @JvmOverloads constructor(
         addOnScrollListener(scrollListener)
     }
 
-    fun scrollToTopHeader() {
+    fun scrollToTopHeader(onCancel: (() -> Unit)? = null) {
         val holder = scrollListener.cachedTopItemHolder
         holder?.itemView?.let {
+            scrollListener.onCancelScrollAction = onCancel
             val position = getChildLayoutPosition(it)
-            scrollToPosition(position)
+            smoothScrollToPosition(position)
+        }
+    }
+
+    /**
+     * hack to perform a artificial scroll after resizing StickyRecyclerView
+     */
+    fun onExpandedItemStateChanged(isExpanded: Boolean) {
+        if (!isExpanded) {
+            post { scrollListener.onScrolled(this, 1, 0) }
         }
     }
 }

@@ -13,7 +13,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.util.MetricsConvector
+import com.chekh.paysage.ui.util.MetricsConverter
 import kotlinx.android.synthetic.main.view_arrow_item.view.*
 
 class ArrowItemView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
@@ -43,7 +43,7 @@ class ArrowItemView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_sizeTitleText)) {
             val sizePx = attributes.getDimension(R.styleable.ArrowItemView_sizeTitleText, -1f)
-            titleTextView.textSize = MetricsConvector.convertPxToDp(sizePx)
+            titleTextView.textSize = MetricsConverter.convertPxToDp(sizePx)
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_fontTitleText)) {
             val fontId = attributes.getResourceId(R.styleable.ArrowItemView_fontTitleText, -1)

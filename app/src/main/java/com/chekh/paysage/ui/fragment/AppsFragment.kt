@@ -2,13 +2,13 @@ package com.chekh.paysage.ui.fragment
 
 import android.os.Bundle
 import android.view.View.OVER_SCROLL_NEVER
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.applyPadding
 import com.chekh.paysage.ui.fragment.core.ViewModelFragment
 import com.chekh.paysage.ui.adapter.AppsCategoryAdapter
 import com.chekh.paysage.extension.observe
+import com.chekh.paysage.ui.view.core.smoothscroll.SmoothScrollLinearLayoutManager
 import com.chekh.paysage.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_apps.*
 
@@ -22,7 +22,7 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = AppsCategoryAdapter()
+        adapter = AppsCategoryAdapter(categoryRecycler)
         onAppsAdapterCreated()
     }
 
@@ -35,12 +35,10 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     private fun initCategoryRecycler() {
         categoryRecycler.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = SmoothScrollLinearLayoutManager(context)
             overScrollMode = OVER_SCROLL_NEVER
         }
         categoryRecycler.adapter = adapter
-        adapter?.setScrollToTopHeaderAction { categoryRecycler.scrollToTopHeader() }
-        adapter?.setAnimationItemChangedAction { categoryRecycler.scheduleLayoutAnimation() }
         recyclerCreatedListener?.invoke(categoryRecycler)
     }
 
@@ -58,7 +56,6 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
 
     fun collapseAllCategories() {
         adapter?.collapseAll()
-        categoryRecycler.scrollToPosition(0)
     }
 
     companion object {

@@ -56,7 +56,6 @@ abstract class PaysageDatabase : RoomDatabase() {
 
             private fun SupportSQLiteDatabase.enableWal() {
                 enableWriteAheadLogging()
-                execSQL("PRAGMA synchronous=NORMAL")
             }
 
             private fun prepopulateCategories() {

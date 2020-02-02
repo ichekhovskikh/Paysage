@@ -14,7 +14,7 @@ import com.chekh.paysage.model.AppInfo
 import com.chekh.paysage.ui.adapter.AppsListAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chekh.paysage.ui.anim.TransformAnimation
-import com.chekh.paysage.ui.util.MetricsConvector
+import com.chekh.paysage.ui.util.MetricsConverter
 
 class AppsDataView @JvmOverloads constructor(
     context: Context,
@@ -41,6 +41,8 @@ class AppsDataView @JvmOverloads constructor(
             }
         }
 
+    var onExpandCancelListener: ((isExpanded: Boolean) -> Unit)? = null
+
     init {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
         minimumHeight = resources.getDimension(R.dimen.default_minimum_categories_size).toInt()
@@ -59,7 +61,7 @@ class AppsDataView @JvmOverloads constructor(
             overScrollMode = View.OVER_SCROLL_NEVER
             layoutManager = linearLayoutManager
             clipToPadding = false
-            val padding = MetricsConvector.convertDpToPx(6f)
+            val padding = MetricsConverter.convertDpToPx(6f)
             setPadding(padding, padding, padding, padding)
         }
         adapter = AppsListAdapter()
@@ -85,7 +87,9 @@ class AppsDataView @JvmOverloads constructor(
             appsView.layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
             appsView.measure(MATCH_PARENT, WRAP_CONTENT)
             val newHeight = appsView.measuredHeight
-            transformAnimation.transform(currentHeight, newHeight)
+            transformAnimation.transform(currentHeight, newHeight) {
+                onExpandCancelListener?.invoke(expanded)
+            }
         }
     }
 }

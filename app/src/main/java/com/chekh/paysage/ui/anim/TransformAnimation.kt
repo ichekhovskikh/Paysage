@@ -9,17 +9,21 @@ class TransformAnimation(
     var duration: Long = DURATION_DEFAULT
 ) {
 
-    fun transform(from: Int, to: Int) {
+    fun transform(from: Int, to: Int, onCancel: (() -> Unit)? = null) {
         val distance = to - from
         view.visibility = View.VISIBLE
         val anim = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                val interpolatedDistance = (distance * interpolatedTime).toInt()
                 view.layoutParams.height = if (interpolatedTime == 1f) {
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 } else {
-                    (from + distance * interpolatedTime).toInt() + 1
+                    from + interpolatedDistance + 1
                 }
                 view.requestLayout()
+                if (interpolatedTime == 1f) {
+                    onCancel?.invoke()
+                }
             }
 
             override fun willChangeBounds() = true
@@ -29,6 +33,6 @@ class TransformAnimation(
     }
 
     companion object {
-        private const val DURATION_DEFAULT = 200L
+        private const val DURATION_DEFAULT = 50L
     }
 }

@@ -1,19 +1,16 @@
 package com.chekh.paysage.ui.view.core.stickyheader
 
-import android.widget.AbsListView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.chekh.paysage.extension.absoluteHeight
 import com.chekh.paysage.ui.view.core.stickyheader.StickyAdapter.StickyViewHolder
 
 class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
 
-    private var scrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE
     var cachedTopItemHolder: StickyViewHolder<*, *>? = null
         private set
 
-    override fun onScrollStateChanged(recyclerView: RecyclerView, scrollState: Int) {
-        this.scrollState = scrollState
-    }
+    var onCancelScrollAction: (() -> Unit)? = null
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         val holder = recyclerView.getChildAt(0).tag as StickyViewHolder<*, *>? ?: return
@@ -36,6 +33,13 @@ class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
             header.translationY = -item.top.toFloat()
         } else if (item.top < 0) {
             header.translationY = (item.height - headerHeight).toFloat()
+        }
+    }
+
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        if (newState == SCROLL_STATE_IDLE) {
+            onCancelScrollAction?.invoke()
+            onCancelScrollAction = null
         }
     }
 }

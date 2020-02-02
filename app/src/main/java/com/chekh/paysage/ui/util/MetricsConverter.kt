@@ -2,7 +2,7 @@ package com.chekh.paysage.ui.util
 
 import com.chekh.paysage.PaysageApp.Companion.launcher
 
-object MetricsConvector {
+object MetricsConverter {
 
     fun convertDpToPx(dp: Float): Int {
         val metrics = launcher.resources.displayMetrics

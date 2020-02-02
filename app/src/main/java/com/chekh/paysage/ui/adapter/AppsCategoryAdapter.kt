@@ -7,41 +7,35 @@ import com.chekh.paysage.ui.view.app.AppsDataView
 import com.chekh.paysage.ui.view.app.AppsHeaderView
 import com.chekh.paysage.ui.view.core.ArrowItemView
 import com.chekh.paysage.ui.view.core.stickyheader.StickyAdapter
+import com.chekh.paysage.ui.view.core.stickyheader.StickyRecyclerView
 
-class AppsCategoryAdapter :
-    StickyAdapter<AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>() {
+class AppsCategoryAdapter(
+    private val recycler: StickyRecyclerView
+) : StickyAdapter<AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>() {
 
-    private var scrollToTopHeaderAction: (() -> Unit)? = null
-    private var animationItemChangedAction: (() -> Unit)? = null
-
-    private val savedCategoryStates = mutableMapOf<String, CategoryState>()
-    private var items = listOf<AppsGroupByCategory>()
+    private var items = listOf<AppsGroupByCategoryWrapper>()
 
     fun setAppsCategories(appsCategory: List<AppsGroupByCategory>, isAnimate: Boolean = false) {
-        items = appsCategory.sortedBy { it.category.position }
-        savedCategoryStates.clear()
+        items = appsCategory
+            .sortedBy { it.category.position }
+            .map { AppsGroupByCategoryWrapper(it) }
         notifyDataSetChanged()
         if (isAnimate) {
-            animationItemChangedAction?.invoke()
+            recycler.scheduleLayoutAnimation()
         }
     }
 
     fun collapseAll() {
-        savedCategoryStates.clear()
+        items.forEach { it.clearState() }
         notifyDataSetChanged()
+        recycler.scrollToPosition(0)
     }
 
-    override fun onCreateHeaderViewHolder(parent: ViewGroup, viewType: Int): AppsHeaderViewHolder {
-        return AppsHeaderViewHolder(
-            AppsHeaderView(parent.context)
-        )
-    }
+    override fun onCreateHeaderViewHolder(parent: ViewGroup, viewType: Int): AppsHeaderViewHolder =
+        AppsHeaderViewHolder(AppsHeaderView(parent.context))
 
-    override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): AppsDataViewHolder {
-        return AppsDataViewHolder(
-            AppsDataView(parent.context)
-        )
-    }
+    override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): AppsDataViewHolder =
+        AppsDataViewHolder(AppsDataView(parent.context), recycler::onExpandedItemStateChanged)
 
     override fun onBind(
         parent: ViewGroup,
@@ -54,20 +48,20 @@ class AppsCategoryAdapter :
         headerHolder.bind(item)
         contentHolder.bind(item)
         val headerArrow = headerHolder.view.arrowItemView
-        if (headerArrow.onExpandedListener == null) {
-            headerArrow.onExpandedListener = HeaderExpandedListener(parent, contentHolder.view)
-        }
+        headerArrow.onExpandedListener =
+            headerArrow.onExpandedListener ?: HeaderExpandedListener(parent, contentHolder.view)
         restoreState(headerHolder, contentHolder)
     }
 
     private fun saveState(headerHolder: AppsHeaderViewHolder, contentHolder: AppsDataViewHolder) {
-        headerHolder.view.categoryId?.let {
-            val content = contentHolder.view
-            savedCategoryStates[it] =
-                CategoryState(
-                    content.isExpanded,
-                    content.appsScrollX
-                )
+        headerHolder.view.categoryId?.let { categoryId ->
+            items
+                .find { it.data.category.id == categoryId }
+                ?.let {
+                    val content = contentHolder.view
+                    it.isExpanded = content.isExpanded
+                    it.scrollX = content.appsScrollX
+                }
         }
     }
 
@@ -77,7 +71,7 @@ class AppsCategoryAdapter :
     ) {
         val header = headerHolder.view
         val content = contentHolder.view
-        val saved = savedCategoryStates[header.categoryId]
+        val saved = items.find { it.data.category.id == header.categoryId }
         val expanded = saved?.isExpanded ?: false
         val scrollX = saved?.scrollX ?: 0
         header.arrowItemView.nonAnimationExpand(expanded)
@@ -87,29 +81,35 @@ class AppsCategoryAdapter :
 
     override fun getItemCount() = items.size
 
-    fun setScrollToTopHeaderAction(action: () -> Unit) {
-        scrollToTopHeaderAction = action
-    }
-
-    fun setAnimationItemChangedAction(action: () -> Unit) {
-        animationItemChangedAction = action
-    }
-
     class AppsHeaderViewHolder(val view: AppsHeaderView) : RecyclerView.ViewHolder(view) {
 
-        fun bind(appCategory: AppsGroupByCategory) {
-            view.setCategory(appCategory.category)
+        fun bind(appCategory: AppsGroupByCategoryWrapper) {
+            view.setCategory(appCategory.data.category)
         }
     }
 
-    class AppsDataViewHolder(val view: AppsDataView) : RecyclerView.ViewHolder(view) {
+    class AppsDataViewHolder(
+        val view: AppsDataView,
+        private val onExpandCancelListener: (isExpanded: Boolean) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
 
-        fun bind(appCategory: AppsGroupByCategory) {
-            view.setApps(appCategory.apps)
+        fun bind(appCategory: AppsGroupByCategoryWrapper) {
+            view.onExpandCancelListener = onExpandCancelListener
+            view.setApps(appCategory.data.apps)
+
         }
     }
 
-    private data class CategoryState(var isExpanded: Boolean, var scrollX: Int)
+    data class AppsGroupByCategoryWrapper(
+        val data: AppsGroupByCategory,
+        var isExpanded: Boolean = false,
+        var scrollX: Int = 0
+    ) {
+        fun clearState() {
+            isExpanded = false
+            scrollX = 0
+        }
+    }
 
     private inner class HeaderExpandedListener(
         var parent: ViewGroup,
@@ -119,9 +119,12 @@ class AppsCategoryAdapter :
         override fun onAnimateExpandedClick(isExpanded: Boolean) {
             if (isExpanded != data.isExpanded) {
                 if (parent.top < 0) {
-                    scrollToTopHeaderAction?.invoke()
+                    recycler.scrollToTopHeader {
+                        data.animationExpand(isExpanded)
+                    }
+                } else {
+                    data.animationExpand(isExpanded)
                 }
-                data.animationExpand(isExpanded)
             }
         }
 
