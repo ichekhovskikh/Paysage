@@ -1,0 +1,95 @@
+package com.chekh.paysage.feature.home.apps.view
+
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.chekh.paysage.R
+import com.chekh.paysage.model.AppInfo
+import com.chekh.paysage.feature.home.apps.adapter.AppsListAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import com.chekh.paysage.ui.anim.TransformAnimation
+import com.chekh.paysage.ui.util.MetricsConverter
+
+class AppsDataView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : FrameLayout(context, attrs, defStyle) {
+
+    private lateinit var appsView: RecyclerView
+    private lateinit var adapter: AppsListAdapter
+
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
+    private var transformAnimation: TransformAnimation
+
+    var isExpanded = false
+        private set
+
+    var appsScrollX = 0
+        get() = if (::appsView.isInitialized) appsView.computeHorizontalScrollOffset() else 0
+        set(value) {
+            if (::appsView.isInitialized) {
+                field = value
+                linearLayoutManager.scrollToPositionWithOffset(0, -value)
+            }
+        }
+
+    var onExpandCancelListener: ((isExpanded: Boolean) -> Unit)? = null
+
+    init {
+        layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        minimumHeight = resources.getDimension(R.dimen.default_minimum_categories_size).toInt()
+        //TODO set padding
+        setBackgroundResource(R.drawable.background_grey_rounded)
+        initAppsView()
+        transformAnimation = TransformAnimation(appsView)
+        addView(appsView)
+    }
+
+    private fun initAppsView() {
+        linearLayoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+        gridLayoutManager = GridLayoutManager(context, 2)
+        appsView = RecyclerView(context).apply {
+            layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+            overScrollMode = View.OVER_SCROLL_NEVER
+            layoutManager = linearLayoutManager
+            clipToPadding = false
+            val padding = MetricsConverter.convertDpToPx(6f)
+            setPadding(padding, padding, padding, padding)
+        }
+        adapter = AppsListAdapter()
+        appsView.adapter = adapter
+    }
+
+    fun setApps(apps: List<AppInfo>) {
+        adapter.setApps(apps)
+    }
+
+    fun expand(expanded: Boolean) {
+        if (isExpanded != expanded) {
+            isExpanded = expanded
+            appsView.layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
+        }
+    }
+
+    fun animationExpand(expanded: Boolean) {
+        if (isExpanded != expanded) {
+            isExpanded = expanded
+            val currentHeight = appsView.measuredHeight
+            appsView.layoutParams.height = currentHeight
+            appsView.layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
+            appsView.measure(MATCH_PARENT, WRAP_CONTENT)
+            val newHeight = appsView.measuredHeight
+            transformAnimation.transform(currentHeight, newHeight) {
+                onExpandCancelListener?.invoke(expanded)
+            }
+        }
+    }
+}

@@ -33,6 +33,6 @@ class TransformAnimation(
     }
 
     companion object {
-        private const val DURATION_DEFAULT = 50L
+        private const val DURATION_DEFAULT = 100L
     }
 }
