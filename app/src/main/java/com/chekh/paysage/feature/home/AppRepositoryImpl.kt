@@ -48,11 +48,11 @@ class AppRepositoryImpl : AppRepository {
             if (app == null) {
                 val categoryId = database.packageDao
                     .getCategoryId(activityInfo.componentName.packageName) ?: CategoryTitle.OTHER.id
-                mergedApps.add(AppInfo(categoryId, activityInfo))
+                mergedApps.add(AppInfo.create(categoryId, activityInfo))
             } else {
                 app.title = applicationInfo.loadLabel(appManager.packageManager).toString()
-                app.icon = applicationInfo.loadIcon(appManager.packageManager)
-                    .toBitmap()  /*TODO IconPack*/
+                /*TODO IconPack*/
+                app.icon = applicationInfo.loadIcon(appManager.packageManager).toBitmap()
                 app.iconColor = IconColor.get(app.icon)
                 mergedApps.add(app)
             }

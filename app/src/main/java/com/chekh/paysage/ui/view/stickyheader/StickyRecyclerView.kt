@@ -24,13 +24,4 @@ class StickyRecyclerView @JvmOverloads constructor(
             smoothScrollToPosition(position)
         }
     }
-
-    /**
-     * hack to perform a artificial scroll after resizing StickyRecyclerView
-     */
-    fun onExpandedItemStateChanged(isExpanded: Boolean) {
-        if (!isExpanded) {
-            post { scrollListener.onScrolled(this, 1, 0) }
-        }
-    }
 }

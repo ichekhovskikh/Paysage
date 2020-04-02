@@ -11,8 +11,7 @@ class SmoothScrollLinearLayoutManager @JvmOverloads constructor(
     reverseLayout: Boolean = false
 ) : LinearLayoutManager(context, orientation, reverseLayout) {
 
-    private val smoothScroller =
-        TopSmoothScroller(context, this)
+    private val smoothScroller = TopSmoothScroller(context, this)
 
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,

@@ -25,10 +25,10 @@ class AppView @JvmOverloads constructor(
         private set
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_app, this, true)
+        LayoutInflater.from(context).inflate(R.layout.view_app, this)
         layoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         orientation = VERTICAL
-        val padding = MetricsConverter.convertDpToPx(6f)
+        val padding = MetricsConverter(context).dpToPx(6f)
         setPadding(padding, padding, padding, padding)
         iconView = findViewById(R.id.icon)
         titleView = findViewById(R.id.title)

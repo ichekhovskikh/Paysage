@@ -23,53 +23,39 @@ class RoundedFrameLayout @JvmOverloads constructor(
     init {
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.RoundedFrameLayout)
         attributes.apply {
-            setCornerRadius(getDimension(R.styleable.RoundedFrameLayout_cornerRadius, 0f))
-            topLeftCornerRadius = getDimension(
-                R.styleable.RoundedFrameLayout_topLeftCornerRadius, topLeftCornerRadius
+            val defaultCornerRadius = getDimension(R.styleable.RoundedFrameLayout_cornerRadius, 0f)
+            val topLeft = getDimension(
+                R.styleable.RoundedFrameLayout_topLeftCornerRadius,
+                defaultCornerRadius
             )
-            topRightCornerRadius = getDimension(
-                R.styleable.RoundedFrameLayout_topRightCornerRadius, topRightCornerRadius
+            val topRight = getDimension(
+                R.styleable.RoundedFrameLayout_topRightCornerRadius,
+                defaultCornerRadius
             )
-            bottomLeftCornerRadius = getDimension(
-                R.styleable.RoundedFrameLayout_bottomLeftCornerRadius, bottomLeftCornerRadius
+            val bottomLeft = getDimension(
+                R.styleable.RoundedFrameLayout_bottomLeftCornerRadius,
+                defaultCornerRadius
             )
-            bottomRightCornerRadius = getDimension(
-                R.styleable.RoundedFrameLayout_bottomRightCornerRadius, bottomRightCornerRadius
+            val bottomRight = getDimension(
+                R.styleable.RoundedFrameLayout_bottomRightCornerRadius,
+                defaultCornerRadius
             )
+            setCornerRadius(topLeft, topRight, bottomLeft, bottomRight)
         }
         attributes.recycle()
         setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
 
-    private fun setCornerRadius(cornerRadius: Float) {
-        setCornerRadius(cornerRadius, true)
-    }
-
-    private fun setCornerRadius(cornerRadius: Float, invalidateRequired: Boolean) {
-        topLeftCornerRadius = cornerRadius
-        topRightCornerRadius = cornerRadius
-        bottomLeftCornerRadius = cornerRadius
-        bottomRightCornerRadius = cornerRadius
-        if (invalidateRequired) invalidate()
-    }
-
-    fun setTopLeftCornerRadius(topLeftCornerRadius: Float) {
-        this.topLeftCornerRadius = topLeftCornerRadius
-        invalidate()
-    }
-
-    fun setTopRightCornerRadius(topRightCornerRadius: Float) {
-        this.topRightCornerRadius = topRightCornerRadius
-        invalidate()
-    }
-
-    fun setBottomLeftCornerRadius(bottomLeftCornerRadius: Float) {
-        this.bottomLeftCornerRadius = bottomLeftCornerRadius
-        invalidate()
-    }
-
-    fun setBottomRightCornerRadius(bottomRightCornerRadius: Float) {
-        this.bottomRightCornerRadius = bottomRightCornerRadius
+    private fun setCornerRadius(
+        topLeft: Float = topLeftCornerRadius,
+        topRight: Float = topRightCornerRadius,
+        bottomLeft: Float = bottomLeftCornerRadius,
+        bottomRight: Float = bottomRightCornerRadius
+    ) {
+        topLeftCornerRadius = topLeft
+        topRightCornerRadius = topRight
+        bottomLeftCornerRadius = bottomLeft
+        bottomRightCornerRadius = bottomRight
         invalidate()
     }
 

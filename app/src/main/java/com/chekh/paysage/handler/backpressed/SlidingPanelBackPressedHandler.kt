@@ -1,4 +1,4 @@
-package com.chekh.paysage.handler
+package com.chekh.paysage.handler.backpressed
 
 import androidx.fragment.app.FragmentManager
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout

@@ -1,12 +1,12 @@
 package com.chekh.paysage.provider
 
-import com.chekh.paysage.PaysageApp
+import android.content.Context
 import com.chekh.paysage.model.PackageInfo
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class PackagesProvider : Provider<List<PackageInfo>> {
+class PackagesProvider(private val context: Context) : Provider<List<PackageInfo>> {
 
     override fun provide(): List<PackageInfo> {
         val packages = mutableListOf<PackageInfo>()
@@ -28,7 +28,7 @@ class PackagesProvider : Provider<List<PackageInfo>> {
 
     private fun readDefaultPackagesFromAssets(): String {
         val builder = StringBuilder()
-        val asset = PaysageApp.launcher.assets.open(CATEGORIES_FILE_NAME)
+        val asset = context.assets.open(CATEGORIES_FILE_NAME)
         val reader = BufferedReader(InputStreamReader(asset))
         var line = reader.readLine()
         while (line != null) {

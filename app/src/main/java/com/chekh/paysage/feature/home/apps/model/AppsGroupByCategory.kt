@@ -7,9 +7,9 @@ import com.chekh.paysage.model.AppInfo
 import com.chekh.paysage.model.CategoryInfo
 
 @Entity
-class AppsGroupByCategory {
+data class AppsGroupByCategory(
     @Embedded
-    lateinit var category: CategoryInfo
+    var category: CategoryInfo? = null,
     @Relation(entity = AppInfo::class, parentColumn = "id", entityColumn = "categoryId")
-    lateinit var apps: List<AppInfo>
-}
+    var apps: List<AppInfo> = emptyList()
+)

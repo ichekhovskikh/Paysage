@@ -7,25 +7,24 @@ import com.chekh.paysage.R
 import com.chekh.paysage.extension.inTransaction
 import com.chekh.paysage.handler.SearchBarSlideHandler
 import com.chekh.paysage.ui.fragment.ViewModelFragment
-import com.chekh.paysage.handler.SlidingPanelBackPressedHandler
+import com.chekh.paysage.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
 import com.chekh.paysage.extension.observe
 import com.chekh.paysage.extension.setMarginTop
-import com.chekh.paysage.extension.statusDarkBarMode
 import com.chekh.paysage.feature.home.apps.fragment.AppsFragment
 import com.chekh.paysage.feature.home.desktop.fragment.DesktopFragment
-import com.chekh.paysage.handler.BackPressedHandler
+import com.chekh.paysage.handler.backpressed.BackPressedHandler
+import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
+import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : ViewModelFragment<HomeViewModel>() {
 
-    private var desktopFragment: DesktopFragment? = null
-    private var appsFragment: AppsFragment? = null
-
     private val backPressedHandler: BackPressedHandler by lazy {
         SlidingPanelBackPressedHandler(slidingPanel, childFragmentManager)
     }
+
+    private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }
 
     override val layoutId = R.layout.fragment_home
     override val viewModelClass = HomeViewModel::class.java
@@ -39,29 +38,22 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
         super.onViewModelCreated(savedInstanceState)
         val defaultSearchMarginTop = searchBar.marginTop
         val defaultSlideableMarginTop = slideable.marginTop
-        viewModel.statusBarHeightLiveData.observe(this) { height ->
+        viewModel.windowInsets.observe(this) { insets ->
+            val height = insets.systemWindowInsetTop
             searchBar.setMarginTop(defaultSearchMarginTop + height)
             slideable.setMarginTop(defaultSlideableMarginTop + height)
         }
     }
 
     private fun setupSlidingPanel() {
-        initFragmentsIfNeed()
+        val desktopFragment = DesktopFragment.instance()
+        val appsFragment = AppsFragment.instance()
         childFragmentManager.inTransaction {
-            replace(R.id.main, desktopFragment!!)
-            replace(R.id.slideable, appsFragment!!)
+            replace(R.id.main, desktopFragment)
+            replace(R.id.slideable, appsFragment)
         }
+        appsFragment.setParentSlidingPanel(slidingPanel)
         slidingPanel.addPanelSlideListener(onSlideListener)
-    }
-
-    private fun initFragmentsIfNeed() {
-        if (desktopFragment == null) {
-            desktopFragment = DesktopFragment.instance()
-        }
-        if (appsFragment == null) {
-            appsFragment = AppsFragment.instance()
-            appsFragment?.setOnRecyclerCreatedListener { slidingPanel.setScrollableView(it) }
-        }
     }
 
     private val onSlideListener = object : SlidingUpPanelLayout.SimplePanelSlideListener() {
@@ -70,17 +62,11 @@ class HomeFragment : ViewModelFragment<HomeViewModel>() {
 
         override fun onPanelSlide(panel: View?, slideOffset: Float) {
             if (slideOffset >= slidingPanel.anchorPoint - 0.1) {
-                activity?.statusDarkBarMode(true)
+                activity?.let { statusBarDecorator.statusBarDarkMode(it, true) }
             } else {
-                activity?.statusDarkBarMode(false)
+                activity?.let { statusBarDecorator.statusBarDarkMode(it, false) }
             }
             searchBarSlideHandler.slideFromTop(transformOffset(slideOffset))
-        }
-
-        override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
-            if (newState == PanelState.HIDDEN || newState == PanelState.COLLAPSED) {
-                appsFragment?.collapseAllCategories()
-            }
         }
 
         private fun transformOffset(offset: Float): Float {

@@ -23,7 +23,7 @@ import com.chekh.paysage.provider.Provider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [AppInfo::class, CategoryInfo::class, PackageInfo::class], version = 3)
+@Database(entities = [AppInfo::class, CategoryInfo::class, PackageInfo::class], version = 1)
 @TypeConverters(
     BooleanTypeConverter::class,
     IconColorTypeConverter::class,
@@ -39,11 +39,11 @@ abstract class PaysageDatabase : RoomDatabase() {
     companion object {
         val instance: PaysageDatabase by lazy { createInstance(launcher) }
 
-        private val packagesProvider: Provider<List<PackageInfo>> by lazy { PackagesProvider() }
+        private val packagesProvider: Provider<List<PackageInfo>> by lazy { PackagesProvider(launcher) }
         private val categoriesProvider: Provider<List<CategoryInfo>> by lazy { CategoriesProvider() }
 
         private fun createInstance(context: Context) =
-            Room.databaseBuilder(context, PaysageDatabase::class.java, "paysageDebug.db")
+            Room.databaseBuilder(context, PaysageDatabase::class.java, "debug.db")
                 .addCallback(prepopulateDatabaseCallback)
                 .addMigrations(*Migrations.get())
                 .build()

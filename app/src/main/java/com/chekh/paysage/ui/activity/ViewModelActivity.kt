@@ -2,10 +2,11 @@ package com.chekh.paysage.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.chekh.paysage.handler.ContainerBackPressedHandler
+import com.chekh.paysage.handler.backpressed.ContainerBackPressedHandler
 
 abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
 
@@ -21,7 +22,6 @@ abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
         createViewModel(savedInstanceState)
-        initViewModel()
     }
 
     private fun createViewModel(savedInstanceState: Bundle?) {
@@ -29,9 +29,8 @@ abstract class ViewModelActivity<VM : ViewModel> : AppCompatActivity() {
         onViewModelCreated(savedInstanceState)
     }
 
+    @CallSuper
     protected open fun onViewModelCreated(savedInstanceState: Bundle?) {}
-
-    protected open fun initViewModel() {}
 
     override fun onBackPressed() {
         backPressedHandler.onBackPressed()

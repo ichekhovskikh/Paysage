@@ -5,8 +5,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.inTransaction
-import com.chekh.paysage.extension.setTransparentStatusBar
 import com.chekh.paysage.ui.activity.ViewModelActivity
+import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
+import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : ViewModelActivity<HomeViewModel>() {
@@ -14,19 +15,21 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
     override val viewModelClass = HomeViewModel::class.java
     override val layoutId = R.layout.activity_home
 
+    private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }
+
     private var fragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTransparentStatusBar()
+        statusBarDecorator.setTransparentStatusBar(this)
         addHomeFragmentIfNeed()
     }
 
-    override fun initViewModel() {
-        rootLayout.setOnApplyWindowInsetsListener { _, insets ->
+    override fun onViewModelCreated(savedInstanceState: Bundle?) {
+        super.onViewModelCreated(savedInstanceState)
+        content.setOnApplyWindowInsetsListener { _, insets ->
             setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
-            viewModel.statusBarHeightLiveData.value = insets.systemWindowInsetTop
-            viewModel.navigationBarHeightLiveData.value = insets.systemWindowInsetBottom
+            viewModel.windowInsets.value = insets
             insets
         }
         viewModel.enableObserveAppsChanging()
@@ -36,10 +39,11 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
     private fun addHomeFragmentIfNeed() {
         fragment = supportFragmentManager.fragments.firstOrNull()
         if (fragment == null) {
-            fragment = HomeFragment.instance()
+            val homeFragment = HomeFragment.instance()
             supportFragmentManager.inTransaction {
-                add(R.id.content, fragment!!)
+                add(R.id.container, homeFragment)
             }
+            fragment = homeFragment
         }
     }
 

@@ -5,8 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.FrameLayout
-import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
@@ -20,76 +18,66 @@ class AppsDataView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
+) : RecyclerView(context, attrs, defStyle) {
 
-    private lateinit var appsView: RecyclerView
-    private lateinit var adapter: AppsListAdapter
+    private val adapter: AppsListAdapter
 
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var gridLayoutManager: GridLayoutManager
-    private var transformAnimation: TransformAnimation
+    private val linearLayoutManager: LinearLayoutManager
+    private val gridLayoutManager: GridLayoutManager
+    private val transformAnimation: TransformAnimation
 
-    var isExpanded = false
-        private set
+    private var expanded = false
 
-    var appsScrollX = 0
-        get() = if (::appsView.isInitialized) appsView.computeHorizontalScrollOffset() else 0
+    var isExpanded
+        get() = expanded
         set(value) {
-            if (::appsView.isInitialized) {
-                field = value
-                linearLayoutManager.scrollToPositionWithOffset(0, -value)
-            }
+            if (this.expanded == value) return
+            this.expanded = value
+            layoutManager = if (this.expanded) gridLayoutManager else linearLayoutManager
         }
 
-    var onExpandCancelListener: ((isExpanded: Boolean) -> Unit)? = null
+    var appsScrollX = 0
+        get() = computeHorizontalScrollOffset()
+        set(value) {
+            field = value
+            linearLayoutManager.scrollToPositionWithOffset(0, -value)
+        }
 
     init {
         layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
         minimumHeight = resources.getDimension(R.dimen.default_minimum_categories_size).toInt()
-        //TODO set padding
         setBackgroundResource(R.drawable.background_grey_rounded)
-        initAppsView()
-        transformAnimation = TransformAnimation(appsView)
-        addView(appsView)
-    }
+        overScrollMode = View.OVER_SCROLL_NEVER
+        clipToPadding = false
+        val padding = MetricsConverter(context).dpToPx(6f)
+        setPadding(padding, padding, padding, padding)
 
-    private fun initAppsView() {
         linearLayoutManager = LinearLayoutManager(context, HORIZONTAL, false)
         gridLayoutManager = GridLayoutManager(context, 2)
-        appsView = RecyclerView(context).apply {
-            layoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            overScrollMode = View.OVER_SCROLL_NEVER
-            layoutManager = linearLayoutManager
-            clipToPadding = false
-            val padding = MetricsConverter.convertDpToPx(6f)
-            setPadding(padding, padding, padding, padding)
-        }
+        layoutManager = linearLayoutManager
+
         adapter = AppsListAdapter()
-        appsView.adapter = adapter
+        setAdapter(adapter)
+        transformAnimation = TransformAnimation(this)
     }
 
     fun setApps(apps: List<AppInfo>) {
         adapter.setApps(apps)
     }
 
-    fun expand(expanded: Boolean) {
-        if (isExpanded != expanded) {
-            isExpanded = expanded
-            appsView.layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
-        }
+    fun setOnAnimationCancelListener(onCancel: () -> Unit) {
+        transformAnimation.onAnimationCancelListener = onCancel
     }
 
-    fun animationExpand(expanded: Boolean) {
-        if (isExpanded != expanded) {
-            isExpanded = expanded
-            val currentHeight = appsView.measuredHeight
-            appsView.layoutParams.height = currentHeight
-            appsView.layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
-            appsView.measure(MATCH_PARENT, WRAP_CONTENT)
-            val newHeight = appsView.measuredHeight
-            transformAnimation.transform(currentHeight, newHeight) {
-                onExpandCancelListener?.invoke(expanded)
-            }
+    fun animatedExpand(expanded: Boolean) {
+        if (this.expanded != expanded) {
+            this.expanded = expanded
+            val currentHeight = measuredHeight
+            layoutParams.height = currentHeight
+            layoutManager = if (this.expanded) gridLayoutManager else linearLayoutManager
+            measure(0, WRAP_CONTENT)
+            val newHeight = measuredHeight
+            transformAnimation.transform(currentHeight, newHeight)
         }
     }
 }

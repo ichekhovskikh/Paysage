@@ -1,5 +1,6 @@
 package com.chekh.paysage.ui.util
 
+import android.content.Context
 import android.graphics.*
 import android.graphics.Color.argb
 import android.graphics.drawable.BitmapDrawable
@@ -14,11 +15,8 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
-import com.chekh.paysage.PaysageApp.Companion.launcher
 
 private const val LINE_THICKNESS = 15f
-
-private val renderScript: RenderScript by lazy { RenderScript.create(launcher) }
 
 fun Bitmap.toBase64(): String {
     val byteArrayOutputStream = ByteArrayOutputStream()
@@ -73,7 +71,8 @@ fun View.makeBitmapScreenshot(scaleFactor: Float): Bitmap {
     return bitmap
 }
 
-fun Bitmap.blur(radius: Float) {
+fun Bitmap.blur(context: Context, radius: Float) {
+    val renderScript = RenderScript.create(context)
     val input = Allocation.createFromBitmap(renderScript, this)
     val output = Allocation.createTyped(renderScript, input.type)
     val script = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))

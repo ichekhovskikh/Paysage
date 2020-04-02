@@ -13,10 +13,6 @@ import kotlinx.android.extensions.LayoutContainer
 abstract class StickyAdapter<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.ViewHolder> :
     RecyclerView.Adapter<StickyAdapter.StickyViewHolder<HVH, CVH>>() {
 
-    init {
-        this.setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StickyViewHolder<HVH, CVH> {
         val headerHolder = onCreateHeaderViewHolder(parent, viewType)
         val dataHolder = onCreateContentViewHolder(parent, viewType)
@@ -28,7 +24,7 @@ abstract class StickyAdapter<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.V
     }
 
     override fun onBindViewHolder(holder: StickyViewHolder<HVH, CVH>, position: Int) {
-        onBind(holder.itemView as ViewGroup, holder.header, holder.content, position)
+        onBindViewHolder(holder.itemView as ViewGroup, holder.header, holder.content, position)
     }
 
     override fun getItemId(position: Int): Long = position.toLong()
@@ -37,7 +33,7 @@ abstract class StickyAdapter<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.V
 
     abstract fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): CVH
 
-    abstract fun onBind(parent: ViewGroup, headerHolder: HVH, contentHolder: CVH, position: Int)
+    abstract fun onBindViewHolder(parent: ViewGroup, headerHolder: HVH, contentHolder: CVH, position: Int)
 
     class StickyViewHolder<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.ViewHolder>(
         parent: ViewGroup,
@@ -50,7 +46,7 @@ abstract class StickyAdapter<HVH : RecyclerView.ViewHolder, CVH : RecyclerView.V
         init {
             containerView.apply {
                 val marginLayoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
-                marginLayoutParams.bottomMargin = MetricsConverter.convertDpToPx(8f)
+                marginLayoutParams.bottomMargin = MetricsConverter(context).dpToPx(8f)
                 layoutParams = marginLayoutParams
                 header.itemView.measure(WRAP_CONTENT, WRAP_CONTENT)
                 content.itemView.setMarginTop(header.itemView.absoluteHeight)

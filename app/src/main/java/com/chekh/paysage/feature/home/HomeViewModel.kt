@@ -1,5 +1,6 @@
 package com.chekh.paysage.feature.home
 
+import android.view.WindowInsets
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,8 +14,7 @@ class HomeViewModel : ViewModel() {
 
     private val repository: AppRepository by lazy { AppRepositoryImpl() }
 
-    val navigationBarHeightLiveData = MutableLiveData<Int>()
-    val statusBarHeightLiveData = MutableLiveData<Int>()
+    val windowInsets = MutableLiveData<WindowInsets>()
 
     fun initApps(onCancelCallback: (() -> Unit)? = null) {
         GlobalScope.launch {

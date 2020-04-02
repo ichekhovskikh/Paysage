@@ -3,14 +3,15 @@ package com.chekh.paysage.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.view.isVisible
 import com.chekh.paysage.R
 
 class ShadowView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : ImageView(context, attrs, defStyle) {
+) : AppCompatImageView(context, attrs, defStyle) {
 
     init {
         visibility = View.GONE
@@ -27,9 +28,7 @@ class ShadowView @JvmOverloads constructor(
     var shadowHeight
         get() = layoutParams.height
         set(height) {
-            if (height > 0) {
-                layoutParams.height = height
-                visibility = View.VISIBLE
-            } else visibility = View.GONE
+            isVisible = height > 0
+            layoutParams.height = height
         }
 }

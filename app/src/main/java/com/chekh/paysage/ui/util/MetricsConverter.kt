@@ -1,16 +1,16 @@
 package com.chekh.paysage.ui.util
 
-import com.chekh.paysage.PaysageApp.Companion.launcher
+import android.content.Context
 
-object MetricsConverter {
+class MetricsConverter(private val context: Context) {
 
-    fun convertDpToPx(dp: Float): Int {
-        val metrics = launcher.resources.displayMetrics
+    fun dpToPx(dp: Float): Int {
+        val metrics = context.resources.displayMetrics
         return (dp * metrics.density).toInt()
     }
 
-    fun convertPxToDp(px: Float): Float {
-        val metrics = launcher.resources.displayMetrics
+    fun pxToDp(px: Float): Float {
+        val metrics = context.resources.displayMetrics
         return px / metrics.density
     }
 }

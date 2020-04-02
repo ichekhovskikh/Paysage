@@ -1,9 +1,11 @@
-package com.chekh.paysage.handler
+package com.chekh.paysage.handler.backpressed
 
 import androidx.fragment.app.FragmentManager
 import com.chekh.paysage.ui.fragment.BaseFragment
 
-class ContainerBackPressedHandler(private val fragmentManager: FragmentManager) : BackPressedHandler {
+class ContainerBackPressedHandler(
+    private val fragmentManager: FragmentManager
+) : BackPressedHandler {
 
     override fun onBackPressed(): Boolean {
         val fragments = fragmentManager.fragments
