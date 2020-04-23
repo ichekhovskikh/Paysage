@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
             android:id="@+id/slidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            app:overlay="true"
             app:fadeColor="@color/white_alpha_90"
-            app:marginTopAnchorPoint="80dp"
+            app:marginTopAnchorPoint="@dimen/search_bar_height"
+            app:overlay="true"
             app:panelHeight="0dp">
 
         <FrameLayout
-                android:id="@+id/main"
+                android:id="@+id/desktop"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         <FrameLayout
-                android:id="@+id/slideable"
+                android:id="@+id/apps"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
     </com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_height="@dimen/search_bar_height"
             android:layout_gravity="top"
-            app:mt_roundedSearchBarEnabled="true"
-            app:mt_speechMode="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="8dp"
+            android:visibility="gone"
             app:mt_hint=""
             app:mt_placeholder="@string/search_apps"
             app:mt_placeholderColor="@android:color/darker_gray"
-            android:visibility="gone"/>
+            app:mt_roundedSearchBarEnabled="true"
+            app:mt_speechMode="true"
+            tools:visibility="visible" />
+
 </FrameLayout>

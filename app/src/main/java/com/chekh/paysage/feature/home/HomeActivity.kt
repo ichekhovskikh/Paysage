@@ -2,6 +2,7 @@ package com.chekh.paysage.feature.home
 
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsets
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.inTransaction
@@ -27,13 +28,13 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {
         super.onViewModelCreated(savedInstanceState)
-        content.setOnApplyWindowInsetsListener { _, insets ->
-            setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
-            viewModel.windowInsets.value = insets
-            insets
-        }
         viewModel.enableObserveAppsChanging()
         viewModel.initApps()
+    }
+
+    override fun onApplyWindowInsets(insets: WindowInsets) {
+        super.onApplyWindowInsets(insets)
+        setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
     }
 
     private fun addHomeFragmentIfNeed() {

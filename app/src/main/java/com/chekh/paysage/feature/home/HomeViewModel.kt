@@ -1,8 +1,6 @@
 package com.chekh.paysage.feature.home
 
-import android.view.WindowInsets
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
 import com.chekh.paysage.extension.observe
@@ -13,8 +11,6 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
 
     private val repository: AppRepository by lazy { AppRepositoryImpl() }
-
-    val windowInsets = MutableLiveData<WindowInsets>()
 
     fun initApps(onCancelCallback: (() -> Unit)? = null) {
         GlobalScope.launch {

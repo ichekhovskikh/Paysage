@@ -3,13 +3,14 @@ package com.chekh.paysage.feature.home.apps.fragment
 import android.os.Bundle
 import android.view.View
 import android.view.View.OVER_SCROLL_NEVER
+import android.view.WindowInsets
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.applyPadding
 import com.chekh.paysage.ui.fragment.ViewModelFragment
 import com.chekh.paysage.feature.home.apps.adapter.AppsCategoryAdapter
-import com.chekh.paysage.extension.observe
 import com.chekh.paysage.ui.view.smoothscroll.SmoothScrollLinearLayoutManager
 import com.chekh.paysage.feature.home.HomeViewModel
+import com.chekh.paysage.ui.util.MetricsConverter
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
 import kotlinx.android.synthetic.main.fragment_apps.*
@@ -26,15 +27,18 @@ class AppsFragment : ViewModelFragment<HomeViewModel>() {
         super.onViewModelCreated(savedInstanceState)
         adapter = AppsCategoryAdapter()
         onAppsAdapterCreated()
-
-        val defaultPaddingBottom = categoryRecycler.paddingBottom
-        viewModel.windowInsets.observe(this) { insets ->
-            val height = insets.systemWindowInsetBottom
-            categoryRecycler.applyPadding(bottom = defaultPaddingBottom + height)
-        }
         viewModel.getAppsGroupByCategories(this) { categories ->
             adapter?.setAppsCategories(categories)
         }
+    }
+
+    override fun onApplyWindowInsets(insets: WindowInsets) {
+        super.onApplyWindowInsets(insets)
+        val context = context ?: return
+
+        val defaultPaddingBottom = MetricsConverter(context).dpToPx(8f)
+        val height = insets.systemWindowInsetBottom
+        categoryRecycler.applyPadding(bottom = defaultPaddingBottom + height)
     }
 
     private fun onAppsAdapterCreated() {
