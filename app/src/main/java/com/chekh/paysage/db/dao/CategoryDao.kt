@@ -17,7 +17,7 @@ interface CategoryDao {
     fun getLiveAll(): LiveData<List<CategoryInfo>>
 
     @Transaction
-    @Query("SELECT * FROM category")
+    @Query("SELECT * FROM category WHERE category.id IN (SELECT categoryId FROM app)")
     fun getGroupByCategories(): LiveData<List<AppsGroupByCategory>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -40,9 +40,9 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
     private fun addHomeFragmentIfNeed() {
         fragment = supportFragmentManager.fragments.firstOrNull()
         if (fragment == null) {
-            val homeFragment = HomeFragment.instance()
+            val homeFragment = HomeFragment()
             supportFragmentManager.inTransaction {
-                add(R.id.container, homeFragment)
+                add(R.id.flContainer, homeFragment)
             }
             fragment = homeFragment
         }
@@ -50,10 +50,10 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
     private fun setBarShadow(statusShadowHeight: Int, navigationShadowHeight: Int) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            statusShadow.shadowHeight = statusShadowHeight
+            swStatusBarShadow.shadowHeight = statusShadowHeight
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            navigationShadow.shadowHeight = navigationShadowHeight
+            swNavigationBarShadow.shadowHeight = navigationShadowHeight
         }
     }
 

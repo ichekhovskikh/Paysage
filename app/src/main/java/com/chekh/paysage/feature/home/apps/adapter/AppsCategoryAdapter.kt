@@ -1,129 +1,155 @@
 package com.chekh.paysage.feature.home.apps.adapter
 
+import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
-import com.chekh.paysage.feature.home.apps.model.AppsDataViewState
-import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
-import com.chekh.paysage.feature.home.apps.model.StateableAppsGroupByCategory
-import com.chekh.paysage.feature.home.apps.tool.restore
-import com.chekh.paysage.feature.home.apps.tool.save
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
+import com.chekh.paysage.R
+import com.chekh.paysage.feature.home.apps.adapter.differ.AppsCategoryStateChanged
+import com.chekh.paysage.feature.home.apps.adapter.differ.AppsGroupByCategoryDiffCallback
+import com.chekh.paysage.feature.home.apps.model.ExpandableAppsGroupByCategory
 import com.chekh.paysage.feature.home.apps.view.AppsDataView
 import com.chekh.paysage.feature.home.apps.view.AppsHeaderView
-import com.chekh.paysage.ui.view.ArrowItemView
 import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
-import com.chekh.paysage.ui.view.stickyheader.StickyRecyclerView
 
-class AppsCategoryAdapter :
-    StickyAdapter<AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>() {
+class AppsCategoryAdapter(
+    private val onCategoryClick: (Int, String) -> Unit,
+    private val onScrollCategoryChange: (Int, String) -> Unit
+) : StickyAdapter<ExpandableAppsGroupByCategory, AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>(
+    AppsGroupByCategoryDiffCallback()
+) {
 
-    private var recycler: StickyRecyclerView? = null
+    private val sharedPool = RecycledViewPool().apply { setMaxRecycledViews(0, SHARED_POOL_SIZE) }
+    private var recycler: RecyclerView? = null
+    private var items = listOf<ExpandableAppsGroupByCategory>()
 
-    private var items = listOf<StateableAppsGroupByCategory>()
-
-    fun setAppsCategories(appsCategory: List<AppsGroupByCategory>, isAnimate: Boolean = false) {
+    fun setAppsCategories(
+        appsCategory: List<ExpandableAppsGroupByCategory>,
+        isAnimate: Boolean = false
+    ) {
         items = appsCategory
-            .sortedBy { it.category?.position }
-            .map { StateableAppsGroupByCategory(it) }
-        notifyDataSetChanged()
+        submitList(appsCategory)
         if (isAnimate) {
             recycler?.scheduleLayoutAnimation()
         }
     }
 
-    private fun getState(categoryId: String?): AppsDataViewState? =
-        items.find { it.data.category?.id == categoryId }?.state
-
-    fun collapseAll() {
-        items.forEach { it.state.clear() }
-        notifyDataSetChanged()
-        recycler?.scrollToPosition(0)
-    }
-
     override fun onAttachedToRecyclerView(recycler: RecyclerView) {
-        if (recycler is StickyRecyclerView) {
-            this.recycler = recycler
-        }
+        this.recycler = recycler
     }
 
     override fun getItemCount() = items.size
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup, viewType: Int): AppsHeaderViewHolder =
-        AppsHeaderViewHolder(AppsHeaderView(parent.context))
+        AppsHeaderViewHolder(AppsHeaderView(parent.context), onCategoryClick)
 
     override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): AppsDataViewHolder =
-        AppsDataViewHolder(recycler, AppsDataView(parent.context))
+        AppsDataViewHolder(
+            view = AppsDataView(parent.context).apply { setRecycledViewPool(sharedPool) },
+            onScrollChange = onScrollCategoryChange
+        )
 
-    override fun onBindViewHolder(
+    override fun onBindHeaderViewHolder(
         parent: ViewGroup,
         headerHolder: AppsHeaderViewHolder,
-        contentHolder: AppsDataViewHolder,
-        position: Int
+        position: Int,
+        payloads: List<Any>?
     ) {
         val item = items[position]
-        saveState(headerHolder, contentHolder)
-        headerHolder.bind(item)
-        contentHolder.bind(item)
-        val header = headerHolder.view
-        header.onExpandedListener = HeaderExpandedListener(recycler, parent, contentHolder.view)
-        restoreState(headerHolder, contentHolder)
+        if (payloads.isNullOrEmpty()) {
+            headerHolder.bind(position, item)
+            return
+        }
+        for (payload in payloads) {
+            if (payload is AppsCategoryStateChanged) {
+                headerHolder.expand(payload.isExpanded)
+            }
+        }
     }
 
-    private fun saveState(headerHolder: AppsHeaderViewHolder, contentHolder: AppsDataViewHolder) {
-        val categoryId = headerHolder.view.categoryId ?: return
-        val state = getState(categoryId)
-        val content = contentHolder.view
-        content.save(state)
-    }
-
-    private fun restoreState(
-        headerHolder: AppsHeaderViewHolder,
-        contentHolder: AppsDataViewHolder
+    override fun onBindContentViewHolder(
+        parent: ViewGroup,
+        contentHolder: AppsDataViewHolder,
+        position: Int,
+        payloads: List<Any>?
     ) {
-        val header = headerHolder.view
-        val content = contentHolder.view
-        val state = getState(header.categoryId)
-        content.restore(state)
-        header.isExpanded = content.isExpanded
+        val item = items[position]
+        if (payloads.isNullOrEmpty()) {
+            contentHolder.bind(item)
+            return
+        }
+        for (payload in payloads) {
+            if (payload is AppsCategoryStateChanged) {
+                contentHolder.setScrollOffset(payload.scrollOffset)
+                contentHolder.expand(payload.isExpanded)
+            }
+        }
     }
 
-    class AppsHeaderViewHolder(val view: AppsHeaderView) : RecyclerView.ViewHolder(view) {
+    class AppsHeaderViewHolder(
+        private val view: AppsHeaderView,
+        private val onCategoryClick: (Int, String) -> Unit
+    ) : RecyclerView.ViewHolder(view) {
 
-        fun bind(appCategory: StateableAppsGroupByCategory) {
+        init {
+            view.apply {
+                layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                val padding = resources.getDimension(R.dimen.small).toInt()
+                val textSize = resources.getDimension(R.dimen.medium_text_size)
+                setPadding(padding, padding, padding, padding)
+                setTextSize(textSize, COMPLEX_UNIT_PX)
+            }
+        }
+
+        fun bind(position: Int, appCategory: ExpandableAppsGroupByCategory) = with(view) {
             val category = appCategory.data.category ?: return
-            view.setCategory(category)
+            setOnClickListener { onCategoryClick(position, category.id) }
+            setIcon(category.title.iconRes)
+            setTitle(category.title.titleRes)
+            isExpanded = appCategory.isExpanded
+        }
+
+        fun expand(isExpanded: Boolean) {
+            view.animatedExpand(isExpanded)
         }
     }
 
     class AppsDataViewHolder(
-        private val parent: StickyRecyclerView?,
-        val view: AppsDataView
+        private val view: AppsDataView,
+        private val onScrollChange: (Int, String) -> Unit
     ) : RecyclerView.ViewHolder(view) {
 
-        fun bind(appCategory: StateableAppsGroupByCategory) {
-            // hack to perform a artificial scroll after resizing StickyRecyclerView
-            view.setOnAnimationCancelListener {
-                if (!view.isExpanded) {
-                    parent?.post { parent.scrollBy(1, 0) }
-                }
+        init {
+            view.apply {
+                layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                val padding = resources.getDimension(R.dimen.small).toInt()
+                setPadding(padding, padding, padding, padding)
             }
-            view.setApps(appCategory.data.apps)
+        }
+
+        fun bind(appCategory: ExpandableAppsGroupByCategory) = with(view) {
+            setApps(appCategory.data.apps)
+            isExpanded = appCategory.isExpanded
+            scrollOffset = appCategory.scrollOffset
+
+            setOffsetChangeListener { offset ->
+                val category = appCategory.data.category ?: return@setOffsetChangeListener
+                onScrollChange(offset, category.id)
+            }
+        }
+
+        fun expand(isExpanded: Boolean) {
+            view.animatedExpand(isExpanded)
+        }
+
+        fun setScrollOffset(scrollOffset: Int) {
+            view.scrollOffset = scrollOffset
         }
     }
 
-    private class HeaderExpandedListener(
-        private val recycler: StickyRecyclerView?,
-        private val parent: ViewGroup,
-        private val data: AppsDataView
-    ) : ArrowItemView.OnExpandedClickListener {
-
-        override fun onExpandedClick(isExpanded: Boolean, isAnimate: Boolean) {
-            when {
-                isAnimate && isExpanded != data.isExpanded && parent.top < 0 -> {
-                    recycler?.scrollToTopHeader(onCancel = { data.animatedExpand(isExpanded) })
-                }
-                isAnimate && isExpanded != data.isExpanded -> data.animatedExpand(isExpanded)
-                !isAnimate -> data.isExpanded = isExpanded
-            }
-        }
+    companion object {
+        private const val SHARED_POOL_SIZE = 20
     }
 }

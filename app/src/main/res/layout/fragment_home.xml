@@ -6,7 +6,7 @@
         android:layout_height="match_parent">
 
     <com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
-            android:id="@+id/slidingPanel"
+            android:id="@+id/suplSlidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
@@ -16,19 +16,19 @@
             app:panelHeight="0dp">
 
         <FrameLayout
-                android:id="@+id/desktop"
+                android:id="@+id/flDesktop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
         <FrameLayout
-                android:id="@+id/apps"
+                android:id="@+id/flApps"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
     </com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
-            android:id="@+id/searchBar"
+            android:id="@+id/msbSearch"
             android:layout_width="match_parent"
             android:layout_height="@dimen/search_bar_height"
             android:layout_gravity="top"

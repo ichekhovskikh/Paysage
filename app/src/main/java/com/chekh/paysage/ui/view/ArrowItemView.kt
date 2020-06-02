@@ -6,6 +6,8 @@ import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.TypedValue
+import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.RelativeLayout
@@ -14,7 +16,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.util.MetricsConverter
 import kotlinx.android.synthetic.main.view_arrow_item.view.*
 
 open class ArrowItemView @JvmOverloads constructor(
@@ -31,7 +32,7 @@ open class ArrowItemView @JvmOverloads constructor(
         set(value) {
             if (expanded == value) return
             expanded = value
-            arrowIcon.rotation = if (expanded) 90f else 0f
+            ivArrow.rotation = if (expanded) 90f else 0f
             onExpandedListener?.onExpandedClick(expanded, false)
         }
 
@@ -45,82 +46,82 @@ open class ArrowItemView @JvmOverloads constructor(
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyle: Int) {
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView, defStyle, 0)
+        val attributes =
+            context.obtainStyledAttributes(attrs, R.styleable.ArrowItemView, defStyle, 0)
         setTittleAttributes(attributes)
-        setTitleIconAttributes(attributes)
+        setIconAttributes(attributes)
         setArrowAttributes(attributes)
         attributes.recycle()
     }
 
     private fun setTittleAttributes(attributes: TypedArray) {
-        titleTextView.text = attributes.getString(R.styleable.ArrowItemView_titleText)
+        tvTitle.text = attributes.getString(R.styleable.ArrowItemView_titleText)
         if (attributes.hasValue(R.styleable.ArrowItemView_colorTitleText)) {
-            titleTextView.setTextColor(attributes.getColor(R.styleable.ArrowItemView_colorTitleText, -1))
+            tvTitle.setTextColor(attributes.getColor(R.styleable.ArrowItemView_colorTitleText, -1))
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_sizeTitleText)) {
             val sizePx = attributes.getDimension(R.styleable.ArrowItemView_sizeTitleText, -1f)
-            titleTextView.textSize = MetricsConverter(context).pxToDp(sizePx)
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, sizePx)
         }
         if (attributes.hasValue(R.styleable.ArrowItemView_fontTitleText)) {
             val fontId = attributes.getResourceId(R.styleable.ArrowItemView_fontTitleText, -1)
-            titleTextView.typeface = ResourcesCompat.getFont(context, fontId)
+            tvTitle.typeface = ResourcesCompat.getFont(context, fontId)
         }
     }
 
-    private fun setTitleIconAttributes(attributes: TypedArray) {
+    private fun setIconAttributes(attributes: TypedArray) {
         if (attributes.hasValue(R.styleable.ArrowItemView_icon)) {
-            titleIcon.setImageDrawable(attributes.getDrawable(R.styleable.ArrowItemView_icon))
-            titleIcon.visibility = View.VISIBLE
+            ivIcon.setImageDrawable(attributes.getDrawable(R.styleable.ArrowItemView_icon))
+            ivIcon.visibility = View.VISIBLE
         }
     }
 
     private fun setArrowAttributes(attributes: TypedArray) {
-        setOnClickListener { animatedExpand(!isExpanded) }
-        isArrowVisible(attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true))
+        isArrowVisible = attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true)
         if (attributes.hasValue(R.styleable.ArrowItemView_arrowTint)) {
             val tintColor = attributes.getColor(R.styleable.ArrowItemView_arrowTint, -1)
-            arrowIcon.imageTintList = ColorStateList.valueOf(tintColor)
+            ivArrow.imageTintList = ColorStateList.valueOf(tintColor)
         }
     }
 
-    val title: CharSequence
-        get() = titleTextView.text
+    var title: CharSequence
+        get() = tvTitle.text
+        set(value) {
+            tvTitle.text = value
+        }
 
-    val icon: Drawable
-        get() = titleIcon.drawable
+    var icon: Drawable
+        get() = ivIcon.drawable
+        set(value) {
+            ivIcon.setImageDrawable(value)
+            ivIcon.visibility = View.VISIBLE
+        }
 
-    fun setTitleText(text: CharSequence) {
-        titleTextView.text = text
+    var isArrowVisible: Boolean
+        get() = ivArrow.isVisible
+        set(value) {
+            ivArrow.isVisible = value
+        }
+
+    fun setTitle(@StringRes resId: Int) {
+        tvTitle.setText(resId)
     }
 
-    fun setTitleText(@StringRes resId: Int) {
-        titleTextView.setText(resId)
-    }
-
-    fun setTitleTextSize(size: Float) {
-        titleTextView.textSize = size
-    }
-
-    fun setIcon(drawable: Drawable) {
-        titleIcon.setImageDrawable(drawable)
-        titleIcon.visibility = View.VISIBLE
+    fun setTextSize(size: Float, typedValue: Int = COMPLEX_UNIT_SP) {
+        tvTitle.setTextSize(typedValue, size)
     }
 
     fun setIcon(@DrawableRes resId: Int) {
-        titleIcon.setImageResource(resId)
-        titleIcon.visibility = View.VISIBLE
+        ivIcon.setImageResource(resId)
+        ivIcon.visibility = View.VISIBLE
     }
 
-    fun isArrowVisible(isVisible: Boolean) {
-        arrowIcon.isVisible = isVisible
-    }
-
-    fun animatedExpand(expanded: Boolean, duration: Long = DEFAULT_DURATION) {
+    fun animatedExpand(expanded: Boolean, duration: Long = ANIMATION_DURATION_DEFAULT) {
         if (this.expanded == expanded) return
         this.expanded = expanded
         val start = if (expanded) 0f else 90f
         val end = if (expanded) 90f else 0f
-        ObjectAnimator.ofFloat(arrowIcon, View.ROTATION, start, end).setDuration(duration).start()
+        ObjectAnimator.ofFloat(ivArrow, View.ROTATION, start, end).setDuration(duration).start()
         onExpandedListener?.onExpandedClick(expanded, true)
     }
 
@@ -129,6 +130,6 @@ open class ArrowItemView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val DEFAULT_DURATION = 300L
+        private const val ANIMATION_DURATION_DEFAULT = 300L
     }
 }

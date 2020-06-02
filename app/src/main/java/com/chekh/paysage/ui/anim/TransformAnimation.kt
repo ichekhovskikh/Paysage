@@ -8,7 +8,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 
 class TransformAnimation(
     val view: View,
-    var duration: Long = DURATION_DEFAULT
+    var duration: Long = ANIMATION_DURATION_DEFAULT
 ) {
 
     var onAnimationCancelListener: (() -> Unit)? = null
@@ -34,6 +34,6 @@ class TransformAnimation(
     }
 
     companion object {
-        private const val DURATION_DEFAULT = 250L
+        private const val ANIMATION_DURATION_DEFAULT = 250L
     }
 }

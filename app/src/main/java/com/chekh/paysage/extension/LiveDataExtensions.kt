@@ -23,6 +23,15 @@ private class OnceObserver<T>(val liveData: LiveData<T>, val observer: Observer<
     }
 }
 
+fun <X> LiveData<X>.doNext(body: (X?) -> Unit): LiveData<X> {
+    val result = MediatorLiveData<X>()
+    result.addSource(this) { x ->
+        body(x)
+        result.value = x
+    }
+    return result
+}
+
 fun <X, Y> LiveData<X>.map(body: (X?) -> Y?): LiveData<Y> {
     return Transformations.map(this, body)
 }
@@ -50,4 +59,12 @@ fun <X, Y, Z> zip(x: LiveData<X>, z: LiveData<Z>, merge: (x: X?, z: Z?) -> Y?): 
 
 fun <T> MutableLiveData<T>.recharge() {
     value = value
+}
+
+fun <X, R : Comparable<R>> LiveData<List<X>>.sortedBy(selector: (X) -> R?): LiveData<List<X>> {
+    return map { it?.sortedBy(selector) }
+}
+
+fun <X, Y> LiveData<List<X>>.foreachMap(body: (X) -> Y): LiveData<List<Y>> {
+    return map { x -> x?.map { body(it) } }
 }

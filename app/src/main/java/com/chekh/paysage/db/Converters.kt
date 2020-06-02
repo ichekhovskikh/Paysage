@@ -1,11 +1,15 @@
 package com.chekh.paysage.db
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.room.TypeConverter
+import com.chekh.paysage.PaysageApp.Companion.launcher
 import com.chekh.paysage.model.CategoryTitle
 import com.chekh.paysage.model.IconColor
-import com.chekh.paysage.ui.util.createBitmap
-import com.chekh.paysage.ui.util.toBase64
+import com.chekh.paysage.ui.tool.createBitmap
+import com.chekh.paysage.ui.tool.toBase64
 
 object Converters {
     class BooleanTypeConverter {
@@ -44,15 +48,15 @@ object Converters {
         }
     }
 
-    class BitmapTypeConverter {
+    class DrawableTypeConverter {
         @TypeConverter
-        fun toBitmap(value: String): Bitmap {
-            return createBitmap(value)
+        fun toDrawable(value: String): Drawable {
+            return createBitmap(value).toDrawable(launcher.resources)
         }
 
         @TypeConverter
-        fun toString(value: Bitmap): String {
-            return value.toBase64()
+        fun toString(value: Drawable): String {
+            return value.toBitmap().toBase64()
         }
     }
 }

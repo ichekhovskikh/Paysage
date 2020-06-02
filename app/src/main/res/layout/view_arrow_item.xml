@@ -8,7 +8,7 @@
        tools:parentTag="android.widget.RelativeLayout">
 
     <ImageView
-            android:id="@+id/titleIcon"
+            android:id="@+id/ivIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerVertical="true"
@@ -17,16 +17,16 @@
             tools:ignore="ContentDescription"/>
 
     <TextView
-            android:id="@+id/titleTextView"
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/titleIcon"
-            android:layout_toStartOf="@id/arrowIcon"
+            android:layout_toEndOf="@id/ivIcon"
+            android:layout_toStartOf="@id/ivArrow"
             tools:text="Заголовок"/>
 
     <ImageView
-            android:id="@+id/arrowIcon"
+            android:id="@+id/ivArrow"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:focusable="false"

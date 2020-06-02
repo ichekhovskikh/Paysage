@@ -1,16 +1,12 @@
 package com.chekh.paysage.ui.view
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.chekh.paysage.R
-import com.chekh.paysage.model.AppInfo
-import com.chekh.paysage.ui.util.MetricsConverter
+import kotlinx.android.synthetic.main.view_app.view.*
 
 class AppView @JvmOverloads constructor(
     context: Context,
@@ -18,36 +14,35 @@ class AppView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attrs, defStyle) {
 
-    private val iconView: ImageView
-    private val titleView: TextView
+    var label: CharSequence
+        get() = tvLabel.text
+        set(value) {
+            tvLabel.text = value
+        }
 
-    var info: AppInfo? = null
-        private set
+    var icon: Drawable?
+        get() = ivIcon.drawable
+        set(value) {
+            ivIcon.setImageDrawable(value)
+        }
+
+    var iconSize: Int
+        get() = (layoutParams as MarginLayoutParams).height
+        set(value) {
+            ivIcon.layoutParams = (layoutParams as MarginLayoutParams).apply {
+                height = value
+                width = value
+            }
+        }
+
+    var isLabelVisible: Boolean = false
+        set(value) {
+            field = value
+            tvLabel.visibility = if (value) VISIBLE else GONE
+        }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_app, this)
-        layoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT)
         orientation = VERTICAL
-        val padding = MetricsConverter(context).dpToPx(6f)
-        setPadding(padding, padding, padding, padding)
-        iconView = findViewById(R.id.icon)
-        titleView = findViewById(R.id.title)
-    }
-
-    var isHideTitle: Boolean = false
-        set(value) {
-            field = value
-            titleView.visibility = if (value) GONE else View.VISIBLE
-        }
-
-    fun setAppInfo(info: AppInfo) {
-        this.info = info
-        iconView.setImageBitmap(info.icon) //TODO make BadgerDrawable
-        titleView.text = info.title
-        setOnClickListener { startApp() }
-    }
-
-    fun startApp() {
-
     }
 }

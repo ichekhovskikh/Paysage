@@ -20,7 +20,7 @@ class ShadowView @JvmOverloads constructor(
         if (drawable != null) {
             setImageDrawable(drawable)
         } else {
-            setImageResource(R.drawable.navigation_shadow)
+            setImageResource(R.drawable.background_navigation_shadow)
         }
         attributes.recycle()
     }

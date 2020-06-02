@@ -1,9 +1,6 @@
 package com.chekh.paysage.feature.home
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
-import com.chekh.paysage.extension.observe
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,10 +14,6 @@ class HomeViewModel : ViewModel() {
             repository.initApps()
             launch(Dispatchers.Main) { onCancelCallback?.invoke() }
         }
-    }
-
-    fun getAppsGroupByCategories(owner: LifecycleOwner, callback: (categories: List<AppsGroupByCategory>) -> Unit) {
-        repository.getAppsGroupByCategories().observe(owner, callback)
     }
 
     fun enableObserveAppsChanging() {

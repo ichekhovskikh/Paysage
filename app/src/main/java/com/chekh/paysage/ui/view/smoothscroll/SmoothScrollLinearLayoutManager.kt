@@ -1,17 +1,19 @@
 package com.chekh.paysage.ui.view.smoothscroll
 
 import android.content.Context
+import android.util.AttributeSet
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class SmoothScrollLinearLayoutManager @JvmOverloads constructor(
     context: Context,
-    orientation: Int = RecyclerView.VERTICAL,
-    reverseLayout: Boolean = false
-) : LinearLayoutManager(context, orientation, reverseLayout) {
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : LinearLayoutManager(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val smoothScroller = TopSmoothScroller(context, this)
+    private val smoothScroller = FastSmoothScroller(context, this)
 
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,

@@ -6,69 +6,74 @@ import android.view.View.OVER_SCROLL_NEVER
 import android.view.WindowInsets
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.applyPadding
-import com.chekh.paysage.ui.fragment.ViewModelFragment
+import com.chekh.paysage.extension.observe
+import com.chekh.paysage.feature.home.apps.AppsViewModel
 import com.chekh.paysage.feature.home.apps.adapter.AppsCategoryAdapter
-import com.chekh.paysage.ui.view.smoothscroll.SmoothScrollLinearLayoutManager
-import com.chekh.paysage.feature.home.HomeViewModel
-import com.chekh.paysage.ui.util.MetricsConverter
+import com.chekh.paysage.ui.fragment.ViewModelFragment
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
+import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelSlideListener
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
 import kotlinx.android.synthetic.main.fragment_apps.*
 
-class AppsFragment : ViewModelFragment<HomeViewModel>() {
+class AppsFragment : ViewModelFragment<AppsViewModel>(), PanelSlideListener {
 
     override val layoutId = R.layout.fragment_apps
-    override val viewModelClass = HomeViewModel::class.java
+    override val viewModelClass = AppsViewModel::class.java
 
-    private var adapter: AppsCategoryAdapter? = null
+    private val adapter: AppsCategoryAdapter by lazy {
+        AppsCategoryAdapter(viewModel::toggleCategory, viewModel::scrollCategoryOffset)
+    }
+
     private var slidingPanel: SlidingUpPanelLayout? = null
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setupRecycler()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupParentSlidingPanel(view)
+    }
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {
         super.onViewModelCreated(savedInstanceState)
-        adapter = AppsCategoryAdapter()
-        onAppsAdapterCreated()
-        viewModel.getAppsGroupByCategories(this) { categories ->
-            adapter?.setAppsCategories(categories)
+        viewModel.init(Unit)
+
+        viewModel.scrollPosition.observe(this) { position ->
+            srvCategories.smoothScrollToPosition(position)
+        }
+        viewModel.appsGroupByCategories.observe(this) { categories ->
+            adapter.setAppsCategories(categories)
         }
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
-        val context = context ?: return
-
-        val defaultPaddingBottom = MetricsConverter(context).dpToPx(8f)
+        val defaultPaddingBottom = resources.getDimension(R.dimen.small).toInt()
         val height = insets.systemWindowInsetBottom
-        categoryRecycler.applyPadding(bottom = defaultPaddingBottom + height)
+        srvCategories.applyPadding(bottom = defaultPaddingBottom + height)
     }
 
-    private fun onAppsAdapterCreated() {
-        categoryRecycler.apply {
-            layoutManager = SmoothScrollLinearLayoutManager(context)
-            overScrollMode = OVER_SCROLL_NEVER
-        }
-        categoryRecycler.adapter = adapter
-        slidingPanel?.setScrollableView(categoryRecycler)
+    private fun setupParentSlidingPanel(fragmentView: View) {
+        slidingPanel = fragmentView.parent?.parent as? SlidingUpPanelLayout
+        slidingPanel?.addPanelSlideListener(this)
     }
 
-    fun setParentSlidingPanel(slidingPanel: SlidingUpPanelLayout?) {
-        this.slidingPanel = slidingPanel?.apply {
-            addPanelSlideListener(onSlideListener)
-        }
+    private fun setupRecycler() {
+        srvCategories.overScrollMode = OVER_SCROLL_NEVER
+        srvCategories.adapter = adapter
+        srvCategories.itemAnimator = null
+        slidingPanel?.setScrollableView(srvCategories)
     }
 
-    private fun collapseAllCategories() {
-        adapter?.collapseAll()
-    }
-
-    private val onSlideListener = object : SlidingUpPanelLayout.SimplePanelSlideListener() {
-        override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
-            if (newState == PanelState.HIDDEN || newState == PanelState.COLLAPSED) {
-                collapseAllCategories()
-            }
+    override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
+        if (newState in listOf(PanelState.HIDDEN, PanelState.COLLAPSED)) {
+            viewModel.collapseAll()
         }
     }
 
-    companion object {
-        fun instance() = AppsFragment()
+    override fun onPanelSlide(panel: View?, slideOffset: Float) {
+        // Nothing
     }
 }

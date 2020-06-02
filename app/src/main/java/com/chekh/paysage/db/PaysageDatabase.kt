@@ -14,7 +14,6 @@ import com.chekh.paysage.model.CategoryInfo
 import com.chekh.paysage.db.Converters.BooleanTypeConverter
 import com.chekh.paysage.db.Converters.IconColorTypeConverter
 import com.chekh.paysage.db.Converters.CategoryTitleTypeConverter
-import com.chekh.paysage.db.Converters.BitmapTypeConverter
 import com.chekh.paysage.db.dao.PackageDao
 import com.chekh.paysage.model.PackageInfo
 import com.chekh.paysage.provider.CategoriesProvider
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
     BooleanTypeConverter::class,
     IconColorTypeConverter::class,
     CategoryTitleTypeConverter::class,
-    BitmapTypeConverter::class
+    Converters.DrawableTypeConverter::class
 )
 abstract class PaysageDatabase : RoomDatabase() {
 
@@ -43,7 +42,7 @@ abstract class PaysageDatabase : RoomDatabase() {
         private val categoriesProvider: Provider<List<CategoryInfo>> by lazy { CategoriesProvider() }
 
         private fun createInstance(context: Context) =
-            Room.databaseBuilder(context, PaysageDatabase::class.java, "debug.db")
+            Room.databaseBuilder(context, PaysageDatabase::class.java, "debug_v2.db")
                 .addCallback(prepopulateDatabaseCallback)
                 .addMigrations(*Migrations.get())
                 .build()

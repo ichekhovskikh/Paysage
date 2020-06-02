@@ -6,7 +6,7 @@ import android.graphics.PointF
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 
-class TopSmoothScroller(
+class FastSmoothScroller(
     context: Context,
     private val layoutManager: LinearLayoutManager
 ) : LinearSmoothScroller(context) {
@@ -29,6 +29,6 @@ class TopSmoothScroller(
     }
 
     companion object {
-        var SCROLL_DURATION = 50
+        private const val SCROLL_DURATION = 100
     }
 }

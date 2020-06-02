@@ -8,8 +8,4 @@ class DesktopFragment : ViewModelFragment<HomeViewModel>() {
 
     override val layoutId = R.layout.fragment_desktop
     override val viewModelClass = HomeViewModel::class.java
-
-    companion object {
-        fun instance() = DesktopFragment()
-    }
 }

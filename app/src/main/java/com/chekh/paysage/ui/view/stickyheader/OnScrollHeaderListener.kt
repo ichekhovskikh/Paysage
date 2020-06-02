@@ -13,7 +13,7 @@ class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
     var onCancelScrollAction: (() -> Unit)? = null
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-        val holder = recyclerView.getChildAt(0).tag as StickyViewHolder<*, *>? ?: return
+        val holder = recyclerView.getChildAt(0)?.tag as? StickyViewHolder<*, *> ?: return
         val completelyVisible = holder.itemView.top >= 0
         if (holder != cachedTopItemHolder || completelyVisible) {
             cachedTopItemHolder?.header?.itemView?.translationY = 0f

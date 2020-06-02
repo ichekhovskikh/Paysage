@@ -26,7 +26,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val content = findViewById<ViewGroup>(android.R.id.content)
         content.setOnApplyWindowInsetsListener { _, insets ->
             onApplyWindowInsets(insets)
-            insets
+            insets.consumeSystemWindowInsets()
         }
     }
 

@@ -1,6 +1,5 @@
 package com.chekh.paysage.feature.home
 
-import android.content.pm.LauncherActivityInfo
 import android.os.UserHandle
 import androidx.core.graphics.drawable.toBitmap
 import com.chekh.paysage.PaysageApp
@@ -18,15 +17,7 @@ class AppRepositoryImpl : AppRepository {
     override fun getAppsGroupByCategories() = database.categoryDao.getGroupByCategories()
 
     override fun initApps() {
-        val activityInfos = appManager.getAllApps()
-        if (activityInfos.isNotEmpty()) {
-            val recentApps = database.appDao.getAll()
-            val allApps = mergeApps(activityInfos, recentApps)
-            database.runInTransaction {
-                database.appDao.removeAll()
-                database.appDao.add(allApps)
-            }
-        }
+        updateAllApps()
     }
 
     override fun enableObserveAppsChanging() {
@@ -37,27 +28,29 @@ class AppRepositoryImpl : AppRepository {
         appManager.removeOnAppsChangedCallback(appsChangedCallback)
     }
 
-    private fun mergeApps(
-        activityInfos: List<LauncherActivityInfo>,
-        recentApps: List<AppInfo>
-    ): MutableList<AppInfo> {
-        val mergedApps = mutableListOf<AppInfo>()
+    private fun updateAllApps() {
+        val activityInfos = appManager.getAllApps()
+        if (activityInfos.isEmpty()) {
+            database.appDao.removeAll()
+            return
+        }
+        val recentApps = database.appDao.getAll().toMutableList()
         activityInfos.forEach { activityInfo ->
-            val applicationInfo = activityInfo.applicationInfo
-            val app = recentApps.find { it.equalsComponentName(activityInfo.componentName) }
+            val app = recentApps.find { it.isSame(activityInfo) }
             if (app == null) {
-                val categoryId = database.packageDao
-                    .getCategoryId(activityInfo.componentName.packageName) ?: CategoryTitle.OTHER.id
-                mergedApps.add(AppInfo.create(categoryId, activityInfo))
+                val componentName = activityInfo.componentName
+                val categoryId = database.packageDao.getCategoryId(componentName.packageName)
+                    ?: CategoryTitle.OTHER.id
+                recentApps.add(AppInfo.create(categoryId, activityInfo))
             } else {
+                val applicationInfo = activityInfo.applicationInfo
                 app.title = applicationInfo.loadLabel(appManager.packageManager).toString()
-                /*TODO IconPack*/
-                app.icon = applicationInfo.loadIcon(appManager.packageManager).toBitmap()
-                app.iconColor = IconColor.get(app.icon)
-                mergedApps.add(app)
+                val icon = applicationInfo.loadIcon(appManager.packageManager) /*TODO IconPack*/
+                app.icon = icon
+                app.iconColor = IconColor.get(icon.toBitmap())
             }
         }
-        return mergedApps
+        database.appDao.add(recentApps)
     }
 
     private val appsChangedCallback = object : AppManager.AppsChangedCallback() {
@@ -73,7 +66,7 @@ class AppRepositoryImpl : AppRepository {
         }
 
         override fun onPackageChanged(packageName: String, userHandle: UserHandle) {
-            GlobalScope.launch {
+            /*GlobalScope.launch {
                 val activityInfos = appManager.getApps(packageName, userHandle)
                 if (activityInfos.isNotEmpty()) {
                     val componentName = activityInfos.first().componentName.packageName
@@ -84,7 +77,7 @@ class AppRepositoryImpl : AppRepository {
                     )
                     database.appDao.add(updatedApps)
                 }
-            }
+            }*/
         }
     }
 }

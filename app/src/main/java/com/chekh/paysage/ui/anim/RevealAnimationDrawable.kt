@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
-import com.chekh.paysage.ui.util.createColorAlpha
+import com.chekh.paysage.ui.tool.createColorAlpha
 
 class RevealAnimationDrawable(
     private val x: Float,
@@ -20,7 +20,7 @@ class RevealAnimationDrawable(
     private var totalTime: Int = 0
     private var startTime: Long = 0
 
-    var duration = DEFAULT_DURATION
+    var duration = ANIMATION_DURATION_DEFAULT
     var interpolator: Interpolator = AccelerateDecelerateInterpolator()
     var isAnimating: Boolean = false
         private set
@@ -86,7 +86,7 @@ class RevealAnimationDrawable(
     }
 
     companion object {
-        private const val DEFAULT_DURATION = 200
+        private const val ANIMATION_DURATION_DEFAULT = 200
         private const val DEFAULT_ALPHA = 0.2f
     }
 }

@@ -9,22 +9,22 @@
         tools:context=".feature.home.HomeActivity">
 
     <FrameLayout
-            android:id="@+id/container"
+            android:id="@+id/flContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
     </FrameLayout>
 
     <com.chekh.paysage.ui.view.ShadowView
-            android:id="@+id/statusShadow"
+            android:id="@+id/swStatusBarShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            app:shadowDrawable="@drawable/status_shadow"/>
+            app:shadowDrawable="@drawable/background_status_shadow"/>
 
     <com.chekh.paysage.ui.view.ShadowView
-            android:id="@+id/navigationShadow"
+            android:id="@+id/swNavigationBarShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:shadowDrawable="@drawable/navigation_shadow"/>
+            app:shadowDrawable="@drawable/background_navigation_shadow"/>
 </FrameLayout>

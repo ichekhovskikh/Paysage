@@ -16,12 +16,19 @@ class StickyRecyclerView @JvmOverloads constructor(
         addOnScrollListener(scrollListener)
     }
 
-    fun scrollToTopHeader(onCancel: (() -> Unit)? = null) {
-        val holder = scrollListener.cachedTopItemHolder
-        holder?.itemView?.let {
-            scrollListener.onCancelScrollAction = onCancel
-            val position = getChildLayoutPosition(it)
-            smoothScrollToPosition(position)
+    override fun smoothScrollToPosition(position: Int) {
+        val view = layoutManager?.findViewByPosition(position) ?: return
+        if (view.top < 0) {
+            super.smoothScrollToPosition(position)
         }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        invalidateScroll()
+    }
+
+    private fun invalidateScroll() {
+        scrollListener.onScrolled(this, 0, 0)
     }
 }
