@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.model
+package com.chekh.paysage.feature.home.screen.apps.model
 
 import androidx.room.Embedded
 import androidx.room.Entity

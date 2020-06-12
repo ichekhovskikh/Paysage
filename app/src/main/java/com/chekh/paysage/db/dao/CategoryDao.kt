@@ -3,7 +3,7 @@ package com.chekh.paysage.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.chekh.paysage.model.CategoryInfo
-import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.AppsGroupByCategory
 
 @Dao
 interface CategoryDao {

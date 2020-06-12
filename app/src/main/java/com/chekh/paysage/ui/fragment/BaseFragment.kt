@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : DaggerFragment() {
 
     @get:LayoutRes
     protected abstract val layoutId: Int
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutId, null)
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(layoutId, null)
 
     open fun onBackPressed(): Boolean {
         return false

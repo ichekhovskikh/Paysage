@@ -6,17 +6,23 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class PackagesProvider(private val context: Context) : Provider<List<PackageInfo>> {
+interface PackagesProvider {
+    fun provide(): List<PackageInfo>
+}
+
+class PackagesProviderImpl(private val context: Context) : PackagesProvider {
 
     override fun provide(): List<PackageInfo> {
         val packages = mutableListOf<PackageInfo>()
         val json = readDefaultPackagesFromAssets()
         val categoriesJsonObject = JSONObject(json).getJSONArray(CATEGORIES_NAME)
+
         val categoriesSize = categoriesJsonObject.length()
         for (categoriesIndex in 0 until categoriesSize) {
             val categoryJsonObject = categoriesJsonObject.getJSONObject(categoriesIndex)
             val categoryId = categoryJsonObject.getString(TITLE_NAME)
             val packagesJsonObject = categoryJsonObject.getJSONArray(PACKAGES_NAME)
+
             val packagesSize = packagesJsonObject.length()
             for (packagesIndex in 0 until packagesSize) {
                 val packageName = packagesJsonObject.getString(packagesIndex)

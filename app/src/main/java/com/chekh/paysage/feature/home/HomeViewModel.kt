@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel @Inject constructor() : ViewModel() {
 
     private val repository: AppRepository by lazy { AppRepositoryImpl() }
 

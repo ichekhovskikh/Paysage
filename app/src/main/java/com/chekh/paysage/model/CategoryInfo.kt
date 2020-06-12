@@ -9,6 +9,5 @@ data class CategoryInfo(
     @PrimaryKey
     var id: String = "",
     var title: CategoryTitle = CategoryTitle.OTHER,
-    var position: Int = 0,
-    var isHidden: Boolean = false
+    var position: Int = 0
 )

@@ -1,7 +1,7 @@
-package com.chekh.paysage.feature.home.apps.adapter.differ
+package com.chekh.paysage.feature.home.screen.apps.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chekh.paysage.feature.home.apps.model.ExpandableAppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategory
 
 class AppsGroupByCategoryDiffCallback : DiffUtil.ItemCallback<ExpandableAppsGroupByCategory>() {
 

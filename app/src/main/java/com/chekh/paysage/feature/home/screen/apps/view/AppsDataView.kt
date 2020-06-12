@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.view
+package com.chekh.paysage.feature.home.screen.apps.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.model.AppInfo
-import com.chekh.paysage.feature.home.apps.adapter.AppListAdapter
+import com.chekh.paysage.feature.home.screen.apps.adapter.AppListAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chekh.paysage.ui.anim.TransformAnimation
 

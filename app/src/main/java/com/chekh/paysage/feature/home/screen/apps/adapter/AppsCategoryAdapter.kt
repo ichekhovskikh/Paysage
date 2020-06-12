@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.adapter
+package com.chekh.paysage.feature.home.screen.apps.adapter
 
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.ViewGroup
@@ -7,11 +7,11 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.home.apps.adapter.differ.AppsCategoryStateChanged
-import com.chekh.paysage.feature.home.apps.adapter.differ.AppsGroupByCategoryDiffCallback
-import com.chekh.paysage.feature.home.apps.model.ExpandableAppsGroupByCategory
-import com.chekh.paysage.feature.home.apps.view.AppsDataView
-import com.chekh.paysage.feature.home.apps.view.AppsHeaderView
+import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsCategoryStateChanged
+import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsGroupByCategoryDiffCallback
+import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.view.AppsDataView
+import com.chekh.paysage.feature.home.screen.apps.view.AppsHeaderView
 import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
 
 class AppsCategoryAdapter(

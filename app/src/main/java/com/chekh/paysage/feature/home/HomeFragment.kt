@@ -10,13 +10,12 @@ import com.chekh.paysage.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
 import com.chekh.paysage.extension.setMarginTop
-import com.chekh.paysage.feature.home.apps.fragment.AppsFragment
-import com.chekh.paysage.feature.home.desktop.fragment.DesktopFragment
+import com.chekh.paysage.feature.home.screen.apps.fragment.AppsFragment
+import com.chekh.paysage.feature.home.screen.desktop.fragment.DesktopFragment
 import com.chekh.paysage.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.ui.fragment.BaseFragment
 import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
-import com.chekh.paysage.ui.tool.MetricsConverter
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {

@@ -17,8 +17,9 @@ import com.chekh.paysage.db.Converters.CategoryTitleTypeConverter
 import com.chekh.paysage.db.dao.PackageDao
 import com.chekh.paysage.model.PackageInfo
 import com.chekh.paysage.provider.CategoriesProvider
+import com.chekh.paysage.provider.CategoriesProviderImpl
 import com.chekh.paysage.provider.PackagesProvider
-import com.chekh.paysage.provider.Provider
+import com.chekh.paysage.provider.PackagesProviderImpl
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -38,11 +39,11 @@ abstract class PaysageDatabase : RoomDatabase() {
     companion object {
         val instance: PaysageDatabase by lazy { createInstance(launcher) }
 
-        private val packagesProvider: Provider<List<PackageInfo>> by lazy { PackagesProvider(launcher) }
-        private val categoriesProvider: Provider<List<CategoryInfo>> by lazy { CategoriesProvider() }
+        private val packagesProvider: PackagesProvider by lazy { PackagesProviderImpl(launcher) }
+        private val categoriesProvider: CategoriesProvider by lazy { CategoriesProviderImpl() }
 
         private fun createInstance(context: Context) =
-            Room.databaseBuilder(context, PaysageDatabase::class.java, "debug_v2.db")
+            Room.databaseBuilder(context, PaysageDatabase::class.java, "debug_v5.db")
                 .addCallback(prepopulateDatabaseCallback)
                 .addMigrations(*Migrations.get())
                 .build()

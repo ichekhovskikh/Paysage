@@ -1,7 +1,7 @@
 package com.chekh.paysage.feature.home
 
 import androidx.lifecycle.LiveData
-import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.AppsGroupByCategory
 
 interface AppRepository {
 

@@ -1,15 +1,16 @@
-package com.chekh.paysage.feature.home.apps
+package com.chekh.paysage.feature.home.screen.apps
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.extension.*
 import com.chekh.paysage.feature.home.AppRepository
 import com.chekh.paysage.feature.home.AppRepositoryImpl
-import com.chekh.paysage.feature.home.apps.model.AppsGroupByCategory
-import com.chekh.paysage.feature.home.apps.model.ExpandableAppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.AppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategory
 import com.chekh.paysage.ui.viewmodel.BaseViewModel
+import javax.inject.Inject
 
-class AppsViewModel : BaseViewModel<Unit>() {
+class AppsViewModel @Inject constructor() : BaseViewModel<Unit>() {
 
     private val repository: AppRepository by lazy { AppRepositoryImpl() }
 

@@ -1,6 +1,5 @@
 package com.chekh.paysage.db
 
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable

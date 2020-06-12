@@ -1,6 +1,5 @@
 package com.chekh.paysage.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowInsets
@@ -8,8 +7,9 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import com.chekh.paysage.handler.backpressed.ContainerBackPressedHandler
 import com.chekh.paysage.ui.fragment.BaseFragment
+import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : DaggerAppCompatActivity() {
 
     @get:LayoutRes
     protected abstract val layoutId: Int

@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.view
+package com.chekh.paysage.feature.home.screen.apps.view
 
 import android.content.Context
 import android.util.AttributeSet

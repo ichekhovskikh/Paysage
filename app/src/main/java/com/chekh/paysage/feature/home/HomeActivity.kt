@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
-    override val viewModelClass = HomeViewModel::class.java
+    override val viewModelClass = HomeViewModel::class
     override val layoutId = R.layout.activity_home
 
     private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }

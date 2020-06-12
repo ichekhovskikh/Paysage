@@ -500,7 +500,9 @@ public class SlidingUpPanelLayout extends ViewGroup {
      */
     public void addPanelSlideListener(PanelSlideListener listener) {
         synchronized (mPanelSlideListeners) {
-            mPanelSlideListeners.add(listener);
+            if (!mPanelSlideListeners.contains(listener)) {
+                mPanelSlideListeners.add(listener);
+            }
         }
     }
 

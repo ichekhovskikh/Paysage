@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.adapter
+package com.chekh.paysage.feature.home.screen.apps.adapter
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT

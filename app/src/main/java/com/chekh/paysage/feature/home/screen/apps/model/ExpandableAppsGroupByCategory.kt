@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.home.apps.model
+package com.chekh.paysage.feature.home.screen.apps.model
 
 data class ExpandableAppsGroupByCategory(
     val data: AppsGroupByCategory,
