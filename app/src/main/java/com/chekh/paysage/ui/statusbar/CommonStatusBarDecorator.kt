@@ -1,12 +1,13 @@
 package com.chekh.paysage.ui.statusbar
 
 import android.app.Activity
+import javax.inject.Inject
 
-class CommonStatusBarDecorator : StatusBarDecorator() {
-
-    private val materialDecorator by lazy { MaterialStatusBarDecorator() }
-    private val meizuDecorator by lazy { MeizuStatusBarDecorator() }
-    private val xiaomiDecorator by lazy { XiaomiStatusBarDecorator(materialDecorator) }
+class CommonStatusBarDecorator @Inject constructor(
+    private val materialDecorator: MaterialStatusBarDecorator,
+    private val meizuDecorator: MeizuStatusBarDecorator,
+    private val xiaomiDecorator: XiaomiStatusBarDecorator
+) : StatusBarDecorator() {
 
     override fun statusBarDarkMode(activity: Activity, isDark: Boolean): Boolean {
         return when {

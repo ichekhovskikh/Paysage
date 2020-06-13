@@ -1,19 +1,22 @@
 package com.chekh.paysage.provider
 
 import android.content.Context
-import com.chekh.paysage.model.PackageInfo
+import com.chekh.paysage.feature.home.data.model.PackageSettingsModel
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import javax.inject.Inject
 
 interface PackagesProvider {
-    fun provide(): List<PackageInfo>
+    fun provide(): List<PackageSettingsModel>
 }
 
-class PackagesProviderImpl(private val context: Context) : PackagesProvider {
+class PackagesProviderImpl @Inject constructor(
+    private val context: Context
+) : PackagesProvider {
 
-    override fun provide(): List<PackageInfo> {
-        val packages = mutableListOf<PackageInfo>()
+    override fun provide(): List<PackageSettingsModel> {
+        val packages = mutableListOf<PackageSettingsModel>()
         val json = readDefaultPackagesFromAssets()
         val categoriesJsonObject = JSONObject(json).getJSONArray(CATEGORIES_NAME)
 
@@ -26,7 +29,12 @@ class PackagesProviderImpl(private val context: Context) : PackagesProvider {
             val packagesSize = packagesJsonObject.length()
             for (packagesIndex in 0 until packagesSize) {
                 val packageName = packagesJsonObject.getString(packagesIndex)
-                packages.add(PackageInfo(packageName, categoryId))
+                packages.add(
+                    PackageSettingsModel(
+                        packageName,
+                        categoryId
+                    )
+                )
             }
         }
         return packages

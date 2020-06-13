@@ -1,7 +1,7 @@
 package com.chekh.paysage.db.dao
 
 import androidx.room.*
-import com.chekh.paysage.model.PackageInfo
+import com.chekh.paysage.feature.home.data.model.PackageSettingsModel
 
 @Dao
 interface PackageDao {
@@ -9,11 +9,11 @@ interface PackageDao {
     fun getCategoryId(packageName: String): String?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(packageInfo: PackageInfo)
+    fun add(packageInfo: PackageSettingsModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(packages: List<PackageInfo>)
+    fun add(packages: List<PackageSettingsModel>)
 
     @Delete
-    fun remove(packageInfo: PackageInfo)
+    fun remove(packageInfo: PackageSettingsModel)
 }

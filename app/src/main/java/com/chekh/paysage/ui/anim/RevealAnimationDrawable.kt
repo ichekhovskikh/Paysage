@@ -5,7 +5,7 @@ import android.graphics.Paint
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
-import com.chekh.paysage.ui.tool.createColorAlpha
+import com.chekh.paysage.ui.tools.createColorAlpha
 
 class RevealAnimationDrawable(
     private val x: Float,

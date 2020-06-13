@@ -3,35 +3,31 @@ package com.chekh.paysage.feature.home.screen.apps
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.extension.*
-import com.chekh.paysage.feature.home.AppRepository
-import com.chekh.paysage.feature.home.AppRepositoryImpl
-import com.chekh.paysage.feature.home.screen.apps.model.AppsGroupByCategory
-import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategory
+import com.chekh.paysage.feature.home.domain.model.AppsGroupByCategoryModel
+import com.chekh.paysage.feature.home.domain.usecase.AppsGroupByCategoriesUseCase
+import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategoryModel
 import com.chekh.paysage.ui.viewmodel.BaseViewModel
 import javax.inject.Inject
 
-class AppsViewModel @Inject constructor() : BaseViewModel<Unit>() {
-
-    private val repository: AppRepository by lazy { AppRepositoryImpl() }
+class AppsViewModel @Inject constructor(
+    private val appsGroupByCategoriesUseCase: AppsGroupByCategoriesUseCase
+) : BaseViewModel<Unit>() {
 
     private val expandedCategoryIds = mutableSetOf<String?>()
     private val scrollCategoriesOffsets: MutableMap<String, Int> = hashMapOf()
 
     private val expandTrigger = MutableLiveData<Unit>()
 
-    private val categoriesLiveData = trigger
-        .switchMap { repository.getAppsGroupByCategories() }
-        .sortedBy { it.category?.position }
+    private val categoriesMutableLiveData = trigger.switchMap { appsGroupByCategoriesUseCase() }
 
-    val appsGroupByCategories = expandTrigger
-        .switchMap {
-            categoriesLiveData.foreachMap {
-                ExpandableAppsGroupByCategory(it, isExpanded(it), scrollOffset(it))
-            }
+    val appsGroupByCategoriesLiveData = expandTrigger.switchMap {
+        categoriesMutableLiveData.foreachMap {
+            ExpandableAppsGroupByCategoryModel(it, isExpanded(it), scrollOffset(it))
         }
+    }
 
-    private val mutableScrollPosition = MutableLiveData<Int>()
-    val scrollPosition: LiveData<Int> = mutableScrollPosition
+    private val scrollPositionMutableLiveData = MutableLiveData<Int>()
+    val scrollPositionLiveData: LiveData<Int> = scrollPositionMutableLiveData
 
     override fun init(trigger: Unit) {
         super.init(trigger)
@@ -44,24 +40,24 @@ class AppsViewModel @Inject constructor() : BaseViewModel<Unit>() {
     }
 
     fun toggleCategory(position: Int, categoryId: String) {
-        mutableScrollPosition.postValue(position)
+        scrollPositionMutableLiveData.postValue(position)
         expandedCategoryIds.toggle(categoryId)
         scrollCategoriesOffsets.remove(categoryId)
         expandTrigger.postValue(Unit)
     }
 
     fun collapseAll() {
-        mutableScrollPosition.postValue(0)
+        scrollPositionMutableLiveData.postValue(0)
         expandedCategoryIds.clear()
         scrollCategoriesOffsets.clear()
         expandTrigger.postValue(Unit)
     }
 
-    private fun isExpanded(data: AppsGroupByCategory?): Boolean {
+    private fun isExpanded(data: AppsGroupByCategoryModel?): Boolean {
         return expandedCategoryIds.contains(data?.category?.id)
     }
 
-    private fun scrollOffset(data: AppsGroupByCategory?): Int {
+    private fun scrollOffset(data: AppsGroupByCategoryModel?): Int {
         return scrollCategoriesOffsets[data?.category?.id] ?: 0
     }
 

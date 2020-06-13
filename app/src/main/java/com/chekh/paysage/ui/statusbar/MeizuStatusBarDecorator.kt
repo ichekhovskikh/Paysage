@@ -2,8 +2,9 @@ package com.chekh.paysage.ui.statusbar
 
 import android.app.Activity
 import android.view.WindowManager.LayoutParams
+import javax.inject.Inject
 
-class MeizuStatusBarDecorator : StatusBarDecorator() {
+class MeizuStatusBarDecorator @Inject constructor() : StatusBarDecorator() {
 
     override fun statusBarDarkMode(activity: Activity, isDark: Boolean): Boolean = try {
         val attributes = activity.window.attributes

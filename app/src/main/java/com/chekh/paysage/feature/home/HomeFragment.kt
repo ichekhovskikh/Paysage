@@ -10,21 +10,23 @@ import com.chekh.paysage.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
 import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
 import com.chekh.paysage.extension.setMarginTop
-import com.chekh.paysage.feature.home.screen.apps.fragment.AppsFragment
-import com.chekh.paysage.feature.home.screen.desktop.fragment.DesktopFragment
+import com.chekh.paysage.feature.home.screen.apps.AppsFragment
+import com.chekh.paysage.feature.home.screen.desktop.DesktopFragment
 import com.chekh.paysage.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.ui.fragment.BaseFragment
-import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
 class HomeFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
+
+    @Inject
+    lateinit var statusBarDecorator: StatusBarDecorator
 
     private val backPressedHandler: BackPressedHandler by lazy {
         SlidingPanelBackPressedHandler(suplSlidingPanel, childFragmentManager)
     }
 
-    private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }
     private val searchBarSlideHandler by lazy { SearchBarSlideHandler(msbSearch) }
 
     override val layoutId = R.layout.fragment_home
@@ -35,8 +37,10 @@ class HomeFragment : BaseFragment(), SlidingUpPanelLayout.PanelSlideListener {
     }
 
     private fun setupSlidingPanel() {
-        val desktopFragment = DesktopFragment()
-        val appsFragment = AppsFragment()
+        val desktopFragment =
+            DesktopFragment()
+        val appsFragment =
+            AppsFragment()
         childFragmentManager.inTransaction {
             replace(R.id.flDesktop, desktopFragment)
             replace(R.id.flApps, appsFragment)

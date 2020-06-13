@@ -7,16 +7,17 @@ import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.extension.inTransaction
 import com.chekh.paysage.ui.activity.ViewModelActivity
-import com.chekh.paysage.ui.statusbar.CommonStatusBarDecorator
 import com.chekh.paysage.ui.statusbar.StatusBarDecorator
 import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
 class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
     override val viewModelClass = HomeViewModel::class
     override val layoutId = R.layout.activity_home
 
-    private val statusBarDecorator: StatusBarDecorator by lazy { CommonStatusBarDecorator() }
+    @Inject
+    lateinit var statusBarDecorator: StatusBarDecorator
 
     private var fragment: Fragment? = null
 
@@ -28,8 +29,7 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
     override fun onViewModelCreated(savedInstanceState: Bundle?) {
         super.onViewModelCreated(savedInstanceState)
-        viewModel.enableObserveAppsChanging()
-        viewModel.initApps()
+        viewModel.startObserveUpdates()
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {
@@ -59,6 +59,6 @@ class HomeActivity : ViewModelActivity<HomeViewModel>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.disableObserveAppsChanging()
+        viewModel.stopObserveUpdates()
     }
 }

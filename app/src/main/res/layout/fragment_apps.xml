@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:layoutAnimation="@anim/layout_animation_from_bottom"
-            app:layoutManager="com.chekh.paysage.ui.view.smoothscroll.SmoothScrollLinearLayoutManager"
+            app:layoutManager="com.chekh.paysage.ui.view.fastscroll.FastScrollLinearLayoutManager"
             android:paddingTop="@dimen/small"
             android:paddingBottom="@dimen/medium"
             android:layout_marginStart="@dimen/small"

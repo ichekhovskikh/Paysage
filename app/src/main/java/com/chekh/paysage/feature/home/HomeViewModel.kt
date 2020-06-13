@@ -1,27 +1,20 @@
 package com.chekh.paysage.feature.home
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.chekh.paysage.feature.home.domain.usecase.StartObserveUpdatesUseCase
+import com.chekh.paysage.feature.home.domain.usecase.StopObserveUpdatesUseCase
 import javax.inject.Inject
 
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val startObserveUpdatesUseCase: StartObserveUpdatesUseCase,
+    private val stopObserveUpdatesUseCase: StopObserveUpdatesUseCase
+) : ViewModel() {
 
-    private val repository: AppRepository by lazy { AppRepositoryImpl() }
-
-    fun initApps(onCancelCallback: (() -> Unit)? = null) {
-        GlobalScope.launch {
-            repository.initApps()
-            launch(Dispatchers.Main) { onCancelCallback?.invoke() }
-        }
+    fun startObserveUpdates() {
+        startObserveUpdatesUseCase()
     }
 
-    fun enableObserveAppsChanging() {
-        repository.enableObserveAppsChanging()
-    }
-
-    fun disableObserveAppsChanging() {
-        repository.disableObserveAppsChanging()
+    fun stopObserveUpdates() {
+        stopObserveUpdatesUseCase()
     }
 }

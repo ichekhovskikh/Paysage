@@ -2,9 +2,9 @@ package com.chekh.paysage.feature.home.di
 
 import com.chekh.paysage.feature.home.screen.apps.di.AppsFragmentModule
 import com.chekh.paysage.feature.home.screen.apps.di.AppsFragmentScope
-import com.chekh.paysage.feature.home.screen.apps.fragment.AppsFragment
+import com.chekh.paysage.feature.home.screen.apps.AppsFragment
 import com.chekh.paysage.feature.home.screen.desktop.di.DesktopFragmentModule
-import com.chekh.paysage.feature.home.screen.desktop.fragment.DesktopFragment
+import com.chekh.paysage.feature.home.screen.desktop.DesktopFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -12,7 +12,7 @@
                      tools:ignore="ProtectedPermissions" />
 
     <application
-            android:name=".PaysageApp"
+            android:name=".PaysageApplication"
             android:allowBackup="true"
             android:fullBackupContent="true"
             android:label="@string/app_name"

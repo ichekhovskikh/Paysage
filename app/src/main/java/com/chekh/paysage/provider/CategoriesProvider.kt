@@ -1,15 +1,22 @@
 package com.chekh.paysage.provider
 
-import com.chekh.paysage.model.CategoryInfo
-import com.chekh.paysage.model.CategoryTitle
+import com.chekh.paysage.feature.home.data.model.CategorySettingsModel
+import com.chekh.paysage.feature.home.data.model.AppCategory
+import javax.inject.Inject
 
 interface CategoriesProvider {
-    fun provide(): List<CategoryInfo>
+    fun provide(): List<CategorySettingsModel>
 }
 
-class CategoriesProviderImpl : CategoriesProvider {
+class CategoriesProviderImpl @Inject constructor() : CategoriesProvider {
 
-    override fun provide(): List<CategoryInfo> {
-        return CategoryTitle.values().map { CategoryInfo(it.id, it, it.ordinal) }
+    override fun provide(): List<CategorySettingsModel> {
+        return AppCategory.values().map {
+            CategorySettingsModel(
+                it.id,
+                it,
+                it.ordinal
+            )
+        }
     }
 }

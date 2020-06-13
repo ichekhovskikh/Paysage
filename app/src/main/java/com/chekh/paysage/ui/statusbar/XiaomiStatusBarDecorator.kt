@@ -2,8 +2,9 @@ package com.chekh.paysage.ui.statusbar
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import javax.inject.Inject
 
-class XiaomiStatusBarDecorator(
+class XiaomiStatusBarDecorator @Inject constructor(
     private val materialDecorator: MaterialStatusBarDecorator
 ) : StatusBarDecorator() {
 

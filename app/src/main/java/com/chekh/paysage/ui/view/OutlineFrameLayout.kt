@@ -15,7 +15,6 @@ class OutlineFrameLayout @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyle) {
 
     init {
-
         val attributes = context.obtainStyledAttributes(attrs, R.styleable.OutlineFrameLayout)
         attributes.apply {
             val outlineRadius = getDimension(R.styleable.OutlineFrameLayout_outlineRadius, 0f)

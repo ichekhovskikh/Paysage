@@ -1,17 +1,13 @@
 package com.chekh.paysage.db
 
-import android.graphics.drawable.Drawable
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import androidx.room.TypeConverter
-import com.chekh.paysage.PaysageApp.Companion.launcher
-import com.chekh.paysage.model.CategoryTitle
-import com.chekh.paysage.model.IconColor
-import com.chekh.paysage.ui.tool.createBitmap
-import com.chekh.paysage.ui.tool.toBase64
+import com.chekh.paysage.feature.home.data.model.AppCategory
+import com.chekh.paysage.feature.home.data.model.IconColor
 
 object Converters {
+
     class BooleanTypeConverter {
+
         @TypeConverter
         fun toBoolean(value: Int): Boolean {
             return value == 1
@@ -24,6 +20,7 @@ object Converters {
     }
 
     class IconColorTypeConverter {
+
         @TypeConverter
         fun toIconColor(value: Int): IconColor {
             return IconColor.get(value)
@@ -35,27 +32,16 @@ object Converters {
         }
     }
 
-    class CategoryTitleTypeConverter {
+    class AppCategoryTypeConverter {
+
         @TypeConverter
-        fun toCategoryTitle(value: String): CategoryTitle {
-            return CategoryTitle.get(value)
+        fun toAppCategory(value: String): AppCategory {
+            return AppCategory.get(value)
         }
 
         @TypeConverter
-        fun toString(value: CategoryTitle): String {
+        fun toString(value: AppCategory): String {
             return value.id
-        }
-    }
-
-    class DrawableTypeConverter {
-        @TypeConverter
-        fun toDrawable(value: String): Drawable {
-            return createBitmap(value).toDrawable(launcher.resources)
-        }
-
-        @TypeConverter
-        fun toString(value: Drawable): String {
-            return value.toBitmap().toBase64()
         }
     }
 }

@@ -4,8 +4,9 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
+import javax.inject.Inject
 
-class MaterialStatusBarDecorator : StatusBarDecorator() {
+class MaterialStatusBarDecorator @Inject constructor() : StatusBarDecorator() {
 
     override fun statusBarDarkMode(activity: Activity, isDark: Boolean): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

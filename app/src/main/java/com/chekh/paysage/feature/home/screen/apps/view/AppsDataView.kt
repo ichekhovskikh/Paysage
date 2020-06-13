@@ -7,9 +7,10 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.model.AppInfo
+import com.chekh.paysage.feature.home.data.model.AppSettingsModel
 import com.chekh.paysage.feature.home.screen.apps.adapter.AppListAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import com.chekh.paysage.feature.home.domain.model.AppModel
 import com.chekh.paysage.ui.anim.TransformAnimation
 
 class AppsDataView @JvmOverloads constructor(
@@ -68,7 +69,7 @@ class AppsDataView @JvmOverloads constructor(
         })
     }
 
-    fun setApps(apps: List<AppInfo>) {
+    fun setApps(apps: List<AppModel>) {
         adapter.setApps(apps)
     }
 

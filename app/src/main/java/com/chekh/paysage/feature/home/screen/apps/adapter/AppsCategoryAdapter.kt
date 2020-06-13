@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.R
 import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsCategoryStateChanged
 import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsGroupByCategoryDiffCallback
-import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategory
+import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategoryModel
 import com.chekh.paysage.feature.home.screen.apps.view.AppsDataView
 import com.chekh.paysage.feature.home.screen.apps.view.AppsHeaderView
 import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
@@ -17,16 +17,16 @@ import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
 class AppsCategoryAdapter(
     private val onCategoryClick: (Int, String) -> Unit,
     private val onScrollCategoryChange: (Int, String) -> Unit
-) : StickyAdapter<ExpandableAppsGroupByCategory, AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>(
+) : StickyAdapter<ExpandableAppsGroupByCategoryModel, AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>(
     AppsGroupByCategoryDiffCallback()
 ) {
 
     private val sharedPool = RecycledViewPool().apply { setMaxRecycledViews(0, SHARED_POOL_SIZE) }
     private var recycler: RecyclerView? = null
-    private var items = listOf<ExpandableAppsGroupByCategory>()
+    private var items = listOf<ExpandableAppsGroupByCategoryModel>()
 
     fun setAppsCategories(
-        appsCategory: List<ExpandableAppsGroupByCategory>,
+        appsCategory: List<ExpandableAppsGroupByCategoryModel>,
         isAnimate: Boolean = false
     ) {
         items = appsCategory
@@ -103,11 +103,11 @@ class AppsCategoryAdapter(
             }
         }
 
-        fun bind(position: Int, appCategory: ExpandableAppsGroupByCategory) = with(view) {
-            val category = appCategory.data.category ?: return
+        fun bind(position: Int, appCategory: ExpandableAppsGroupByCategoryModel) = with(view) {
+            val category = appCategory.data.category
             setOnClickListener { onCategoryClick(position, category.id) }
-            setIcon(category.title.iconRes)
-            setTitle(category.title.titleRes)
+            setIcon(category.category.iconRes)
+            setTitle(category.category.titleRes)
             isExpanded = appCategory.isExpanded
         }
 
@@ -129,13 +129,13 @@ class AppsCategoryAdapter(
             }
         }
 
-        fun bind(appCategory: ExpandableAppsGroupByCategory) = with(view) {
+        fun bind(appCategory: ExpandableAppsGroupByCategoryModel) = with(view) {
             setApps(appCategory.data.apps)
             isExpanded = appCategory.isExpanded
             scrollOffset = appCategory.scrollOffset
 
             setOffsetChangeListener { offset ->
-                val category = appCategory.data.category ?: return@setOffsetChangeListener
+                val category = appCategory.data.category
                 onScrollChange(offset, category.id)
             }
         }
