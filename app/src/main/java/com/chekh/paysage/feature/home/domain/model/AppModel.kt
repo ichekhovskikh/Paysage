@@ -8,7 +8,7 @@ data class AppModel(
     val packageName: String,
     val className: String,
     val title: String,
-    val icon: Drawable,
+    val icon: Drawable?,
     val categoryId: String,
     val position: Int,
     val isHidden: Boolean,

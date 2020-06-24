@@ -7,8 +7,10 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsCategoryStateChanged
+import com.chekh.paysage.feature.home.domain.model.AppModel
+import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryStateChanged
 import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsGroupByCategoryDiffCallback
+import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryAppsChanged
 import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategoryModel
 import com.chekh.paysage.feature.home.screen.apps.view.AppsDataView
 import com.chekh.paysage.feature.home.screen.apps.view.AppsHeaderView
@@ -81,9 +83,14 @@ class AppsCategoryAdapter(
             return
         }
         for (payload in payloads) {
-            if (payload is AppsCategoryStateChanged) {
-                contentHolder.setScrollOffset(payload.scrollOffset)
-                contentHolder.expand(payload.isExpanded)
+            when(payload) {
+                is AppsCategoryStateChanged -> {
+                    contentHolder.setScrollOffset(payload.scrollOffset)
+                    contentHolder.expand(payload.isExpanded)
+                }
+                is AppsCategoryAppsChanged -> {
+                    contentHolder.setApps(payload.apps)
+                }
             }
         }
     }
@@ -129,15 +136,19 @@ class AppsCategoryAdapter(
             }
         }
 
-        fun bind(appCategory: ExpandableAppsGroupByCategoryModel) = with(view) {
+        fun bind(appCategory: ExpandableAppsGroupByCategoryModel) {
             setApps(appCategory.data.apps)
-            isExpanded = appCategory.isExpanded
-            scrollOffset = appCategory.scrollOffset
+            view.isExpanded = appCategory.isExpanded
+            view.scrollOffset = appCategory.scrollOffset
 
-            setOffsetChangeListener { offset ->
+            view.setOffsetChangeListener { offset ->
                 val category = appCategory.data.category
                 onScrollChange(offset, category.id)
             }
+        }
+
+        fun setApps(apps: List<AppModel>) {
+            view.setApps(apps)
         }
 
         fun expand(isExpanded: Boolean) {

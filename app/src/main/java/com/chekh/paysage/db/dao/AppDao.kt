@@ -5,37 +5,41 @@ import androidx.room.*
 import com.chekh.paysage.feature.home.data.model.AppSettingsModel
 
 @Dao
-interface AppDao {
+abstract class AppDao {
+
     @Query("SELECT * FROM app WHERE id = :packageName || :className")
-    fun getByUnique(packageName: String, className: String): AppSettingsModel
+    abstract fun getByUnique(packageName: String, className: String): AppSettingsModel
 
     @Query("SELECT * FROM app WHERE packageName = :packageName")
-    fun getByPackageName(packageName: String): List<AppSettingsModel>
+    abstract fun getByPackageName(packageName: String): List<AppSettingsModel>
 
     @Query("SELECT * FROM app")
-    fun getAll(): List<AppSettingsModel>
+    abstract fun getAll(): List<AppSettingsModel>
 
     @Query("SELECT * FROM app")
-    fun getLiveAll(): LiveData<List<AppSettingsModel>>
+    abstract fun getLiveAll(): LiveData<List<AppSettingsModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(app: AppSettingsModel)
+    abstract fun add(app: AppSettingsModel)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun add(apps: Set<AppSettingsModel>)
+    abstract fun add(apps: Set<AppSettingsModel>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(app: AppSettingsModel)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(apps: List<AppSettingsModel>)
+    abstract fun update(app: AppSettingsModel)
 
     @Delete
-    fun remove(app: AppSettingsModel)
+    abstract fun remove(app: AppSettingsModel)
 
     @Query("DELETE FROM app")
-    fun removeAll()
+    abstract fun removeAll()
 
     @Query("DELETE FROM app WHERE packageName = :packageName")
-    fun removeByPackageName(packageName: String)
+    abstract fun removeByPackageName(packageName: String)
+
+    @Transaction
+    open fun updateAll(apps: Set<AppSettingsModel>) {
+        removeAll()
+        add(apps)
+    }
 }

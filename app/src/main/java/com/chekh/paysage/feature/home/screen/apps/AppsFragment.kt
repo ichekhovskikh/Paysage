@@ -62,7 +62,6 @@ class AppsFragment : ViewModelFragment<AppsViewModel>(), PanelSlideListener {
     private fun setupRecycler() {
         srvCategories.overScrollMode = OVER_SCROLL_NEVER
         srvCategories.adapter = adapter
-        srvCategories.itemAnimator = null
         slidingPanel?.setScrollableView(srvCategories)
     }
 

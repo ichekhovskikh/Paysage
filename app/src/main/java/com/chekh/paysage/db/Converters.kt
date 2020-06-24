@@ -1,8 +1,14 @@
 package com.chekh.paysage.db
 
+import android.graphics.drawable.Drawable
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.room.TypeConverter
+import com.chekh.paysage.PaysageApplication.Companion.globalContext
 import com.chekh.paysage.feature.home.data.model.AppCategory
 import com.chekh.paysage.feature.home.data.model.IconColor
+import com.chekh.paysage.ui.tools.createBitmap
+import com.chekh.paysage.ui.tools.toBase64
 
 object Converters {
 
@@ -42,6 +48,19 @@ object Converters {
         @TypeConverter
         fun toString(value: AppCategory): String {
             return value.id
+        }
+    }
+
+    class DrawableTypeConverter {
+
+        @TypeConverter
+        fun toDrawable(value: String): Drawable {
+            return createBitmap(value).toDrawable(globalContext.resources)
+        }
+
+        @TypeConverter
+        fun toString(value: Drawable): String {
+            return value.toBitmap().toBase64()
         }
     }
 }

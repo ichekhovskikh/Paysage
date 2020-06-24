@@ -1,6 +1,7 @@
 package com.chekh.paysage
 
 import android.app.Application
+import android.content.Context
 import com.chekh.paysage.di.AppComponent
 import com.chekh.paysage.di.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -25,5 +26,11 @@ class PaysageApplication : Application(), HasAndroidInjector {
     override fun onCreate() {
         super.onCreate()
         component.inject(this)
+
+        globalContext = this
+    }
+
+    companion object {
+        lateinit var globalContext: Context private set
     }
 }

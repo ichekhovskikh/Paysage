@@ -1,9 +1,12 @@
 package com.chekh.paysage.feature.home.screen.apps.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
+import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryAppsChanged
+import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryStateChanged
 import com.chekh.paysage.feature.home.screen.apps.model.ExpandableAppsGroupByCategoryModel
 
-class AppsGroupByCategoryDiffCallback : DiffUtil.ItemCallback<ExpandableAppsGroupByCategoryModel>() {
+class AppsGroupByCategoryDiffCallback :
+    DiffUtil.ItemCallback<ExpandableAppsGroupByCategoryModel>() {
 
     override fun areItemsTheSame(
         oldItem: ExpandableAppsGroupByCategoryModel,
@@ -22,10 +25,15 @@ class AppsGroupByCategoryDiffCallback : DiffUtil.ItemCallback<ExpandableAppsGrou
     override fun getChangePayload(
         oldItem: ExpandableAppsGroupByCategoryModel,
         newItem: ExpandableAppsGroupByCategoryModel
-    ): Any? {
-        if (oldItem != newItem && oldItem.data == newItem.data) {
-            return AppsCategoryStateChanged(newItem.isExpanded, newItem.scrollOffset)
+    ): Any? = when {
+        oldItem != newItem && oldItem.data == newItem.data -> {
+            AppsCategoryStateChanged(newItem.isExpanded, newItem.scrollOffset)
         }
-        return super.getChangePayload(oldItem, newItem)
+        oldItem.data.category == newItem.data.category && oldItem.data.apps != newItem.data.apps -> {
+            AppsCategoryAppsChanged(newItem.data.apps)
+        }
+        else -> {
+            super.getChangePayload(oldItem, newItem)
+        }
     }
 }

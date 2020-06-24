@@ -5,9 +5,9 @@ import android.content.pm.LauncherApps
 import android.os.Process
 import android.os.UserHandle
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.db.dao.AppDao
 import com.chekh.paysage.db.dao.PackageDao
+import com.chekh.paysage.extension.foreachMap
 import com.chekh.paysage.feature.home.data.factory.AppSettingsFactory
 import com.chekh.paysage.feature.home.data.model.AppSettingsModel
 import com.chekh.paysage.feature.home.data.model.AppCategory.OTHER
@@ -35,8 +35,8 @@ class AppServiceImpl @Inject constructor(
     private val appMapper: AppModelMapper
 ) : AppService, AppsChangedCallback() {
 
-    private val appsMutableLiveData = MutableLiveData<List<AppModel>>()
-    override val appsLiveData: LiveData<List<AppModel>> = appsMutableLiveData
+    override val appsLiveData: LiveData<List<AppModel>> = appDao.getLiveAll()
+        .foreachMap { appMapper.map(it) }
 
     init {
         pullAppsAsync()
@@ -64,35 +64,46 @@ class AppServiceImpl @Inject constructor(
             removePackage(packageName)
             return
         }
-
-        val apps = appsMutableLiveData.value?.toMutableList() ?: mutableListOf()
-        val appsSettings = appDao.getAll().toMutableSet()
-
-        activityInfos.forEach { activityInfo ->
-            val appSettings = appsSettings
-                .find { isSame(activityInfo, it) }
-                ?: createAppSettings(activityInfo, appsSettings)
-            appsSettings.add(appSettings)
-
-            val appModel = appMapper.map(activityInfo, appSettings)
-            apps.update(appModel)
+        val cachedAppsSettings = appDao.getAll()
+        val newAppsSettings = when (packageName == null) {
+            true -> mutableSetOf()
+            else -> cachedAppsSettings.toMutableSet()
         }
-        appsMutableLiveData.postValue(apps)
-        appDao.add(appsSettings)
+        activityInfos.forEach { activityInfo ->
+            val appSettings = pullUpdatedAppSettings(activityInfo, cachedAppsSettings)
+            newAppsSettings.update(appSettings)
+        }
+        appDao.updateAll(newAppsSettings)
     }
 
     private fun removePackage(packageName: String?) {
-        packageName ?: return
-        val apps = appsMutableLiveData.value?.filter { it.packageName != packageName }
-        apps?.let {
-            appsMutableLiveData.postValue(it)
-            appDao.removeByPackageName(packageName)
+        when (packageName == null) {
+            true -> appDao.removeAll()
+            else -> appDao.removeByPackageName(packageName)
+        }
+    }
+
+    private fun pullUpdatedAppSettings(
+        activityInfo: LauncherActivityInfo,
+        appsSettings: List<AppSettingsModel>
+    ): AppSettingsModel {
+        val appSettings = appsSettings.find { isSame(activityInfo, it) }
+        return when (appSettings == null) {
+            true -> createAppSettings(activityInfo, appsSettings)
+            else -> {
+                appSettingsFactory.create(
+                    activityInfo,
+                    appSettings.categoryId,
+                    appSettings.position,
+                    appSettings.isHidden
+                )
+            }
         }
     }
 
     private fun createAppSettings(
         activityInfo: LauncherActivityInfo,
-        appsSettings: Set<AppSettingsModel>
+        appsSettings: List<AppSettingsModel>
     ): AppSettingsModel {
         val componentName = activityInfo.componentName
         val categoryId = packageDao.getCategoryId(componentName.packageName) ?: OTHER.id
@@ -102,7 +113,7 @@ class AppServiceImpl @Inject constructor(
                 position = it.position
             }
         }
-        return appSettingsFactory.create(componentName, categoryId, position + 1)
+        return appSettingsFactory.create(activityInfo, categoryId, position + 1)
     }
 
     private fun isSame(activityInfo: LauncherActivityInfo, appSettings: AppSettingsModel): Boolean {
@@ -111,7 +122,7 @@ class AppServiceImpl @Inject constructor(
                 appSettings.className == componentName.className
     }
 
-    private fun MutableList<AppModel>.update(element: AppModel) {
+    private fun MutableSet<AppSettingsModel>.update(element: AppSettingsModel) {
         removeAll { it.id == element.id }
         add(element)
     }

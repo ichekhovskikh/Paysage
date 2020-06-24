@@ -44,7 +44,7 @@ class DatabaseModule {
         context: Context,
         migrations: Array<Migration>,
         callback: RoomDatabase.Callback
-    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v6.db")
+    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v7.db")
         .addCallback(callback)
         .addMigrations(*migrations)
         .build()
