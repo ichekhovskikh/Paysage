@@ -7,14 +7,9 @@ import com.chekh.paysage.feature.home.data.factory.AppSettingsFactoryImpl
 import com.chekh.paysage.feature.home.HomeFragment
 import com.chekh.paysage.feature.home.HomeViewModel
 import com.chekh.paysage.feature.home.data.HomeRepositoryImpl
-import com.chekh.paysage.feature.home.data.service.AppService
-import com.chekh.paysage.feature.home.data.service.AppServiceImpl
-import com.chekh.paysage.feature.home.data.service.CategoryService
-import com.chekh.paysage.feature.home.data.service.CategoryServiceImpl
+import com.chekh.paysage.feature.home.data.service.*
 import com.chekh.paysage.feature.home.domain.HomeRepository
-import com.chekh.paysage.feature.home.domain.gateway.AppsGroupByCategoriesGateway
-import com.chekh.paysage.feature.home.domain.gateway.StartObserveUpdatesGateway
-import com.chekh.paysage.feature.home.domain.gateway.StopObserveUpdatesGateway
+import com.chekh.paysage.feature.home.domain.gateway.*
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -57,6 +52,24 @@ abstract class HomeActivityModule {
 
     @HomeActivityScope
     @Binds
+    abstract fun bindGetDockAppsGateway(
+        repository: HomeRepository
+    ): GetDockAppsGateway
+
+    @HomeActivityScope
+    @Binds
+    abstract fun bindGetDockAppsPositionsGateway(
+        repository: HomeRepository
+    ): GetDockAppsPositionsGateway
+
+    @HomeActivityScope
+    @Binds
+    abstract fun bindGetDockAppsSizeGateway(
+        repository: HomeRepository
+    ): GetDockAppsSizeGateway
+
+    @HomeActivityScope
+    @Binds
     abstract fun bindAppSettingsFactory(
         appSettingsFactory: AppSettingsFactoryImpl
     ): AppSettingsFactory
@@ -72,4 +85,10 @@ abstract class HomeActivityModule {
     abstract fun bindCategoryService(
         categoryService: CategoryServiceImpl
     ): CategoryService
+
+    @HomeActivityScope
+    @Binds
+    abstract fun bindDockAppService(
+        dockAppService: DockAppServiceImpl
+    ): DockAppService
 }

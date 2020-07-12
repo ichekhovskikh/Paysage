@@ -35,7 +35,7 @@ class AppServiceImpl @Inject constructor(
     private val appMapper: AppModelMapper
 ) : AppService, AppsChangedCallback() {
 
-    override val appsLiveData: LiveData<List<AppModel>> = appDao.getLiveAll()
+    override val appsLiveData: LiveData<List<AppModel>> = appDao.getAllLive()
         .foreachMap { appMapper.map(it) }
 
     init {
@@ -87,7 +87,7 @@ class AppServiceImpl @Inject constructor(
         activityInfo: LauncherActivityInfo,
         appsSettings: List<AppSettingsModel>
     ): AppSettingsModel {
-        val appSettings = appsSettings.find { isSame(activityInfo, it) }
+        val appSettings = appsSettings.find { it.isSame(activityInfo) }
         return when (appSettings == null) {
             true -> createAppSettings(activityInfo, appsSettings)
             else -> {
@@ -116,10 +116,9 @@ class AppServiceImpl @Inject constructor(
         return appSettingsFactory.create(activityInfo, categoryId, position + 1)
     }
 
-    private fun isSame(activityInfo: LauncherActivityInfo, appSettings: AppSettingsModel): Boolean {
+    private fun AppSettingsModel.isSame(activityInfo: LauncherActivityInfo): Boolean {
         val componentName = activityInfo.componentName
-        return appSettings.packageName == componentName.packageName &&
-                appSettings.className == componentName.className
+        return packageName == componentName.packageName && className == componentName.className
     }
 
     private fun MutableSet<AppSettingsModel>.update(element: AppSettingsModel) {

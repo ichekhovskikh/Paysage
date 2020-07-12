@@ -1,8 +1,8 @@
 package com.chekh.paysage.handler.backpressed
 
 import androidx.fragment.app.FragmentManager
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
-import com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout.PanelState
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 
 class SlidingPanelBackPressedHandler(
     private val slidingPanel: SlidingUpPanelLayout,

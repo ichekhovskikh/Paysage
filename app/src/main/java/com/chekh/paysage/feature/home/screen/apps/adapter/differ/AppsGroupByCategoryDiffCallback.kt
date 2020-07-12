@@ -29,8 +29,9 @@ class AppsGroupByCategoryDiffCallback :
         oldItem != newItem && oldItem.data == newItem.data -> {
             AppsCategoryStateChanged(newItem.isExpanded, newItem.scrollOffset)
         }
-        oldItem.data.category == newItem.data.category && oldItem.data.apps != newItem.data.apps -> {
-            AppsCategoryAppsChanged(newItem.data.apps)
+        oldItem.data.category == newItem.data.category &&
+                oldItem.data.appList != newItem.data.appList -> {
+            AppsCategoryAppsChanged(newItem.data.appList)
         }
         else -> {
             super.getChangePayload(oldItem, newItem)

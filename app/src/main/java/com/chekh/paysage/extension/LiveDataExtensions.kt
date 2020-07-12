@@ -46,13 +46,79 @@ fun <X> LiveData<X>.filter(condition: (X?) -> Boolean): LiveData<X> {
     return result
 }
 
-fun <X, Y, Z> zip(x: LiveData<X>, z: LiveData<Z>, merge: (x: X?, z: Z?) -> Y?): LiveData<Y> {
-    val mergeLiveData = MediatorLiveData<Y>()
+fun <X, Y, Z> zip(
+    x: LiveData<X>,
+    y: LiveData<Y>,
+    merge: (x: X?, z: Y?) -> Z?
+): LiveData<Z> {
+    val mergeLiveData = MediatorLiveData<Z>()
     mergeLiveData.addSource(x) { xValue ->
-        mergeLiveData.value = merge(xValue, z.value)
+        val yValue = y.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue)
+    }
+    mergeLiveData.addSource(y) { yValue ->
+        val xValue = x.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue)
+    }
+    return mergeLiveData
+}
+
+fun <X, Y, Z, R> zip(
+    x: LiveData<X>,
+    y: LiveData<Y>,
+    z: LiveData<Z>,
+    merge: (x: X, y: Y, z: Z) -> R
+): LiveData<R> {
+    val mergeLiveData = MediatorLiveData<R>()
+    mergeLiveData.addSource(x) { xValue ->
+        val yValue = y.value ?: return@addSource
+        val zValue = z.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue)
+    }
+    mergeLiveData.addSource(y) { yValue ->
+        val xValue = x.value ?: return@addSource
+        val zValue = z.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue)
     }
     mergeLiveData.addSource(z) { zValue ->
-        mergeLiveData.value = merge(x.value, zValue)
+        val xValue = x.value ?: return@addSource
+        val yValue = y.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue)
+    }
+    return mergeLiveData
+}
+
+fun <X, Y, Z, W, R> zip(
+    x: LiveData<X>,
+    y: LiveData<Y>,
+    z: LiveData<Z>,
+    w: LiveData<W>,
+    merge: (x: X, y: Y, z: Z, w: W) -> R
+): LiveData<R> {
+    val mergeLiveData = MediatorLiveData<R>()
+    mergeLiveData.addSource(x) { xValue ->
+        val yValue = y.value ?: return@addSource
+        val zValue = z.value ?: return@addSource
+        val wValue = w.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
+    }
+    mergeLiveData.addSource(y) { yValue ->
+        val xValue = x.value ?: return@addSource
+        val zValue = z.value ?: return@addSource
+        val wValue = w.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
+    }
+    mergeLiveData.addSource(z) { zValue ->
+        val xValue = x.value ?: return@addSource
+        val yValue = y.value ?: return@addSource
+        val wValue = w.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
+    }
+    mergeLiveData.addSource(w) { wValue ->
+        val xValue = x.value ?: return@addSource
+        val yValue = y.value ?: return@addSource
+        val zValue = z.value ?: return@addSource
+        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
     }
     return mergeLiveData
 }

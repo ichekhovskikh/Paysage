@@ -7,7 +7,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.home.domain.model.AppModel
+import com.chekh.paysage.feature.home.domain.model.AppListModel
 import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryStateChanged
 import com.chekh.paysage.feature.home.screen.apps.adapter.differ.AppsGroupByCategoryDiffCallback
 import com.chekh.paysage.feature.home.screen.apps.data.AppsCategoryAppsChanged
@@ -18,7 +18,8 @@ import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
 
 class AppsCategoryAdapter(
     private val onCategoryClick: (Int, String) -> Unit,
-    private val onScrollCategoryChange: (Int, String) -> Unit
+    private val onScrollCategoryChange: (Int, String) -> Unit,
+    private val onScrollStateChange: (Int) -> Unit
 ) : StickyAdapter<ExpandableAppsGroupByCategoryModel, AppsCategoryAdapter.AppsHeaderViewHolder, AppsCategoryAdapter.AppsDataViewHolder>(
     AppsGroupByCategoryDiffCallback()
 ) {
@@ -50,7 +51,8 @@ class AppsCategoryAdapter(
     override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): AppsDataViewHolder =
         AppsDataViewHolder(
             view = AppsDataView(parent.context).apply { setRecycledViewPool(sharedPool) },
-            onScrollChange = onScrollCategoryChange
+            onScrollChange = onScrollCategoryChange,
+            onScrollStateChange = onScrollStateChange
         )
 
     override fun onBindHeaderViewHolder(
@@ -83,7 +85,7 @@ class AppsCategoryAdapter(
             return
         }
         for (payload in payloads) {
-            when(payload) {
+            when (payload) {
                 is AppsCategoryStateChanged -> {
                     contentHolder.setScrollOffset(payload.scrollOffset)
                     contentHolder.expand(payload.isExpanded)
@@ -125,7 +127,8 @@ class AppsCategoryAdapter(
 
     class AppsDataViewHolder(
         private val view: AppsDataView,
-        private val onScrollChange: (Int, String) -> Unit
+        private val onScrollChange: (Int, String) -> Unit,
+        private val onScrollStateChange: (Int) -> Unit
     ) : RecyclerView.ViewHolder(view) {
 
         init {
@@ -133,11 +136,12 @@ class AppsCategoryAdapter(
                 layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
                 val padding = resources.getDimension(R.dimen.small).toInt()
                 setPadding(padding, padding, padding, padding)
+                setScrollStateChangeListener { onScrollStateChange(it) }
             }
         }
 
         fun bind(appCategory: ExpandableAppsGroupByCategoryModel) {
-            setApps(appCategory.data.apps)
+            setApps(appCategory.data.appList)
             view.isExpanded = appCategory.isExpanded
             view.scrollOffset = appCategory.scrollOffset
 
@@ -147,8 +151,10 @@ class AppsCategoryAdapter(
             }
         }
 
-        fun setApps(apps: List<AppModel>) {
-            view.setApps(apps)
+        fun setApps(appList: AppListModel) {
+            view.spanCount = appList.appSpan
+            view.appSize = appList.appSize
+            view.setApps(appList.apps)
         }
 
         fun expand(isExpanded: Boolean) {

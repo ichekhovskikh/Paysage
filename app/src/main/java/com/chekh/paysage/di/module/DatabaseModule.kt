@@ -10,6 +10,7 @@ import com.chekh.paysage.db.Migrations
 import com.chekh.paysage.db.PrepopulateDatabaseCallback
 import com.chekh.paysage.db.dao.AppDao
 import com.chekh.paysage.db.dao.CategoryDao
+import com.chekh.paysage.db.dao.DockAppDao
 import com.chekh.paysage.db.dao.PackageDao
 import com.chekh.paysage.provider.CategoriesProvider
 import com.chekh.paysage.provider.PackagesProvider
@@ -44,7 +45,7 @@ class DatabaseModule {
         context: Context,
         migrations: Array<Migration>,
         callback: RoomDatabase.Callback
-    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v7.db")
+    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v8.db")
         .addCallback(callback)
         .addMigrations(*migrations)
         .build()
@@ -60,4 +61,8 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providePackageDao(db: ApplicationDatabase): PackageDao = db.packageDao
+
+    @Singleton
+    @Provides
+    fun provideDockAppDao(db: ApplicationDatabase): DockAppDao = db.dockAppDao
 }

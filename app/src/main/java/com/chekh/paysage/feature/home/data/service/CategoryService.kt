@@ -16,6 +16,6 @@ class CategoryServiceImpl @Inject constructor(
     private val categoryMapper: CategoryModelMapper
 ) : CategoryService {
 
-    override val categoriesLiveData = categoryDao.getLiveAll()
+    override val categoriesLiveData = categoryDao.getAllLive()
         .foreachMap { categoryMapper.map(it) }
 }

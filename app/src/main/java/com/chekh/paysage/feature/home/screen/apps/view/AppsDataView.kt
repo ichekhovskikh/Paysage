@@ -7,9 +7,9 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.home.data.model.AppSettingsModel
 import com.chekh.paysage.feature.home.screen.apps.adapter.AppListAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import com.chekh.paysage.feature.home.domain.model.AppListModel
 import com.chekh.paysage.feature.home.domain.model.AppModel
 import com.chekh.paysage.ui.anim.TransformAnimation
 
@@ -25,6 +25,7 @@ class AppsDataView @JvmOverloads constructor(
     private val gridLayoutManager: GridLayoutManager
     private val transformAnimation: TransformAnimation
     private var onOffsetChange: ((Int) -> Unit)? = null
+    private var onScrollStateChange: ((Int) -> Unit)? = null
 
     var isExpanded = false
         set(value) {
@@ -39,6 +40,12 @@ class AppsDataView @JvmOverloads constructor(
             linearLayoutManager.scrollToPositionWithOffset(0, -value)
         }
 
+    var appSize: Int = WRAP_CONTENT
+        set(value) {
+            field = value
+            adapter.appSize = field
+        }
+
     var spanCount
         get() = gridLayoutManager.spanCount
         set(value) {
@@ -50,6 +57,7 @@ class AppsDataView @JvmOverloads constructor(
         overScrollMode = View.OVER_SCROLL_NEVER
         clipToPadding = false
 
+        isNestedScrollingEnabled = false
         linearLayoutManager = LinearLayoutManager(context, HORIZONTAL, false)
         gridLayoutManager = GridLayoutManager(context, SPAN_COUNT_DEFAULT)
         layoutManager = linearLayoutManager
@@ -64,7 +72,10 @@ class AppsDataView @JvmOverloads constructor(
     private fun setupOffsetListener() {
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(view: RecyclerView, newState: Int) {
-                onOffsetChange?.invoke(scrollOffset)
+                onScrollStateChange?.invoke(newState)
+                if (newState != SCROLL_STATE_DRAGGING) {
+                    onOffsetChange?.invoke(scrollOffset)
+                }
             }
         })
     }
@@ -75,6 +86,10 @@ class AppsDataView @JvmOverloads constructor(
 
     fun setOffsetChangeListener(onOffsetChange: (Int) -> Unit) {
         this.onOffsetChange = onOffsetChange
+    }
+
+    fun setScrollStateChangeListener(onScrollStateChange: (Int) -> Unit) {
+        this.onScrollStateChange = onScrollStateChange
     }
 
     fun setOnAnimationCancelListener(onCancel: () -> Unit) {

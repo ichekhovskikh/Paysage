@@ -2,20 +2,23 @@ package com.chekh.paysage.feature.home.domain.mapper
 
 import com.chekh.paysage.feature.home.domain.model.AppModel
 import com.chekh.paysage.feature.home.domain.model.AppsGroupByCategoryModel
+import com.chekh.paysage.feature.home.domain.model.AppListModel
 import com.chekh.paysage.feature.home.domain.model.CategoryModel
-import com.chekh.paysage.mapper.TwoParametersMapper
+import com.chekh.paysage.mapper.FourParametersMapper
 import javax.inject.Inject
 
 class AppsGroupByCategoryModelMapper @Inject constructor() :
-    TwoParametersMapper<CategoryModel, List<AppModel>, AppsGroupByCategoryModel> {
+    FourParametersMapper<CategoryModel, List<AppModel>, Int, Int, AppsGroupByCategoryModel> {
 
     override fun map(
         firstSource: CategoryModel,
-        secondSource: List<AppModel>
+        secondSource: List<AppModel>,
+        thirdSource: Int,
+        fourthSource: Int
     ): AppsGroupByCategoryModel {
         return AppsGroupByCategoryModel(
             category = firstSource,
-            apps = secondSource
+            appList = AppListModel(secondSource, thirdSource, fourthSource)
         )
     }
 }

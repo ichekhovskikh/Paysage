@@ -3,9 +3,10 @@ package com.chekh.paysage.feature.home.screen.apps.di
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.chekh.paysage.di.tools.ViewModelKey
-import com.chekh.paysage.feature.home.domain.usecase.AppsGroupByCategoriesUseCase
+import com.chekh.paysage.feature.home.domain.usecase.*
 import com.chekh.paysage.feature.home.screen.apps.AppsViewModel
 import com.chekh.paysage.feature.home.screen.apps.AppsFragment
+import com.chekh.paysage.feature.home.screen.apps.DockAppsViewModel
 import com.chekh.paysage.provider.ParamsProvider
 import dagger.Module
 import dagger.Provides
@@ -25,5 +26,17 @@ class AppsFragmentModule {
     @ViewModelKey(AppsViewModel::class)
     fun provideViewModel(
         appsGroupByCategoriesUseCase: AppsGroupByCategoriesUseCase
-    ): ViewModel = AppsViewModel(appsGroupByCategoriesUseCase)
+    ): ViewModel = AppsViewModel(
+        appsGroupByCategoriesUseCase
+    )
+
+    @AppsFragmentScope
+    @Provides
+    @IntoMap
+    @ViewModelKey(DockAppsViewModel::class)
+    fun provideDockAppsViewModel(
+        getSortedDockAppsScenario: GetSortedDockAppsScenario
+    ): ViewModel = DockAppsViewModel(
+        getSortedDockAppsScenario
+    )
 }

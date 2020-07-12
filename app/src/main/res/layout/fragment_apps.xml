@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chekh.paysage.ui.view.OutlineFrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:outlineRadius="@dimen/default_corner_radius"
-        android:background="@drawable/background_white_top_rounded">
+        android:orientation="vertical">
 
-    <com.chekh.paysage.ui.view.stickyheader.StickyRecyclerView
-            android:id="@+id/srvCategories"
+    <com.chekh.paysage.feature.home.screen.apps.view.DockBarView
+            android:id="@+id/dbvApps"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="@dimen/small"
+            android:padding="@dimen/micro" />
+
+    <com.chekh.paysage.ui.view.OutlineFrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:layoutAnimation="@anim/layout_animation_from_bottom"
-            app:layoutManager="com.chekh.paysage.ui.view.fastscroll.FastScrollLinearLayoutManager"
-            android:paddingTop="@dimen/small"
-            android:paddingBottom="@dimen/medium"
-            android:layout_marginStart="@dimen/small"
-            android:layout_marginEnd="@dimen/small"/>
+            android:background="@drawable/background_white_top_rounded"
+            app:outlineRadius="@dimen/default_corner_radius">
 
-</com.chekh.paysage.ui.view.OutlineFrameLayout>
+        <com.chekh.paysage.ui.view.stickyheader.StickyRecyclerView
+                android:id="@+id/srvCategories"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/small"
+                android:layout_marginEnd="@dimen/small"
+                android:clipToPadding="false"
+                android:layoutAnimation="@anim/layout_animation_from_bottom"
+                android:paddingTop="@dimen/small"
+                android:paddingBottom="@dimen/medium"
+                app:layoutManager="com.chekh.paysage.ui.view.fastscroll.FastScrollLinearLayoutManager" />
+
+    </com.chekh.paysage.ui.view.OutlineFrameLayout>
+
+</LinearLayout>

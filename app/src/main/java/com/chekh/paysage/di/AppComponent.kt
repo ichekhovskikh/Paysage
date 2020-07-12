@@ -1,10 +1,7 @@
 package com.chekh.paysage.di
 
 import com.chekh.paysage.PaysageApplication
-import com.chekh.paysage.di.module.ActivityModule
-import com.chekh.paysage.di.module.AppModule
-import com.chekh.paysage.di.module.DatabaseModule
-import com.chekh.paysage.di.module.ManagerModule
+import com.chekh.paysage.di.module.*
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -16,6 +13,7 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         AppModule::class,
+        ServiceModule::class,
         DatabaseModule::class,
         ManagerModule::class,
         ActivityModule::class

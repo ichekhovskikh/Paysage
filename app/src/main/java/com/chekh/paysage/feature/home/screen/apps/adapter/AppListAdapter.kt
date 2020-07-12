@@ -9,6 +9,8 @@ import com.chekh.paysage.ui.view.AppView
 
 class AppListAdapter : RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
 
+    var appSize: Int = WRAP_CONTENT
+
     private var apps: List<AppModel> = listOf()
 
     fun setApps(apps: List<AppModel>) {
@@ -22,12 +24,15 @@ class AppListAdapter : RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
-        holder.setApp(apps[position])
+        holder.bind(apps[position])
+        holder.setAppSize(appSize)
     }
 
     override fun getItemCount() = apps.size
 
-    class AppViewHolder(private val appView: AppView) : RecyclerView.ViewHolder(appView) {
+    class AppViewHolder(
+        private val appView: AppView
+    ) : RecyclerView.ViewHolder(appView) {
 
         init {
             appView.apply {
@@ -38,13 +43,22 @@ class AppListAdapter : RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
             }
         }
 
-        fun setApp(app: AppModel) {
+        fun bind(app: AppModel) {
             // TODO make SettingsService for iconSize
             //TODO make BadgerDrawable
             appView.icon = app.icon
             appView.label = app.title
             appView.setOnClickListener {
                 // startApp(app)
+            }
+        }
+
+        fun setAppSize(appSize: Int) {
+            val layoutParams = appView.layoutParams as ViewGroup.MarginLayoutParams
+            if (layoutParams.width != appSize && layoutParams.height != appSize) {
+                layoutParams.width = appSize
+                layoutParams.height = appSize
+                appView.layoutParams = layoutParams
             }
         }
     }

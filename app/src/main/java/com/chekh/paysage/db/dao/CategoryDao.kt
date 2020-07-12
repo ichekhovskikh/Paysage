@@ -13,7 +13,7 @@ interface CategoryDao {
     fun getAll(): List<CategorySettingsModel>
 
     @Query("SELECT * FROM category")
-    fun getLiveAll(): LiveData<List<CategorySettingsModel>>
+    fun getAllLive(): LiveData<List<CategorySettingsModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun add(category: CategorySettingsModel)

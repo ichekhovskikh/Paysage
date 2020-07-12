@@ -11,12 +11,15 @@ import com.chekh.paysage.db.Converters.BooleanTypeConverter
 import com.chekh.paysage.db.Converters.IconColorTypeConverter
 import com.chekh.paysage.db.Converters.AppCategoryTypeConverter
 import com.chekh.paysage.db.Converters.DrawableTypeConverter
+import com.chekh.paysage.db.dao.DockAppDao
 import com.chekh.paysage.db.dao.PackageDao
+import com.chekh.paysage.feature.home.data.model.DockAppSettingsModel
 import com.chekh.paysage.feature.home.data.model.PackageSettingsModel
 
 @Database(
     entities = [
         AppSettingsModel::class,
+        DockAppSettingsModel::class,
         CategorySettingsModel::class,
         PackageSettingsModel::class
     ],
@@ -30,6 +33,7 @@ import com.chekh.paysage.feature.home.data.model.PackageSettingsModel
 )
 abstract class ApplicationDatabase : RoomDatabase() {
     abstract val appDao: AppDao
+    abstract val dockAppDao: DockAppDao
     abstract val categoryDao: CategoryDao
     abstract val packageDao: PackageDao
 }

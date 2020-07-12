@@ -17,7 +17,10 @@ abstract class AppDao {
     abstract fun getAll(): List<AppSettingsModel>
 
     @Query("SELECT * FROM app")
-    abstract fun getLiveAll(): LiveData<List<AppSettingsModel>>
+    abstract fun getAllLive(): LiveData<List<AppSettingsModel>>
+
+    @Query("SELECT * FROM app WHERE app.id IN (SELECT appId FROM dock_app)")
+    abstract fun getDockAppAllLive(): LiveData<List<AppSettingsModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun add(app: AppSettingsModel)

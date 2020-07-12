@@ -5,15 +5,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
             android:id="@+id/suplSlidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            app:fadeColor="@color/white_alpha_90"
-            app:marginTopAnchorPoint="@dimen/search_bar_height"
-            app:overlay="true"
-            app:panelHeight="0dp">
+            app:umanoShadowHeight="0dp"
+            app:umanoFadeColor="@color/white_alpha_90"
+            app:umanoOverlay="true"
+            app:umanoPanelHeight="0dp">
 
         <FrameLayout
                 android:id="@+id/flDesktop"
@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-    </com.chekh.paysage.ui.view.slidingpanel.SlidingUpPanelLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/msbSearch"
