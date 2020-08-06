@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OVER_SCROLL_NEVER
 import android.view.WindowInsets
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.extension.applyPadding
-import com.chekh.paysage.extension.get
-import com.chekh.paysage.extension.observe
+import com.chekh.paysage.extension.*
 import com.chekh.paysage.feature.home.screen.apps.adapter.AppsCategoryAdapter
 import com.chekh.paysage.handler.slide.DockBarSlideHandler
 import com.chekh.paysage.ui.fragment.ViewModelFragment
@@ -37,7 +36,7 @@ class AppsFragment : ViewModelFragment<AppsViewModel>(), PanelSlideListener {
     private var slidingPanel: SlidingUpPanelLayout? = null
 
     private val dockBarSlideHandler by lazy {
-        DockBarSlideHandler(dbvApps)
+        DockBarSlideHandler(dbvApps, oflPanel)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -90,17 +89,16 @@ class AppsFragment : ViewModelFragment<AppsViewModel>(), PanelSlideListener {
     }
 
     private fun updateDockSize(size: Int) {
-        val dockLayoutParams = dbvApps.layoutParams
-        val padding = resources.getDimensionPixelSize(R.dimen.micro)
-        val height = size + padding * 2
-        if (height == dockLayoutParams.height) return
+        val height = size + dbvApps.paddingBottom + dbvApps.paddingTop
+        if (height == dbvApps.layoutParams.height) return
 
-        dockLayoutParams.height = height
-        dbvApps.layoutParams = dockLayoutParams
+        dbvApps.setHeight(height)
+        val absoluteHeight = height + dbvApps.marginBottom + dbvApps.marginBottom
+        slidingPanel?.panelHeight = absoluteHeight
 
-        dockBarSlideHandler.viewHeightChanged()
-        val margin = resources.getDimensionPixelSize(R.dimen.small)
-        slidingPanel?.panelHeight = height + margin * 2
+        if (slidingPanel?.panelState in listOf(PanelState.HIDDEN, PanelState.COLLAPSED)) {
+            oflPanel.setMarginTop(absoluteHeight)
+        }
     }
 
     override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {

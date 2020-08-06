@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -14,6 +14,7 @@
             android:padding="@dimen/micro" />
 
     <com.chekh.paysage.ui.view.OutlineFrameLayout
+            android:id="@+id/oflPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_white_top_rounded"
@@ -33,4 +34,4 @@
 
     </com.chekh.paysage.ui.view.OutlineFrameLayout>
 
-</LinearLayout>
+</FrameLayout>

@@ -10,7 +10,7 @@ import com.chekh.paysage.feature.home.data.model.CategorySettingsModel
 import com.chekh.paysage.db.Converters.BooleanTypeConverter
 import com.chekh.paysage.db.Converters.IconColorTypeConverter
 import com.chekh.paysage.db.Converters.AppCategoryTypeConverter
-import com.chekh.paysage.db.Converters.DrawableTypeConverter
+import com.chekh.paysage.db.Converters.BitmapTypeConverter
 import com.chekh.paysage.db.dao.DockAppDao
 import com.chekh.paysage.db.dao.PackageDao
 import com.chekh.paysage.feature.home.data.model.DockAppSettingsModel
@@ -29,7 +29,7 @@ import com.chekh.paysage.feature.home.data.model.PackageSettingsModel
     BooleanTypeConverter::class,
     IconColorTypeConverter::class,
     AppCategoryTypeConverter::class,
-    DrawableTypeConverter::class
+    BitmapTypeConverter::class
 )
 abstract class ApplicationDatabase : RoomDatabase() {
     abstract val appDao: AppDao

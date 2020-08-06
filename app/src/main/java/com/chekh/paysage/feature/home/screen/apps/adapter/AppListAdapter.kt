@@ -46,7 +46,7 @@ class AppListAdapter : RecyclerView.Adapter<AppListAdapter.AppViewHolder>() {
         fun bind(app: AppModel) {
             // TODO make SettingsService for iconSize
             //TODO make BadgerDrawable
-            appView.icon = app.icon
+            appView.setIcon(app.icon)
             appView.label = app.title
             appView.setOnClickListener {
                 // startApp(app)

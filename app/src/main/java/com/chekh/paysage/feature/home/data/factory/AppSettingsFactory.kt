@@ -33,8 +33,8 @@ class AppSettingsFactoryImpl @Inject constructor(
         val id = packageName + className
         val applicationInfo = activityInfo.applicationInfo
         val title = applicationInfo.loadLabel(packageManager).toString()
-        val icon = applicationInfo.loadIcon(packageManager)
-        val iconColor = IconColor.get(icon.toBitmap())
+        val icon = applicationInfo.loadIcon(packageManager).toBitmap()
+        val iconColor = IconColor.get(icon)
 
         return AppSettingsModel(
             id = id,

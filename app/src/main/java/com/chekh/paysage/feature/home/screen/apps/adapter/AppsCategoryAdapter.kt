@@ -43,8 +43,6 @@ class AppsCategoryAdapter(
         this.recycler = recycler
     }
 
-    override fun getItemCount() = items.size
-
     override fun onCreateHeaderViewHolder(parent: ViewGroup, viewType: Int): AppsHeaderViewHolder =
         AppsHeaderViewHolder(AppsHeaderView(parent.context), onCategoryClick)
 

@@ -1,6 +1,6 @@
 package com.chekh.paysage.feature.home.data.model
 
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import androidx.room.*
 
 @Entity(tableName = "app", indices = [Index(value = ["packageName", "className"], unique = true)])
@@ -14,6 +14,6 @@ data class AppSettingsModel(
     var categoryId: String = "",
     var position: Int = Int.MAX_VALUE,
     var isHidden: Boolean = false,
-    var icon: Drawable? = null,
+    var icon: Bitmap? = null,
     var iconColor: IconColor = IconColor.NOTHING
 )

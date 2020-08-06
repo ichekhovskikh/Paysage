@@ -1,7 +1,7 @@
 package com.chekh.paysage.ui.view
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -18,12 +18,6 @@ class AppView @JvmOverloads constructor(
         get() = tvLabel.text
         set(value) {
             tvLabel.text = value
-        }
-
-    var icon: Drawable?
-        get() = ivIcon.drawable
-        set(value) {
-            ivIcon.setImageDrawable(value)
         }
 
     var iconSize: Int
@@ -44,5 +38,9 @@ class AppView @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.view_app, this)
         orientation = VERTICAL
+    }
+
+    fun setIcon(icon: Bitmap?) {
+        ivIcon.setImageBitmap(icon)
     }
 }

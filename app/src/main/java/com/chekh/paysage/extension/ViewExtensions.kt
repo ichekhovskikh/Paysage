@@ -12,8 +12,13 @@ inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> Fragmen
 }
 
 fun View.setMarginTop(top: Int) {
-    val params = layoutParams as ViewGroup.MarginLayoutParams
-    params.topMargin = top
+    val params = layoutParams as? ViewGroup.MarginLayoutParams
+    params?.topMargin = top
+    layoutParams = params
+}
+
+fun View.setHeight(height: Int) {
+    layoutParams = layoutParams.apply { this.height = height }
 }
 
 inline val View.absoluteHeight: Int

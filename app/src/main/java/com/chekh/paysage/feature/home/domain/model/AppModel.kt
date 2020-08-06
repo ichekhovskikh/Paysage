@@ -1,6 +1,6 @@
 package com.chekh.paysage.feature.home.domain.model
 
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
 import com.chekh.paysage.feature.home.data.model.IconColor
 
 data class AppModel(
@@ -8,7 +8,7 @@ data class AppModel(
     val packageName: String,
     val className: String,
     val title: String,
-    val icon: Drawable?,
+    val icon: Bitmap?,
     val categoryId: String,
     val position: Int,
     val isHidden: Boolean,

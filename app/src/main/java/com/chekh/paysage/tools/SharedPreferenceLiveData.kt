@@ -17,7 +17,11 @@ class SharedPreferenceLiveData<T>(
             }
         }
 
-    @Suppress("UNCHECKED_CAST")
+    init {
+        value = getValueFromPreferences(sharedPrefs, key, defValue)
+    }
+
+    @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
     private fun getValueFromPreferences(
         sharedPrefs: SharedPreferences,
         key: String,
@@ -32,7 +36,6 @@ class SharedPreferenceLiveData<T>(
 
     override fun onActive() {
         super.onActive()
-        value = getValueFromPreferences(sharedPrefs, key, defValue)
         sharedPrefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
