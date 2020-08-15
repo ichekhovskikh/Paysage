@@ -1,0 +1,9 @@
+package com.chekh.paysage.feature.main.domain.model
+
+import com.chekh.paysage.data.model.AppCategory
+
+data class CategoryModel(
+    val id: String,
+    val category: AppCategory = AppCategory.OTHER,
+    val position: Int
+)

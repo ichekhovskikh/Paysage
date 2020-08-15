@@ -1,8 +1,8 @@
 package com.chekh.paysage.di.module
 
-import com.chekh.paysage.feature.home.HomeActivity
-import com.chekh.paysage.feature.home.di.HomeActivityModule
-import com.chekh.paysage.feature.home.di.HomeActivityScope
+import com.chekh.paysage.feature.main.MainActivity
+import com.chekh.paysage.feature.main.di.HomeActivityModule
+import com.chekh.paysage.feature.main.di.HomeActivityScope
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -11,5 +11,5 @@ abstract class ActivityModule {
 
     @HomeActivityScope
     @ContributesAndroidInjector(modules = [HomeActivityModule::class])
-    abstract fun homeActivity(): HomeActivity
+    abstract fun homeActivity(): MainActivity
 }

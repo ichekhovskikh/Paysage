@@ -82,6 +82,13 @@ fun Bitmap.blur(context: Context, radius: Float) {
     output.copyTo(this)
 }
 
+fun Bitmap?.isSame(other: Bitmap?): Boolean {
+    if (this == other) return true
+    if (this == null && other == null) return true
+    if (this == null || other == null) return false
+    return sameAs(other)
+}
+
 @ColorInt
 fun createColorAlpha(@ColorInt color: Int, alpha: Float): Int {
     return argb((Color.alpha(color).toFloat() * alpha).toInt(), Color.red(color), Color.green(color), Color.blue(color))

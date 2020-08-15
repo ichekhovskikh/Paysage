@@ -9,16 +9,12 @@ import com.chekh.paysage.handler.backpressed.ContainerBackPressedHandler
 import com.chekh.paysage.ui.fragment.BaseFragment
 import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseActivity : DaggerAppCompatActivity() {
-
-    @get:LayoutRes
-    protected abstract val layoutId: Int
+abstract class BaseActivity(@LayoutRes layoutId: Int) : DaggerAppCompatActivity(layoutId) {
 
     private val backPressedHandler by lazy { ContainerBackPressedHandler(supportFragmentManager) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutId)
         setWindowInsets()
     }
 

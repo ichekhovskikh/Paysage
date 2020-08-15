@@ -1,8 +1,16 @@
 package com.chekh.paysage.extension
 
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 
-fun <T> LiveData<T>.observe(owner: LifecycleOwner, callback: (data: T) -> Unit) {
+fun <T> LiveData<T>.observe(owner: Fragment, callback: (data: T) -> Unit) {
+    observe(owner.viewLifecycleOwner, Observer<T> { data ->
+        data?.let { callback.invoke(it) }
+    })
+}
+
+fun <T> LiveData<T>.observe(owner: AppCompatActivity, callback: (data: T) -> Unit) {
     observe(owner, Observer<T> { data ->
         data?.let { callback.invoke(it) }
     })
@@ -40,16 +48,31 @@ fun <X, Y> LiveData<X>.switchMap(body: (X?) -> LiveData<Y>): LiveData<Y> {
     return Transformations.switchMap(this, body)
 }
 
+fun <X, Y> LiveData<X>.repeat(trigger: LiveData<Y>): LiveData<X> {
+    val mergeLiveData = MediatorLiveData<X>()
+    mergeLiveData.addSource(trigger) {
+        mergeLiveData.value = this.value
+    }
+    mergeLiveData.addSource(this) { value ->
+        mergeLiveData.value = value
+    }
+    return mergeLiveData
+}
+
 fun <X> LiveData<X>.filter(condition: (X?) -> Boolean): LiveData<X> {
     val result = MediatorLiveData<X>()
     result.addSource(this) { x -> if (condition(x)) result.value = x }
     return result
 }
 
+fun <X> LiveData<X>.distinctUntilChanged(): LiveData<X> {
+    return Transformations.distinctUntilChanged(this)
+}
+
 fun <X, Y, Z> zip(
     x: LiveData<X>,
     y: LiveData<Y>,
-    merge: (x: X?, z: Y?) -> Z?
+    merge: (x: X, z: Y) -> Z
 ): LiveData<Z> {
     val mergeLiveData = MediatorLiveData<Z>()
     mergeLiveData.addSource(x) { xValue ->
@@ -84,41 +107,6 @@ fun <X, Y, Z, R> zip(
         val xValue = x.value ?: return@addSource
         val yValue = y.value ?: return@addSource
         mergeLiveData.value = merge(xValue, yValue, zValue)
-    }
-    return mergeLiveData
-}
-
-fun <X, Y, Z, W, R> zip(
-    x: LiveData<X>,
-    y: LiveData<Y>,
-    z: LiveData<Z>,
-    w: LiveData<W>,
-    merge: (x: X, y: Y, z: Z, w: W) -> R
-): LiveData<R> {
-    val mergeLiveData = MediatorLiveData<R>()
-    mergeLiveData.addSource(x) { xValue ->
-        val yValue = y.value ?: return@addSource
-        val zValue = z.value ?: return@addSource
-        val wValue = w.value ?: return@addSource
-        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
-    }
-    mergeLiveData.addSource(y) { yValue ->
-        val xValue = x.value ?: return@addSource
-        val zValue = z.value ?: return@addSource
-        val wValue = w.value ?: return@addSource
-        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
-    }
-    mergeLiveData.addSource(z) { zValue ->
-        val xValue = x.value ?: return@addSource
-        val yValue = y.value ?: return@addSource
-        val wValue = w.value ?: return@addSource
-        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
-    }
-    mergeLiveData.addSource(w) { wValue ->
-        val xValue = x.value ?: return@addSource
-        val yValue = y.value ?: return@addSource
-        val zValue = z.value ?: return@addSource
-        mergeLiveData.value = merge(xValue, yValue, zValue, wValue)
     }
     return mergeLiveData
 }

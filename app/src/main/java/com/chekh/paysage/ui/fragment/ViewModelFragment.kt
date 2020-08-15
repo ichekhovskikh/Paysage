@@ -2,16 +2,19 @@ package com.chekh.paysage.ui.fragment
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.lifecycle.ViewModel
 import com.chekh.paysage.di.tools.ViewModelFactory
 import com.chekh.paysage.extension.get
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-abstract class ViewModelFragment<VM : ViewModel> : BaseFragment() {
+abstract class ViewModelFragment<VM : ViewModel>(
+    @LayoutRes layoutId: Int,
+    private val viewModelClass: KClass<VM>
+) : BaseFragment(layoutId) {
 
     protected lateinit var viewModel: VM
-    protected abstract val viewModelClass: KClass<VM>
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory

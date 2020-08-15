@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <com.chekh.paysage.feature.home.screen.apps.view.DockBarView
+    <com.chekh.paysage.feature.main.screen.apps.view.DockBarView
             android:id="@+id/dbvApps"
             android:layout_width="match_parent"
             android:layout_height="100dp"

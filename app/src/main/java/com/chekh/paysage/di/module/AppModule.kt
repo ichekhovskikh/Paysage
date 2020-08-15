@@ -16,25 +16,43 @@ abstract class AppModule {
 
     @Singleton
     @Binds
-    abstract fun bindContext(application: PaysageApplication): Context
+    abstract fun bindContext(
+        application: PaysageApplication
+    ): Context
 
     @Singleton
     @Binds
-    abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
+    abstract fun bindViewModelFactory(
+        factory: ViewModelFactory
+    ): ViewModelProvider.Factory
 
     @Singleton
     @Binds
-    abstract fun bindStatusBarDecorator(factory: CommonStatusBarDecorator): StatusBarDecorator
+    abstract fun bindStatusBarDecorator(
+        factory: CommonStatusBarDecorator
+    ): StatusBarDecorator
 
     @Singleton
     @Binds
-    abstract fun bindParamsProvider(paramsProvider: ParamsProviderIml): ParamsProvider
+    abstract fun bindParamsProvider(
+        paramsProvider: ParamsProviderIml
+    ): ParamsProvider
 
     @Singleton
     @Binds
-    abstract fun bindPackagesProvider(packagesProvider: PackagesProviderImpl): PackagesProvider
+    abstract fun bindPackagesProvider(
+        packagesProvider: PackagesProviderImpl
+    ): PackagesProvider
 
     @Singleton
     @Binds
-    abstract fun bindCategoriesProvider(categoriesProvider: CategoriesProviderImpl): CategoriesProvider
+    abstract fun bindCategoriesProvider(
+        categoriesProvider: CategoriesProviderImpl
+    ): CategoriesProvider
+
+    @Singleton
+    @Binds
+    abstract fun bindDispatcherProvider(
+        dispatcherProvider: DispatcherProviderImpl
+    ): DispatcherProvider
 }
