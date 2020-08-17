@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.di
+package com.chekh.paysage.feature.main.screen.home.di
 
 import com.chekh.paysage.feature.main.screen.apps.di.AppsFragmentModule
 import com.chekh.paysage.feature.main.screen.apps.di.AppsFragmentScope

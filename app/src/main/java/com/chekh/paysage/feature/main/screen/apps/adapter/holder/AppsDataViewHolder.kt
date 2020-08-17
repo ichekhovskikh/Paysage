@@ -17,6 +17,7 @@ class AppsDataViewHolder(
 ) : RecyclerView.ViewHolder(view) {
 
     init {
+        setIsRecyclable(false)
         view.apply {
             layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
             val padding = resources.getDimension(R.dimen.small).toInt()

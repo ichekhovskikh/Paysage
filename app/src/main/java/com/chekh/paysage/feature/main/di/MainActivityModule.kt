@@ -9,47 +9,49 @@ import com.chekh.paysage.feature.main.screen.home.HomeViewModel
 import com.chekh.paysage.feature.main.data.HomeGatewayImpl
 import com.chekh.paysage.feature.main.data.service.*
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.screen.home.di.HomeFragmentModule
+import com.chekh.paysage.feature.main.screen.home.di.HomeFragmentScope
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class HomeActivityModule {
+abstract class MainActivityModule {
 
     @HomeFragmentScope
     @ContributesAndroidInjector(modules = [HomeFragmentModule::class])
     abstract fun homeFragment(): HomeFragment
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
     abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     abstract fun bindHomeRepository(gateway: HomeGatewayImpl): HomeGateway
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     abstract fun bindAppSettingsFactory(
         appSettingsFactory: AppSettingsFactoryImpl
     ): AppSettingsFactory
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     abstract fun bindAppService(
         appService: AppServiceImpl
     ): AppService
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     abstract fun bindCategoryService(
         categoryService: CategoryServiceImpl
     ): CategoryService
 
-    @HomeActivityScope
+    @MainActivityScope
     @Binds
     abstract fun bindDockAppService(
         dockAppService: DockAppServiceImpl
