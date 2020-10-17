@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.WindowInsets
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
-import com.chekh.paysage.extension.inTransaction
+import com.chekh.paysage.core.extension.inTransaction
+import com.chekh.paysage.core.ui.activity.ViewModelActivity
+import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.feature.main.screen.home.HomeFragment
 import com.chekh.paysage.feature.main.screen.home.HomeViewModel
-import com.chekh.paysage.ui.activity.ViewModelActivity
-import com.chekh.paysage.ui.statusbar.StatusBarDecorator
-import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_home.*
 
 class MainActivity : ViewModelActivity<HomeViewModel>(
     R.layout.activity_home,

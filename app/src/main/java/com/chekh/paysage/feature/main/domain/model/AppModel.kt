@@ -1,7 +1,7 @@
 package com.chekh.paysage.feature.main.domain.model
 
 import android.graphics.Bitmap
-import com.chekh.paysage.data.model.IconColor
+import com.chekh.paysage.common.data.model.IconColor
 
 data class AppModel(
     val id: String,

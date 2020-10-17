@@ -29,10 +29,10 @@ class AppsHeaderViewHolder(
         setOnClickListener { onCategoryClick(position, category.id) }
         setIcon(category.category.iconRes)
         setTitle(category.category.titleRes)
-        isExpanded = appCategory.isExpanded
+        view.expand(appCategory.isExpanded)
     }
 
     fun expand(isExpanded: Boolean) {
-        view.animatedExpand(isExpanded)
+        view.expand(isExpanded, isAnimate = true)
     }
 }

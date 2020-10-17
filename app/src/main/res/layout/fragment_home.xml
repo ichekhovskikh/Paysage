@@ -5,15 +5,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+    <com.chekh.slidinguppanel.SlidingUpPanelLayout
             android:id="@+id/suplSlidingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
-            app:umanoShadowHeight="0dp"
-            app:umanoFadeColor="@color/white_alpha_90"
-            app:umanoOverlay="true"
-            app:umanoPanelHeight="0dp">
+            app:fadeColor="@color/white_alpha_90"
+            app:overlay="true"
+            app:panelHeight="0dp"
+            app:shadowHeight="0dp">
 
         <FrameLayout
                 android:id="@+id/flDesktop"
@@ -25,16 +25,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+    </com.chekh.slidinguppanel.SlidingUpPanelLayout>
 
     <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/msbSearch"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/search_bar_height"
+            android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginRight="8dp"
+            android:paddingStart="@dimen/small"
+            android:layout_marginTop="@dimen/search_bar_margin_top"
+            android:paddingEnd="@dimen/small"
+            android:paddingBottom="@dimen/medium"
             android:visibility="gone"
             app:mt_hint=""
             app:mt_placeholder="@string/search_apps"

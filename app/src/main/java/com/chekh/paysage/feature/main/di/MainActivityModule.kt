@@ -1,14 +1,14 @@
 package com.chekh.paysage.feature.main.di
 
 import androidx.lifecycle.ViewModel
-import com.chekh.paysage.di.tools.ViewModelKey
+import com.chekh.paysage.common.di.tools.ViewModelKey
+import com.chekh.paysage.feature.main.data.HomeGatewayImpl
 import com.chekh.paysage.feature.main.data.factory.AppSettingsFactory
 import com.chekh.paysage.feature.main.data.factory.AppSettingsFactoryImpl
-import com.chekh.paysage.feature.main.screen.home.HomeFragment
-import com.chekh.paysage.feature.main.screen.home.HomeViewModel
-import com.chekh.paysage.feature.main.data.HomeGatewayImpl
 import com.chekh.paysage.feature.main.data.service.*
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.screen.home.HomeFragment
+import com.chekh.paysage.feature.main.screen.home.HomeViewModel
 import com.chekh.paysage.feature.main.screen.home.di.HomeFragmentModule
 import com.chekh.paysage.feature.main.screen.home.di.HomeFragmentScope
 import dagger.Binds

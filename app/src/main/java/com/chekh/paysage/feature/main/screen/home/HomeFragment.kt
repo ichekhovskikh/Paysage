@@ -2,26 +2,29 @@ package com.chekh.paysage.feature.main.screen.home
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
+import androidx.core.view.marginTop
 import com.chekh.paysage.R
-import com.chekh.paysage.extension.inTransaction
-import com.chekh.paysage.handler.slide.SearchBarSlideHandler
-import com.chekh.paysage.handler.backpressed.SlidingPanelBackPressedHandler
-import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
-import com.chekh.paysage.extension.setMarginTop
+import com.chekh.paysage.core.extension.inTransaction
+import com.chekh.paysage.core.extension.setMarginTop
+import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
+import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
+import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
+import com.chekh.paysage.core.ui.fragment.BaseFragment
+import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
+import com.chekh.paysage.core.ui.tools.MetricsConverter
 import com.chekh.paysage.feature.main.screen.apps.AppsFragment
 import com.chekh.paysage.feature.main.screen.desktop.DesktopFragment
-import com.chekh.paysage.handler.backpressed.BackPressedHandler
-import com.chekh.paysage.ui.fragment.BaseFragment
-import com.chekh.paysage.ui.statusbar.StatusBarDecorator
-import com.chekh.paysage.ui.tools.MetricsConverter
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.chekh.slidinguppanel.SlidingUpPanelLayout
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : BaseFragment(
-    R.layout.fragment_home
-), SlidingUpPanelLayout.PanelSlideListener {
+class HomeFragment :
+    BaseFragment(
+        R.layout.fragment_home
+    ),
+    SlidingUpPanelLayout.PanelSlideListener {
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -37,6 +40,12 @@ class HomeFragment : BaseFragment(
         SearchBarSlideHandler(msbSearch)
     }
 
+    private val searchHeight: Int
+        get() {
+            msbSearch.measure(0, WRAP_CONTENT)
+            return msbSearch.measuredHeight + msbSearch.paddingBottom + msbSearch.marginTop
+        }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupSlidingPanel()
@@ -49,13 +58,8 @@ class HomeFragment : BaseFragment(
             replace(R.id.flDesktop, desktopFragment)
             replace(R.id.flApps, appsFragment)
         }
-        val searchBarHeight = resources.getDimensionPixelSize(R.dimen.search_bar_height_with_margin)
-        suplSlidingPanel.anchorPoint = 1 - metricsConverter.pxToPercentage(searchBarHeight)
+        suplSlidingPanel.anchorPoint = 1 - metricsConverter.pxToPercentage(searchHeight)
         suplSlidingPanel.addPanelSlideListener(this)
-    }
-
-    override fun onPanelStateChanged(panel: View, previousState: PanelState, newState: PanelState) {
-        // nothing
     }
 
     override fun onPanelSlide(panel: View, slideOffset: Float) {

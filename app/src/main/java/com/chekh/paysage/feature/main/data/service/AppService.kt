@@ -5,19 +5,19 @@ import android.content.pm.LauncherApps
 import android.os.Process
 import android.os.UserHandle
 import androidx.lifecycle.LiveData
-import com.chekh.paysage.data.dao.AppDao
-import com.chekh.paysage.data.dao.PackageDao
-import com.chekh.paysage.extension.foreachMap
+import com.chekh.paysage.common.data.dao.AppDao
+import com.chekh.paysage.common.data.dao.PackageDao
+import com.chekh.paysage.common.data.model.AppCategory.OTHER
+import com.chekh.paysage.common.data.model.AppSettingsEntity
+import com.chekh.paysage.core.extension.foreachMap
+import com.chekh.paysage.core.provider.DispatcherProvider
 import com.chekh.paysage.feature.main.data.factory.AppSettingsFactory
-import com.chekh.paysage.data.model.entity.AppSettingsEntity
-import com.chekh.paysage.data.model.AppCategory.OTHER
-import com.chekh.paysage.feature.main.domain.mapper.AppModelMapper
+import com.chekh.paysage.feature.main.data.mapper.AppModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
-import com.chekh.paysage.provider.DispatcherProvider
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 interface AppService {
 
@@ -98,7 +98,8 @@ class AppServiceImpl @Inject constructor(
                 appSettingsFactory.create(
                     activityInfo,
                     appSettings.categoryId,
-                    appSettings.position,
+                    appSettings.boardPosition,
+                    appSettings.dockPosition,
                     appSettings.isHidden
                 )
             }
@@ -111,13 +112,13 @@ class AppServiceImpl @Inject constructor(
     ): AppSettingsEntity {
         val componentName = activityInfo.componentName
         val categoryId = packageDao.getCategoryId(componentName.packageName) ?: OTHER.id
-        var position = -1
+        var boardPosition = -1
         appsSettings.forEach {
-            if (it.categoryId == categoryId && it.position > position) {
-                position = it.position
+            if (it.categoryId == categoryId && it.boardPosition > boardPosition) {
+                boardPosition = it.boardPosition
             }
         }
-        return appSettingsFactory.create(activityInfo, categoryId, position + 1)
+        return appSettingsFactory.create(activityInfo, categoryId, boardPosition + 1)
     }
 
     private fun AppSettingsEntity.isSame(activityInfo: LauncherActivityInfo): Boolean {

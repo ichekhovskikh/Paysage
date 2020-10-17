@@ -3,15 +3,15 @@ package com.chekh.paysage.feature.main.screen.apps.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import com.chekh.paysage.feature.main.screen.apps.data.AppsCategoryStateChanged
+import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
 import com.chekh.paysage.feature.main.screen.apps.adapter.differ.AppsGroupByCategoryDiffCallback
 import com.chekh.paysage.feature.main.screen.apps.adapter.holder.AppsDataViewHolder
 import com.chekh.paysage.feature.main.screen.apps.adapter.holder.AppsHeaderViewHolder
 import com.chekh.paysage.feature.main.screen.apps.data.AppsCategoryAppsChanged
+import com.chekh.paysage.feature.main.screen.apps.data.AppsCategoryStateChanged
 import com.chekh.paysage.feature.main.screen.apps.model.ExpandableAppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.screen.apps.view.AppsDataView
 import com.chekh.paysage.feature.main.screen.apps.view.AppsHeaderView
-import com.chekh.paysage.ui.view.stickyheader.StickyAdapter
 
 class AppsCategoryAdapter(
     private val onCategoryClick: (Int, String) -> Unit,
@@ -35,6 +35,7 @@ class AppsCategoryAdapter(
     }
 
     override fun onAttachedToRecyclerView(recycler: RecyclerView) {
+        super.onAttachedToRecyclerView(recycler)
         this.recycler = recycler
     }
 

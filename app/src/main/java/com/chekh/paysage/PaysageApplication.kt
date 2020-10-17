@@ -1,8 +1,8 @@
 package com.chekh.paysage
 
 import android.app.Application
-import com.chekh.paysage.di.AppComponent
-import com.chekh.paysage.di.DaggerAppComponent
+import com.chekh.paysage.common.di.AppComponent
+import com.chekh.paysage.common.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector

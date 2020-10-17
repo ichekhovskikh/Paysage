@@ -13,14 +13,14 @@
             android:layout_margin="@dimen/small"
             android:padding="@dimen/micro" />
 
-    <com.chekh.paysage.ui.view.OutlineFrameLayout
+    <com.chekh.paysage.core.ui.view.OutlineFrameLayout
             android:id="@+id/oflPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/background_white_top_rounded"
             app:outlineRadius="@dimen/default_corner_radius">
 
-        <com.chekh.paysage.ui.view.stickyheader.StickyRecyclerView
+        <com.chekh.paysage.core.ui.view.stickyheader.StickyRecyclerView
                 android:id="@+id/srvCategories"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -30,8 +30,8 @@
                 android:layoutAnimation="@anim/layout_animation_from_bottom"
                 android:paddingTop="@dimen/small"
                 android:paddingBottom="@dimen/medium"
-                app:layoutManager="com.chekh.paysage.ui.view.fastscroll.FastScrollLinearLayoutManager" />
+                app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager" />
 
-    </com.chekh.paysage.ui.view.OutlineFrameLayout>
+    </com.chekh.paysage.core.ui.view.OutlineFrameLayout>
 
 </FrameLayout>

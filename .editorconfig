@@ -1,0 +1,9 @@
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.{kt,kts}]
+max_line_length = off
+# noinspection EditorConfigKeyCorrectness
+disabled_rules = no-wildcard-imports,import-ordering,no-blank-line-before-rbrace

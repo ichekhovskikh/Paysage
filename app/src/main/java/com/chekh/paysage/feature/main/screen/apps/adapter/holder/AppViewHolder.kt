@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import com.chekh.paysage.core.ui.view.AppView
 import com.chekh.paysage.feature.main.domain.model.AppModel
-import com.chekh.paysage.ui.view.AppView
 
 class AppViewHolder(
     private val appView: AppView
@@ -22,7 +22,7 @@ class AppViewHolder(
 
     fun bind(app: AppModel) {
         // TODO make SettingsService for iconSize
-        //TODO make BadgerDrawable
+        // TODO make BadgerDrawable
         appView.setIcon(app.icon)
         appView.label = app.title
         appView.setOnClickListener {

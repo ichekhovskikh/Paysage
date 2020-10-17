@@ -1,8 +1,8 @@
 package com.chekh.paysage.feature.main.screen.apps.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
+import com.chekh.paysage.core.ui.tools.isSame
 import com.chekh.paysage.feature.main.domain.model.AppModel
-import com.chekh.paysage.ui.tools.isSame
 
 class AppDiffCallback : DiffUtil.ItemCallback<AppModel>() {
 
@@ -11,13 +11,13 @@ class AppDiffCallback : DiffUtil.ItemCallback<AppModel>() {
 
     override fun areContentsTheSame(oldItem: AppModel, newItem: AppModel) =
         oldItem.packageName == newItem.packageName &&
-                oldItem.className == newItem.className &&
-                oldItem.title == newItem.title &&
-                oldItem.icon.isSame(newItem.icon) &&
-                oldItem.categoryId == newItem.categoryId &&
-                oldItem.position == newItem.position &&
-                oldItem.isHidden == newItem.isHidden &&
-                oldItem.iconColor == newItem.iconColor
+            oldItem.className == newItem.className &&
+            oldItem.title == newItem.title &&
+            oldItem.icon.isSame(newItem.icon) &&
+            oldItem.categoryId == newItem.categoryId &&
+            oldItem.position == newItem.position &&
+            oldItem.isHidden == newItem.isHidden &&
+            oldItem.iconColor == newItem.iconColor
 
     override fun getChangePayload(oldItem: AppModel, newItem: AppModel) = Unit
 }

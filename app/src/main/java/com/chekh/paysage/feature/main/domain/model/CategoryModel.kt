@@ -1,6 +1,6 @@
 package com.chekh.paysage.feature.main.domain.model
 
-import com.chekh.paysage.data.model.AppCategory
+import com.chekh.paysage.common.data.model.AppCategory
 
 data class CategoryModel(
     val id: String,

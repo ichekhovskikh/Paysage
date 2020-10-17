@@ -1,7 +1,7 @@
 package com.chekh.paysage.feature.main.screen.desktop.di
 
 import androidx.lifecycle.ViewModel
-import com.chekh.paysage.di.tools.ViewModelKey
+import com.chekh.paysage.common.di.tools.ViewModelKey
 import com.chekh.paysage.feature.main.screen.desktop.DesktopViewModel
 import dagger.Module
 import dagger.Provides

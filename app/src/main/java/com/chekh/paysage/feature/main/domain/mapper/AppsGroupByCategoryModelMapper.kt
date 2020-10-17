@@ -1,7 +1,8 @@
 package com.chekh.paysage.feature.main.domain.mapper
 
+import com.chekh.paysage.common.domain.model.AppSettingsModel
+import com.chekh.paysage.core.mapper.ThreeParametersMapper
 import com.chekh.paysage.feature.main.domain.model.*
-import com.chekh.paysage.mapper.ThreeParametersMapper
 import javax.inject.Inject
 
 class AppsGroupByCategoryModelMapper @Inject constructor() :
@@ -11,11 +12,9 @@ class AppsGroupByCategoryModelMapper @Inject constructor() :
         firstSource: CategoryModel,
         secondSource: List<AppModel>,
         thirdSource: AppSettingsModel
-    ): AppsGroupByCategoryModel {
-        return AppsGroupByCategoryModel(
-            category = firstSource,
-            apps = secondSource,
-            appSettings = thirdSource
-        )
-    }
+    ) = AppsGroupByCategoryModel(
+        category = firstSource,
+        apps = secondSource,
+        settings = thirdSource
+    )
 }

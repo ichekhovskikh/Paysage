@@ -4,13 +4,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.main.screen.apps.adapter.AppListAdapter
-import androidx.recyclerview.widget.GridLayoutManager
+import com.chekh.paysage.core.ui.anim.TransformAnimation
 import com.chekh.paysage.feature.main.domain.model.AppModel
-import com.chekh.paysage.ui.anim.TransformAnimation
+import com.chekh.paysage.feature.main.screen.apps.adapter.AppListAdapter
 
 class AppsDataView @JvmOverloads constructor(
     context: Context,
@@ -27,11 +27,7 @@ class AppsDataView @JvmOverloads constructor(
     private var onScrollStateChange: ((Int) -> Unit)? = null
 
     var isExpanded = false
-        set(value) {
-            if (field == value) return
-            field = value
-            layoutManager = if (field) gridLayoutManager else linearLayoutManager
-        }
+        private set
 
     var scrollOffset
         get() = computeHorizontalScrollOffset()
@@ -68,19 +64,32 @@ class AppsDataView @JvmOverloads constructor(
         setupOffsetListener()
     }
 
-    private fun setupOffsetListener() {
-        addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(view: RecyclerView, newState: Int) {
-                onScrollStateChange?.invoke(newState)
-                if (newState != SCROLL_STATE_DRAGGING) {
-                    onOffsetChange?.invoke(scrollOffset)
-                }
-            }
-        })
+    fun setApps(
+        apps: List<AppModel>,
+        isAnimate: Boolean = true,
+        onUpdated: (() -> Unit)? = null
+    ) {
+        adapter.setApps(apps, isAnimate, onUpdated)
     }
 
-    fun setApps(apps: List<AppModel>) {
-        adapter.setApps(apps)
+    fun expand(
+        isExpanded: Boolean,
+        isAnimate: Boolean = false,
+        duration: Long = ANIMATION_DURATION_DEFAULT
+    ) {
+        if (this.isExpanded != isExpanded) {
+            this.isExpanded = isExpanded
+            if (isAnimate) {
+                val oldHeight = measuredHeight
+                layoutParams.height = oldHeight
+                layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
+                measure(0, WRAP_CONTENT)
+                val newHeight = measuredHeight
+                transformAnimation.transform(oldHeight, newHeight, duration)
+            } else {
+                layoutManager = if (isExpanded) gridLayoutManager else linearLayoutManager
+            }
+        }
     }
 
     fun setOffsetChangeListener(onOffsetChange: (Int) -> Unit) {
@@ -95,19 +104,21 @@ class AppsDataView @JvmOverloads constructor(
         transformAnimation.onAnimationCancelListener = onCancel
     }
 
-    fun animatedExpand(isExpanded: Boolean) {
-        if (this.isExpanded != isExpanded) {
-            val oldHeight = measuredHeight
-            layoutParams.height = oldHeight
-
-            this.isExpanded = isExpanded
-            measure(0, WRAP_CONTENT)
-            val newHeight = measuredHeight
-            transformAnimation.transform(oldHeight, newHeight)
-        }
+    private fun setupOffsetListener() {
+        addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(view: RecyclerView, newState: Int) {
+                    onScrollStateChange?.invoke(newState)
+                    if (newState == SCROLL_STATE_IDLE) {
+                        onOffsetChange?.invoke(scrollOffset)
+                    }
+                }
+            }
+        )
     }
 
-    companion object {
-        private const val SPAN_COUNT_DEFAULT = 4
+    private companion object {
+        const val SPAN_COUNT_DEFAULT = 4
+        const val ANIMATION_DURATION_DEFAULT = 250L
     }
 }

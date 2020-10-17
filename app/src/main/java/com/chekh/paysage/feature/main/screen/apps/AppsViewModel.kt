@@ -2,13 +2,13 @@ package com.chekh.paysage.feature.main.screen.apps
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.chekh.paysage.extension.*
-import com.chekh.paysage.feature.main.domain.model.DockAppsModel
+import com.chekh.paysage.core.extension.*
+import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
+import com.chekh.paysage.feature.main.domain.model.AppsModel
 import com.chekh.paysage.feature.main.domain.usecase.GetAppsGroupByCategoriesScenario
 import com.chekh.paysage.feature.main.domain.usecase.GetDockAppsWithSettingsScenario
 import com.chekh.paysage.feature.main.screen.apps.model.ExpandableAppsGroupByCategoryModel
-import com.chekh.paysage.ui.viewmodel.BaseViewModel
 import javax.inject.Inject
 
 class AppsViewModel @Inject constructor(
@@ -32,13 +32,8 @@ class AppsViewModel @Inject constructor(
     private val scrollPositionMutableLiveData = MutableLiveData<Int>()
     val scrollPositionLiveData: LiveData<Int> = scrollPositionMutableLiveData
 
-    val dockAppsLiveData: LiveData<DockAppsModel> = trigger
+    val dockAppsLiveData: LiveData<AppsModel> = trigger
         .switchMap { getDockAppsWithSettingsScenario() }
-
-    override fun init(trigger: Unit) {
-        super.init(trigger)
-        expandTrigger.postValue(Unit)
-    }
 
     fun scrollCategoryOffset(scrollOffset: Int, categoryId: String) {
         scrollCategoriesOffsets[categoryId] = scrollOffset
@@ -66,5 +61,4 @@ class AppsViewModel @Inject constructor(
     private fun scrollOffset(data: AppsGroupByCategoryModel?): Int {
         return scrollCategoriesOffsets[data?.category?.id] ?: 0
     }
-
 }

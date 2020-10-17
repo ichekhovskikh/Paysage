@@ -1,22 +1,22 @@
 package com.chekh.paysage.feature.main.domain.usecase
 
 import androidx.lifecycle.LiveData
-import com.chekh.paysage.extension.zip
+import com.chekh.paysage.core.extension.zip
 import com.chekh.paysage.feature.main.domain.mapper.AppsGroupByCategoryModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
 import javax.inject.Inject
 
 class GetAppsGroupByCategoriesScenario @Inject constructor(
     private val getAppCategoriesUseCase: GetAppCategoriesUseCase,
-    private val getMenuAppsUseCase: GetMenuAppsUseCase,
-    private val getMenuAppSettingsUseCase: GetMenuAppSettingsUseCase,
+    private val getBoardAppsUseCase: GetBoardAppsUseCase,
+    private val getBoardAppSettingsUseCase: GetBoardAppSettingsUseCase,
     private val appsGroupByCategoryMapper: AppsGroupByCategoryModelMapper
 ) {
 
     operator fun invoke(): LiveData<List<AppsGroupByCategoryModel>> = zip(
         getAppCategoriesUseCase(),
-        getMenuAppsUseCase(),
-        getMenuAppSettingsUseCase()
+        getBoardAppsUseCase(),
+        getBoardAppSettingsUseCase()
     ) { categories, apps, settings ->
 
         val appsGroupByCategories = mutableListOf<AppsGroupByCategoryModel>()

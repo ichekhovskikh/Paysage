@@ -2,8 +2,9 @@ package com.chekh.paysage.feature.main.screen.apps.view
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import com.chekh.paysage.R
-import com.chekh.paysage.ui.view.ArrowItemView
+import com.chekh.paysage.core.ui.view.ArrowItemView
 
 class AppsHeaderView @JvmOverloads constructor(
     context: Context,
@@ -12,6 +13,6 @@ class AppsHeaderView @JvmOverloads constructor(
 ) : ArrowItemView(context, attrs, defStyle) {
 
     init {
-        background = context.getDrawable(R.color.white_alpha_95)
+        background = ContextCompat.getDrawable(context, R.color.white_alpha_95)
     }
 }

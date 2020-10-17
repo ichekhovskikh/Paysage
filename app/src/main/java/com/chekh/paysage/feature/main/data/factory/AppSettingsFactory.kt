@@ -3,9 +3,8 @@ package com.chekh.paysage.feature.main.data.factory
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.PackageManager
 import androidx.core.graphics.drawable.toBitmap
-import com.chekh.paysage.data.model.entity.AppSettingsEntity
-import com.chekh.paysage.data.model.IconColor
-import com.chekh.paysage.extension.toIconColor
+import com.chekh.paysage.common.data.model.AppSettingsEntity
+import com.chekh.paysage.core.extension.toIconColor
 import javax.inject.Inject
 
 interface AppSettingsFactory {
@@ -13,7 +12,8 @@ interface AppSettingsFactory {
     fun create(
         activityInfo: LauncherActivityInfo,
         categoryId: String,
-        position: Int,
+        boardPosition: Int,
+        dockPosition: Int = -1,
         isHidden: Boolean = false
     ): AppSettingsEntity
 }
@@ -25,7 +25,8 @@ class AppSettingsFactoryImpl @Inject constructor(
     override fun create(
         activityInfo: LauncherActivityInfo,
         categoryId: String,
-        position: Int,
+        boardPosition: Int,
+        dockPosition: Int,
         isHidden: Boolean
     ): AppSettingsEntity {
         val componentName = activityInfo.componentName
@@ -43,7 +44,8 @@ class AppSettingsFactoryImpl @Inject constructor(
             packageName = packageName,
             className = className,
             categoryId = categoryId,
-            position = position,
+            boardPosition = boardPosition,
+            dockPosition = dockPosition,
             isHidden = isHidden,
             icon = icon,
             iconColor = iconColor
