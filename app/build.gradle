@@ -1,24 +1,26 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "29.0.3"
+    compileSdkVersion androidCompileSdkVersion
+    buildToolsVersion androidBuildToolsVersion
     defaultConfig {
         applicationId "com.chekh.paysage"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionName "1.0"
+        versionCode 1
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [
-                        "room.schemaLocation": "$projectDir/schemas".toString(),
-                        "room.incremental"   : "true"
+                arguments += [
+                    "room.schemaLocation": "$projectDir/schemas".toString(),
+                    "room.incremental"   : "true"
                 ]
             }
         }
@@ -42,33 +44,33 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation project(':slidinguppanel')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation "androidx.cardview:cardview:1.0.0"
-    implementation 'androidx.core:core-ktx:1.3.2'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-    implementation 'androidx.palette:palette-ktx:1.0.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
-    implementation 'at.wirecube:additive_animations:1.6.0'
-    implementation 'com.chauthai.overscroll:overscroll-bouncy:0.1.1'
-    implementation 'com.squareup.picasso:picasso:2.71828'
 
-    implementation "com.google.dagger:dagger:2.28.1"
-    kapt "com.google.dagger:dagger-compiler:2.28.1"
-    implementation "com.google.dagger:dagger-android-support:2.27"
-    kapt "com.google.dagger:dagger-android-processor:2.27"
+    implementation libraries.fragmentktx
+    implementation libraries.appCompat
+    implementation libraries.material
+    implementation libraries.cardView
+    implementation libraries.corektx
+    implementation libraries.recyclerView
+    implementation libraries.palettektx
+    implementation libraries.coroutines
+    implementation libraries.gson
+    implementation libraries.picasso
+    implementation libraries.lifecycleViewModel
+    implementation libraries.lifecycleExtensions
+    implementation libraries.overscrollBouncy
+    implementation libraries.searchBar
 
-    implementation 'androidx.room:room-runtime:2.2.5'
-    kapt 'androidx.room:room-compiler:2.2.5'
+    implementation libraries.hiltLifecycleViewModel
+    kapt libraries.hiltLifecycleCompiler
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation libraries.hiltDagger
+    kapt libraries.hiltCompiler
+
+    implementation libraries.roomRuntime
+    kapt libraries.roomCompiler
+
+    testImplementation testLibraries.junit
+    androidTestImplementation testLibraries.testRunner
+    androidTestImplementation testLibraries.espresso
 }

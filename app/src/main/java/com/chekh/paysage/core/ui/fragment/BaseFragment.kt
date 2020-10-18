@@ -3,10 +3,10 @@ package com.chekh.paysage.core.ui.fragment
 import android.view.WindowInsets
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
-import dagger.android.support.DaggerFragment
 
-abstract class BaseFragment(@LayoutRes layoutId: Int) : DaggerFragment(layoutId) {
+abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
     override fun onStop() {
         super.onStop()

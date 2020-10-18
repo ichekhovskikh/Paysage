@@ -3,20 +3,22 @@ package com.chekh.paysage.feature.main
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.inTransaction
-import com.chekh.paysage.core.ui.activity.ViewModelActivity
+import com.chekh.paysage.core.ui.activity.BaseActivity
 import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
-import com.chekh.paysage.feature.main.screen.home.HomeFragment
-import com.chekh.paysage.feature.main.screen.home.HomeViewModel
-import javax.inject.Inject
+import com.chekh.paysage.feature.main.presentation.home.HomeFragment
+import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
-class MainActivity : ViewModelActivity<HomeViewModel>(
-    R.layout.activity_home,
-    HomeViewModel::class
-) {
+@AndroidEntryPoint
+class MainActivity : BaseActivity(R.layout.activity_home) {
+
+    private val viewModel: HomeViewModel by viewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -27,10 +29,10 @@ class MainActivity : ViewModelActivity<HomeViewModel>(
         super.onCreate(savedInstanceState)
         statusBarDecorator.setTransparentStatusBar(this)
         addHomeFragmentIfNeed()
+        initViewModel()
     }
 
-    override fun onViewModelCreated(savedInstanceState: Bundle?) {
-        super.onViewModelCreated(savedInstanceState)
+    private fun initViewModel() {
         viewModel.startObserveUpdates()
     }
 

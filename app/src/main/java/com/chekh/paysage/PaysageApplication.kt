@@ -1,29 +1,7 @@
 package com.chekh.paysage
 
 import android.app.Application
-import com.chekh.paysage.common.di.AppComponent
-import com.chekh.paysage.common.di.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
+import dagger.hilt.android.HiltAndroidApp
 
-class PaysageApplication : Application(), HasAndroidInjector {
-
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    override fun androidInjector(): AndroidInjector<Any> = androidInjector
-
-    private val component: AppComponent by lazy {
-        DaggerAppComponent
-            .builder()
-            .application(this)
-            .build()
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        component.inject(this)
-    }
-}
+@HiltAndroidApp
+class PaysageApplication : Application()

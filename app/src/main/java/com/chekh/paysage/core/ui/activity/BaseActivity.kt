@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import com.chekh.paysage.core.handler.backpressed.ContainerBackPressedHandler
 import com.chekh.paysage.core.ui.fragment.BaseFragment
-import dagger.android.support.DaggerAppCompatActivity
 
-abstract class BaseActivity(@LayoutRes layoutId: Int) : DaggerAppCompatActivity(layoutId) {
+abstract class BaseActivity(@LayoutRes layoutId: Int) : AppCompatActivity(layoutId) {
 
     private val backPressedHandler by lazy { ContainerBackPressedHandler(supportFragmentManager) }
 

@@ -6,6 +6,7 @@ import com.chekh.paysage.common.data.mapper.AppSettingsModelMapper
 import com.chekh.paysage.common.domain.model.AppSettingsModel
 import com.chekh.paysage.core.extension.zip
 import com.chekh.paysage.core.tools.SharedPreferenceLiveData
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 interface SettingsService {
@@ -29,6 +30,7 @@ interface SettingsService {
 }
 
 class SettingsServiceImpl @Inject constructor(
+    @ApplicationContext
     context: Context,
     private val appSettingsModelMapper: AppSettingsModelMapper
 ) : SettingsService {

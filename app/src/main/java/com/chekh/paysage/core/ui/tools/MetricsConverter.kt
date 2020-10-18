@@ -1,9 +1,15 @@
 package com.chekh.paysage.core.ui.tools
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class MetricsConverter @Inject constructor(private val context: Context) {
+@Singleton
+class MetricsConverter @Inject constructor(
+    @ApplicationContext
+    private val context: Context
+) {
 
     fun dpToPx(dp: Float): Int {
         val metrics = context.resources.displayMetrics

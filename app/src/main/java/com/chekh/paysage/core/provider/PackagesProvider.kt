@@ -2,6 +2,7 @@ package com.chekh.paysage.core.provider
 
 import android.content.Context
 import com.chekh.paysage.common.data.model.PackageSettingsEntity
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
@@ -12,6 +13,7 @@ interface PackagesProvider {
 }
 
 class PackagesProviderImpl @Inject constructor(
+    @ApplicationContext
     private val context: Context
 ) : PackagesProvider {
 
