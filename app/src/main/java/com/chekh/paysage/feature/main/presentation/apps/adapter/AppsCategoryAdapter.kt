@@ -15,8 +15,7 @@ import com.chekh.paysage.feature.main.presentation.apps.view.AppsHeaderView
 
 class AppsCategoryAdapter(
     private val onCategoryClick: (Int, String) -> Unit,
-    private val onScrollCategoryChange: (Int, String) -> Unit,
-    private val onScrollStateChange: (Int) -> Unit
+    private val onScrollCategoryChange: (Int, String) -> Unit
 ) : StickyAdapter<ExpandableAppsGroupByCategoryModel, AppsHeaderViewHolder, AppsDataViewHolder>(
     AppsGroupByCategoryDiffCallback()
 ) {
@@ -45,8 +44,7 @@ class AppsCategoryAdapter(
     override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): AppsDataViewHolder =
         AppsDataViewHolder(
             view = AppsDataView(parent.context).apply { setRecycledViewPool(sharedPool) },
-            onScrollChange = onScrollCategoryChange,
-            onScrollStateChange = onScrollStateChange
+            onScrollChange = onScrollCategoryChange
         )
 
     override fun onBindHeaderViewHolder(

@@ -1,12 +1,11 @@
 package com.chekh.paysage.core.handler.backpressed
 
 import androidx.fragment.app.FragmentManager
-import com.chekh.slidinguppanel.SlidingUpPanelLayout
-import com.chekh.slidinguppanel.SlidingUpPanelLayout.PanelState
-import com.chekh.slidinguppanel.isOpened
+import com.chekh.paysage.core.extension.isOpened
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class SlidingPanelBackPressedHandler(
-    private val slidingPanel: SlidingUpPanelLayout,
+    private val bottomSheetBehavior: BottomSheetBehavior<*>,
     fragmentManager: FragmentManager
 ) : BackPressedHandler {
 
@@ -15,8 +14,8 @@ class SlidingPanelBackPressedHandler(
     override fun onBackPressed(): Boolean {
         return when {
             containerBackPressedHandler.onBackPressed() -> true
-            slidingPanel.isOpened -> {
-                slidingPanel.panelState = PanelState.COLLAPSED
+            bottomSheetBehavior.isOpened -> {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 true
             }
             else -> false

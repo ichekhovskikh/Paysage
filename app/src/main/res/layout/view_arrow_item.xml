@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:focusable="true"
-       android:clickable="true"
-       tools:parentTag="android.widget.RelativeLayout">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    tools:parentTag="android.widget.RelativeLayout">
 
     <ImageView
-            android:id="@+id/ivIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:visibility="gone"
-            tools:ignore="ContentDescription"/>
+        android:id="@+id/ivIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
 
     <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/ivIcon"
-            android:layout_toStartOf="@id/ivArrow"
-            tools:text="Заголовок"/>
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/ivArrow"
+        android:layout_toEndOf="@id/ivIcon"
+        tools:text="Заголовок" />
 
     <ImageView
-            android:id="@+id/ivArrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:focusable="false"
-            android:clickable="false"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_arrow"
-            tools:rotation="90"
-            tools:ignore="ContentDescription"/>
+        android:id="@+id/ivArrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:src="@drawable/ic_arrow"
+        tools:ignore="ContentDescription"
+        tools:rotation="90" />
 </merge>

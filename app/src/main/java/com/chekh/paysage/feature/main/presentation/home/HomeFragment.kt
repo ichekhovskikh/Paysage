@@ -6,8 +6,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
 import androidx.core.view.marginTop
 import com.chekh.paysage.R
-import com.chekh.paysage.core.extension.inTransaction
-import com.chekh.paysage.core.extension.setMarginTop
+import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
@@ -16,13 +15,13 @@ import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
-import com.chekh.slidinguppanel.SlidingUpPanelLayout
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home), SlidingUpPanelLayout.PanelSlideListener {
+class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -30,8 +29,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SlidingUpPanelLayout.
     @Inject
     lateinit var metricsConverter: MetricsConverter
 
+    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(svBottomSheet) }
+
     private val backPressedHandler: BackPressedHandler by lazy {
-        SlidingPanelBackPressedHandler(suplSlidingPanel, childFragmentManager)
+        SlidingPanelBackPressedHandler(bottomSheetBehavior, childFragmentManager)
     }
 
     private val searchBarSlideHandler by lazy {
@@ -56,31 +57,25 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), SlidingUpPanelLayout.
             replace(R.id.flDesktop, desktopFragment)
             replace(R.id.flApps, appsFragment)
         }
-        suplSlidingPanel.anchorPoint = 1 - metricsConverter.pxToPercentage(searchHeight)
-        suplSlidingPanel.addPanelSlideListener(this)
+        bottomSheetBehavior.halfExpandedRatio = 1 - metricsConverter.pxToPercentage(searchHeight)
+        bottomSheetBehavior.addBottomSheetListener(this)
     }
 
-    override fun onPanelSlide(panel: View, slideOffset: Float) {
+    override fun onSlide(bottomSheet: View, slideOffset: Float) {
         val activity = activity ?: return
-        val isDark = slideOffset >= suplSlidingPanel.anchorPoint - 0.1
+        val isDark = slideOffset >= bottomSheetBehavior.halfExpandedRatio - 0.1
         statusBarDecorator.statusBarDarkMode(activity, isDark)
-        searchBarSlideHandler.slideToTop(transformOffset(slideOffset))
-    }
+        flDesktop.alpha = 1 - slideOffset
 
-    private fun transformOffset(offset: Float): Float {
-        val anchor = suplSlidingPanel.anchorPoint
-        return when (offset > anchor) {
-            true -> (1 - offset) / (1 - anchor)
-            else -> offset / anchor
-        }
+        val anchor = bottomSheetBehavior.halfExpandedRatio - BOTTOM_SHEET_HALF_RATIO_INACCURACY
+        searchBarSlideHandler.slideToTop(slideOffset, anchor)
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
         val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
-        val height = insets.systemWindowInsetTop
-        msbSearch.setMarginTop(searchMarginTop + height)
-        flApps.setMarginTop(height)
+        val insetTop = insets.systemWindowInsetTop
+        msbSearch.setMarginTop(searchMarginTop + insetTop)
     }
 
     override fun onBackPressed(): Boolean {

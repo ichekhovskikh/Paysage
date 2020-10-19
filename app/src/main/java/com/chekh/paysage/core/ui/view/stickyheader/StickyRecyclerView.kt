@@ -3,6 +3,8 @@ package com.chekh.paysage.core.ui.view.stickyheader
 import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.RecyclerView
+import me.everything.android.ui.overscroll.VerticalOverScrollBounceEffectDecorator
+import me.everything.android.ui.overscroll.adapters.RecyclerViewOverScrollDecorAdapter
 
 class StickyRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -11,9 +13,18 @@ class StickyRecyclerView @JvmOverloads constructor(
 ) : RecyclerView(context, attrs, defStyle) {
 
     private val scrollListener = OnScrollHeaderListener()
+    private val overScrollDecorator: VerticalOverScrollBounceEffectDecorator
 
     init {
         addOnScrollListener(scrollListener)
+        overScrollDecorator = VerticalOverScrollBounceEffectDecorator(
+            RecyclerViewOverScrollDecorAdapter(this)
+        )
+    }
+
+    fun setBouncing(isBouncing: Boolean) {
+        val touchListener = if (isBouncing) overScrollDecorator else null
+        setOnTouchListener(touchListener)
     }
 
     override fun smoothScrollToPosition(position: Int) {

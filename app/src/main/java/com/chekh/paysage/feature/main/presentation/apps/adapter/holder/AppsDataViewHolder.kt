@@ -12,8 +12,7 @@ import com.chekh.paysage.feature.main.presentation.apps.view.AppsDataView
 
 class AppsDataViewHolder(
     private val view: AppsDataView,
-    private val onScrollChange: (Int, String) -> Unit,
-    private val onScrollStateChange: (Int) -> Unit
+    private val onScrollChange: (Int, String) -> Unit
 ) : RecyclerView.ViewHolder(view) {
 
     init {
@@ -21,7 +20,6 @@ class AppsDataViewHolder(
             layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
             val padding = resources.getDimension(R.dimen.small).toInt()
             setPadding(padding, padding, padding, padding)
-            setScrollStateChangeListener { onScrollStateChange(it) }
         }
     }
 

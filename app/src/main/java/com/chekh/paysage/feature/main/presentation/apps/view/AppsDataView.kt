@@ -24,7 +24,6 @@ class AppsDataView @JvmOverloads constructor(
     private val gridLayoutManager: GridLayoutManager
     private val transformAnimation: TransformAnimation
     private var onOffsetChange: ((Int) -> Unit)? = null
-    private var onScrollStateChange: ((Int) -> Unit)? = null
 
     var isExpanded = false
         private set
@@ -96,10 +95,6 @@ class AppsDataView @JvmOverloads constructor(
         this.onOffsetChange = onOffsetChange
     }
 
-    fun setScrollStateChangeListener(onScrollStateChange: (Int) -> Unit) {
-        this.onScrollStateChange = onScrollStateChange
-    }
-
     fun setOnAnimationCancelListener(onCancel: () -> Unit) {
         transformAnimation.onAnimationCancelListener = onCancel
     }
@@ -108,7 +103,6 @@ class AppsDataView @JvmOverloads constructor(
         addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(view: RecyclerView, newState: Int) {
-                    onScrollStateChange?.invoke(newState)
                     if (newState == SCROLL_STATE_IDLE) {
                         onOffsetChange?.invoke(scrollOffset)
                     }

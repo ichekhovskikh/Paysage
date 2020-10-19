@@ -44,14 +44,13 @@ android {
 }
 
 dependencies {
-    implementation project(':slidinguppanel')
-
     implementation libraries.fragmentktx
     implementation libraries.appCompat
     implementation libraries.material
     implementation libraries.cardView
     implementation libraries.corektx
     implementation libraries.recyclerView
+    implementation libraries.constraintLayout
     implementation libraries.palettektx
     implementation libraries.coroutines
     implementation libraries.gson
@@ -59,6 +58,7 @@ dependencies {
     implementation libraries.lifecycleViewModel
     implementation libraries.lifecycleExtensions
     implementation libraries.overscrollBouncy
+    implementation libraries.overscrollDecor
     implementation libraries.searchBar
 
     implementation libraries.hiltLifecycleViewModel

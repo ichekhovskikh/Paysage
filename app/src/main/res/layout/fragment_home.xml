@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/flDesktop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <com.chekh.slidinguppanel.SlidingUpPanelLayout
-            android:id="@+id/suplSlidingPanel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            app:fadeColor="@color/white_alpha_90"
-            app:overlay="true"
-            app:panelHeight="0dp"
-            app:shadowHeight="0dp">
-
-        <FrameLayout
-                android:id="@+id/flDesktop"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        <FrameLayout
-                android:id="@+id/flApps"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-    </com.chekh.slidinguppanel.SlidingUpPanelLayout>
+        android:layout_height="match_parent" />
 
     <com.mancj.materialsearchbar.MaterialSearchBar
-            android:id="@+id/msbSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:paddingStart="@dimen/small"
-            android:layout_marginTop="@dimen/search_bar_margin_top"
-            android:paddingEnd="@dimen/small"
-            android:paddingBottom="@dimen/medium"
-            android:visibility="gone"
-            app:mt_hint=""
-            app:mt_placeholder="@string/search_apps"
-            app:mt_placeholderColor="@android:color/darker_gray"
-            app:mt_roundedSearchBarEnabled="true"
-            app:mt_speechMode="true"
-            tools:visibility="visible" />
+        android:id="@+id/msbSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/search_bar_margin_top"
+        android:paddingStart="@dimen/small"
+        android:paddingEnd="@dimen/small"
+        android:paddingBottom="@dimen/medium"
+        android:visibility="gone"
+        app:mt_hint=""
+        app:mt_placeholder="@string/search_apps"
+        app:mt_placeholderColor="@android:color/darker_gray"
+        app:mt_roundedSearchBarEnabled="true"
+        app:mt_speechMode="true"
+        tools:visibility="visible" />
 
-</FrameLayout>
+    <ScrollView
+        android:id="@+id/svBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:nestedScrollingEnabled="true"
+        app:behavior_fitToContents="false"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <FrameLayout
+            android:id="@+id/flApps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

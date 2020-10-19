@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".feature.main.MainActivity">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".feature.main.MainActivity">
 
     <FrameLayout
-            android:id="@+id/flContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    </FrameLayout>
+        android:id="@+id/flContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.chekh.paysage.core.ui.view.ShadowView
-            android:id="@+id/swStatusBarShadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            app:shadowDrawable="@drawable/background_status_shadow"/>
+        android:id="@+id/swStatusBarShadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        app:shadowDrawable="@drawable/background_status_shadow" />
 
     <com.chekh.paysage.core.ui.view.ShadowView
-            android:id="@+id/swNavigationBarShadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:shadowDrawable="@drawable/background_navigation_shadow"/>
+        android:id="@+id/swNavigationBarShadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:shadowDrawable="@drawable/background_navigation_shadow" />
 </FrameLayout>

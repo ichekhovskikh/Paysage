@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.chekh.paysage.feature.main.presentation.apps.view.DockBarView
-            android:id="@+id/dbvApps"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_margin="@dimen/small"
-            android:padding="@dimen/micro" />
+        android:id="@+id/dbvApps"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="@dimen/small"
+        android:padding="@dimen/micro" />
 
-    <com.chekh.paysage.core.ui.view.OutlineFrameLayout
-            android:id="@+id/oflPanel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_white_top_rounded"
-            app:outlineRadius="@dimen/default_corner_radius">
+    <com.chekh.paysage.core.ui.view.OutlineConstraintLayout
+        android:id="@+id/oclPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_white_top_rounded"
+        app:outlineRadius="@dimen/default_corner_radius">
 
         <com.chekh.paysage.core.ui.view.stickyheader.StickyRecyclerView
-                android:id="@+id/srvCategories"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/small"
-                android:layout_marginEnd="@dimen/small"
-                android:clipToPadding="false"
-                android:layoutAnimation="@anim/layout_animation_from_bottom"
-                android:paddingTop="@dimen/small"
-                android:paddingBottom="@dimen/medium"
-                app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager" />
+            android:id="@+id/srvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/small"
+            android:layout_marginEnd="@dimen/small"
+            android:clipToPadding="false"
+            android:layoutAnimation="@anim/layout_animation_from_bottom"
+            android:paddingTop="@dimen/small"
+            android:paddingBottom="@dimen/medium"
+            android:overScrollMode="never"
+            app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </com.chekh.paysage.core.ui.view.OutlineFrameLayout>
+    </com.chekh.paysage.core.ui.view.OutlineConstraintLayout>
 
 </FrameLayout>

@@ -5,19 +5,19 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewOutlineProvider
-import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.chekh.paysage.R
 
-class OutlineFrameLayout @JvmOverloads constructor(
+class OutlineConstraintLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FrameLayout(context, attrs, defStyle) {
+) : ConstraintLayout(context, attrs, defStyle) {
 
     init {
-        val attributes = context.obtainStyledAttributes(attrs, R.styleable.OutlineFrameLayout)
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.OutlineConstraintLayout)
         attributes.apply {
-            val outlineRadius = getDimension(R.styleable.OutlineFrameLayout_outlineRadius, 0f)
+            val outlineRadius = getDimension(R.styleable.OutlineConstraintLayout_outlineRadius, 0f)
             if (outlineRadius > 0) {
                 outlineProvider = RoundedOutlineProvider(outlineRadius)
                 clipToOutline = true

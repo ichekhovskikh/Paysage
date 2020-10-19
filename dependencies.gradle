@@ -25,6 +25,7 @@ ext {
         roomVersion = '2.2.5',
         additiveAnimationsVersion = '1.6.0',
         overscrollBouncyVersion = '0.1.1',
+        overscrollDecorVersion = '1.1.0',
         searchBarVersion = '0.8.2',
 
         junitVersion = '4.13',
@@ -58,6 +59,7 @@ ext {
         roomCompiler          : "androidx.room:room-compiler:$roomVersion",
         additiveAnimations    : "at.wirecube:additive_animations:$additiveAnimationsVersion",
         overscrollBouncy      : "com.chauthai.overscroll:overscroll-bouncy:$overscrollBouncyVersion",
+        overscrollDecor      : "me.everything:overscroll-decor-android:$overscrollDecorVersion",
         searchBar             : "com.github.mancj:MaterialSearchBar:$searchBarVersion"
     ]
     testLibraries = [

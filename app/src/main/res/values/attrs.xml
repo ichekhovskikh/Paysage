@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="OutlineFrameLayout">
+    <declare-styleable name="OutlineConstraintLayout">
         <attr name="outlineRadius" format="dimension" />
     </declare-styleable>
 
