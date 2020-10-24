@@ -17,6 +17,7 @@
 package com.chekh.paysage.core.ui.behavior;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static java.lang.Math.abs;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -621,7 +622,9 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             }
         }
         dispatchOnSlide(child.getTop());
-        lastNestedScrollDy = dy;
+        if (viewDragHelper != null && abs(dy) > abs(viewDragHelper.getTouchSlop())) {
+            lastNestedScrollDy = dy;
+        }
         nestedScrolled = true;
     }
 
@@ -680,7 +683,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
                     }
                 } else {
                     int weightedCurrentTop = child.getTop() * 2;
-                    if (preScrollState == STATE_HALF_EXPANDED ||
+                    if (preScrollState == STATE_HALF_EXPANDED || preScrollState == STATE_SETTLING ||
                         Math.abs(weightedCurrentTop - halfExpandedOffset) >=
                             Math.abs(weightedCurrentTop - collapsedOffset)) {
                         top = collapsedOffset;
@@ -697,7 +700,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
                 targetState = STATE_COLLAPSED;
             } else {
                 int weightedCurrentTop = child.getTop() * 2;
-                if (preScrollState == STATE_HALF_EXPANDED ||
+                if (preScrollState == STATE_HALF_EXPANDED || preScrollState == STATE_SETTLING ||
                     Math.abs(weightedCurrentTop - halfExpandedOffset) >=
                         Math.abs(weightedCurrentTop - collapsedOffset)) {
                     top = collapsedOffset;
@@ -1419,13 +1422,15 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
                                 targetState = STATE_HALF_EXPANDED;
                             }
                         } else {
-                            if (Math.abs(currentTop - halfExpandedOffset)
-                                < Math.abs(currentTop - collapsedOffset)) {
-                                top = halfExpandedOffset;
-                                targetState = STATE_HALF_EXPANDED;
-                            } else {
+                            int weightedCurrentTop = releasedChild.getTop() * 2;
+                            if (preScrollState == STATE_HALF_EXPANDED || preScrollState == STATE_SETTLING ||
+                                Math.abs(weightedCurrentTop - halfExpandedOffset) >=
+                                    Math.abs(weightedCurrentTop - collapsedOffset)) {
                                 top = collapsedOffset;
                                 targetState = STATE_COLLAPSED;
+                            } else {
+                                top = halfExpandedOffset;
+                                targetState = STATE_HALF_EXPANDED;
                             }
                         }
                     }
@@ -1434,15 +1439,15 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
                         top = collapsedOffset;
                         targetState = STATE_COLLAPSED;
                     } else {
-                        // Settle to the nearest correct height.
-                        int currentTop = releasedChild.getTop();
-                        if (Math.abs(currentTop - halfExpandedOffset)
-                            < Math.abs(currentTop - collapsedOffset)) {
-                            top = halfExpandedOffset;
-                            targetState = STATE_HALF_EXPANDED;
-                        } else {
+                        int weightedCurrentTop = releasedChild.getTop() * 2;
+                        if (preScrollState == STATE_HALF_EXPANDED || preScrollState == STATE_SETTLING ||
+                            Math.abs(weightedCurrentTop - halfExpandedOffset) >=
+                                Math.abs(weightedCurrentTop - collapsedOffset)) {
                             top = collapsedOffset;
                             targetState = STATE_COLLAPSED;
+                        } else {
+                            top = halfExpandedOffset;
+                            targetState = STATE_HALF_EXPANDED;
                         }
                     }
                 }
