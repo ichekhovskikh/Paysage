@@ -10,18 +10,19 @@ import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
+class HomeFragment : BaseFragment(R.layout.fragment_home),
+    CustomBottomSheetBehavior.BottomSheetCallback {
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -29,7 +30,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
     @Inject
     lateinit var metricsConverter: MetricsConverter
 
-    private val bottomSheetBehavior by lazy { BottomSheetBehavior.from(svBottomSheet) }
+    private val bottomSheetBehavior by lazy { CustomBottomSheetBehavior.from(svBottomSheet) }
 
     private val backPressedHandler: BackPressedHandler by lazy {
         SlidingPanelBackPressedHandler(bottomSheetBehavior, childFragmentManager)
@@ -42,7 +43,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
     private val searchHeight: Int
         get() {
             msbSearch.measure(0, WRAP_CONTENT)
-            return msbSearch.measuredHeight + msbSearch.paddingBottom + msbSearch.marginTop
+            return msbSearch.measuredHeight + 3 * msbSearch.marginTop
         }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -57,8 +58,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
             replace(R.id.flDesktop, desktopFragment)
             replace(R.id.flApps, appsFragment)
         }
-        bottomSheetBehavior.halfExpandedRatio = 1 - metricsConverter.pxToPercentage(searchHeight)
-        bottomSheetBehavior.addBottomSheetListener(this)
+        bottomSheetBehavior.halfExpandedOffset = searchHeight
+        bottomSheetBehavior.addBottomSheetCallback(this)
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -67,7 +68,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetListener {
         statusBarDecorator.statusBarDarkMode(activity, isDark)
         flDesktop.alpha = 1 - slideOffset
 
-        val anchor = bottomSheetBehavior.halfExpandedRatio - BOTTOM_SHEET_HALF_RATIO_INACCURACY
+        val anchor = bottomSheetBehavior.halfExpandedRatio
         searchBarSlideHandler.slideToTop(slideOffset, anchor)
     }
 

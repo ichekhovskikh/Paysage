@@ -2,7 +2,6 @@ package com.chekh.paysage.feature.main.presentation.apps
 
 import android.os.Bundle
 import android.view.View
-import android.view.View.OVER_SCROLL_NEVER
 import android.view.WindowInsets
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
@@ -11,18 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.slide.AppsBoardSlideHandler
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
 import com.chekh.paysage.feature.main.presentation.apps.adapter.AppsCategoryAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_EXPANDED
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_HIDDEN
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_COLLAPSED
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_apps.*
 
 @AndroidEntryPoint
-class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetListener {
+class AppsFragment : BaseFragment(R.layout.fragment_apps),
+    CustomBottomSheetBehavior.BottomSheetCallback {
 
     private val viewModel: AppsViewModel by viewModels()
 
@@ -30,7 +30,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetListener {
         AppsCategoryAdapter(viewModel::toggleCategory, viewModel::scrollCategoryOffset)
     }
 
-    private var bottomSheetBehavior: BottomSheetBehavior<View>? = null
+    private var bottomSheetBehavior: CustomBottomSheetBehavior<View>? = null
 
     private val appsBoardSlideHandler by lazy {
         AppsBoardSlideHandler(dbvApps, oclPanel)
@@ -80,8 +80,8 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetListener {
 
     private fun setupParentSlidingPanel(view: View) {
         val parent = view.parent?.parent as? View ?: return
-        bottomSheetBehavior = BottomSheetBehavior.from(parent)
-        bottomSheetBehavior?.addBottomSheetListener(this)
+        bottomSheetBehavior = CustomBottomSheetBehavior.from(parent)
+        bottomSheetBehavior?.addBottomSheetCallback(this)
     }
 
     private fun setupListView() {
@@ -114,8 +114,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetListener {
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        val anchorWithInaccuracy = bottomSheetBehavior?.halfExpandedRatio ?: return
-        val anchor = anchorWithInaccuracy - BOTTOM_SHEET_HALF_RATIO_INACCURACY
+        val anchor = bottomSheetBehavior?.halfExpandedRatio ?: return
         appsBoardSlideHandler.slideToTop(slideOffset, anchor)
     }
 }

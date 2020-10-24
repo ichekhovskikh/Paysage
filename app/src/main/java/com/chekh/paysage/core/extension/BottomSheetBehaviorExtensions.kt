@@ -1,38 +1,16 @@
 package com.chekh.paysage.core.extension
 
 import android.view.View
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 
-const val BOTTOM_SHEET_HALF_RATIO_INACCURACY = 0.025f
-
-interface BottomSheetListener {
-    fun onStateChanged(bottomSheet: View, @BottomSheetBehavior.State newState: Int) {}
-    fun onSlide(bottomSheet: View, slideOffset: Float) {}
-}
-
-fun <T : View> BottomSheetBehavior<T>.addBottomSheetListener(listener: BottomSheetListener) {
-    addBottomSheetCallback(
-        object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                listener.onStateChanged(bottomSheet, newState)
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                listener.onSlide(bottomSheet, slideOffset)
-            }
-
-        }
-    )
-}
-
-val <T : View> BottomSheetBehavior<T>.isClosed
+val <T : View> CustomBottomSheetBehavior<T>.isClosed
     get() = state in listOf(
-        BottomSheetBehavior.STATE_HIDDEN,
-        BottomSheetBehavior.STATE_COLLAPSED
+        CustomBottomSheetBehavior.STATE_HIDDEN,
+        CustomBottomSheetBehavior.STATE_COLLAPSED
     )
 
-val <T : View> BottomSheetBehavior<T>.isOpened
+val <T : View> CustomBottomSheetBehavior<T>.isOpened
     get() = state in listOf(
-        BottomSheetBehavior.STATE_EXPANDED,
-        BottomSheetBehavior.STATE_HALF_EXPANDED
+        CustomBottomSheetBehavior.STATE_EXPANDED,
+        CustomBottomSheetBehavior.STATE_HALF_EXPANDED
     )
