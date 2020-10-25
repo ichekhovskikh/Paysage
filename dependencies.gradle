@@ -6,7 +6,7 @@ ext {
         androidBuildToolsVersion = '29.0.3',
 
         kotlinVersion = '1.4.10',
-        gradleVersion = '4.0.2',
+        gradleVersion = '4.1.0',
         hiltVersion = '2.28-alpha',
 
         fragmentktxVersion = '1.2.5',

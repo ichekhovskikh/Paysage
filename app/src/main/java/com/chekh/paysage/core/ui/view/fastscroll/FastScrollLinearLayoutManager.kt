@@ -12,13 +12,12 @@ class FastScrollLinearLayoutManager @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : LinearLayoutManager(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val fastScroller = FastSmoothScroller(context, this)
-
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView,
         state: RecyclerView.State?,
         position: Int
     ) {
+        val fastScroller = FastSmoothScroller(recyclerView.context, this)
         fastScroller.targetPosition = position
         startSmoothScroll(fastScroller)
     }

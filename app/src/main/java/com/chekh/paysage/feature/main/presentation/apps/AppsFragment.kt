@@ -9,20 +9,19 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
+import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
+import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.core.handler.slide.AppsBoardSlideHandler
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
 import com.chekh.paysage.feature.main.presentation.apps.adapter.AppsCategoryAdapter
-import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_EXPANDED
-import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_HIDDEN
-import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.STATE_COLLAPSED
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_apps.*
 
 @AndroidEntryPoint
-class AppsFragment : BaseFragment(R.layout.fragment_apps),
-    CustomBottomSheetBehavior.BottomSheetCallback {
+class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     private val viewModel: AppsViewModel by viewModels()
 
@@ -31,6 +30,10 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps),
     }
 
     private var bottomSheetBehavior: CustomBottomSheetBehavior<View>? = null
+
+    private val backPressedHandler: BackPressedHandler by lazy {
+        SlidingPanelBackPressedHandler(bottomSheetBehavior, srvCategories, childFragmentManager)
+    }
 
     private val appsBoardSlideHandler by lazy {
         AppsBoardSlideHandler(dbvApps, oclPanel)
@@ -51,7 +54,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps),
         viewModel.init(Unit)
 
         viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->
-            srvCategories.smoothScrollToPosition(position)
+            srvCategories.smoothScrollToHeader(position)
         }
         viewModel.appsGroupByCategoriesLiveData.observe(viewLifecycleOwner) { categories ->
             adapter.setAppsCategories(categories)
@@ -80,7 +83,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps),
 
     private fun setupParentSlidingPanel(view: View) {
         val parent = view.parent?.parent as? View ?: return
-        bottomSheetBehavior = CustomBottomSheetBehavior.from(parent)
+        bottomSheetBehavior = from(parent)
         bottomSheetBehavior?.addBottomSheetCallback(this)
     }
 
@@ -116,5 +119,9 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps),
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
         val anchor = bottomSheetBehavior?.halfExpandedRatio ?: return
         appsBoardSlideHandler.slideToTop(slideOffset, anchor)
+    }
+
+    override fun onBackPressed(): Boolean {
+        return backPressedHandler.onBackPressed()
     }
 }

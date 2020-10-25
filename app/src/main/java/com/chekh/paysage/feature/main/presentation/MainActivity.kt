@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main
+package com.chekh.paysage.feature.main.presentation
 
 import android.os.Build
 import android.os.Bundle

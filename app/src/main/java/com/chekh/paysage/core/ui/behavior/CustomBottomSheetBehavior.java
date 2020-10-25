@@ -53,7 +53,6 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.customview.widget.ViewDragHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -320,6 +319,9 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
     @Nullable
     private Map<View, Integer> importantForAccessibilityMap;
 
+    @SuppressLint("ClickableViewAccessibility")
+    private View.OnTouchListener disableTouchListener = (v, e) -> true;
+
     public CustomBottomSheetBehavior() {
         setupScrollCallbacks();
     }
@@ -578,7 +580,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         int dy,
         @NonNull int[] consumed,
         int type) {
-        if (type == ViewCompat.TYPE_NON_TOUCH) {
+        if (type == ViewCompat.TYPE_NON_TOUCH ) {
             // Ignore fling here. The ViewDragHelper handles it.
             return;
         }
@@ -1749,11 +1751,13 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
 
             public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
                 View view = findVerticalScrollingChild(bottomSheet, 1);
-                if (view instanceof RecyclerView) {
-                    RecyclerView recyclerView = (RecyclerView) view;
-                    recyclerView.suppressLayout(preScrollState == STATE_COLLAPSED);
+                if (view instanceof ViewGroup) {
+                    if (newState == STATE_SETTLING || newState == STATE_DRAGGING) {
+                        disableTouchViews((ViewGroup) view, true);
+                    } else {
+                        disableTouchViews((ViewGroup) view, false);
+                    }
                 }
-                // other scrolling view types
             }
         });
     }
@@ -1772,5 +1776,15 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             }
         }
         return null;
+    }
+
+    private void disableTouchViews(ViewGroup viewGroup, boolean isDisable) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            child.setOnTouchListener(isDisable ? disableTouchListener : null);
+            if (child instanceof ViewGroup) {
+                disableTouchViews((ViewGroup) child, isDisable);
+            }
+        }
     }
 }

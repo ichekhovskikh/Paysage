@@ -4,17 +4,16 @@ import android.view.WindowInsets
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import com.chekh.paysage.core.handler.backpressed.ContainerBackPressedHandler
 import com.chekh.paysage.core.ui.tools.hideKeyboard
 
 abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
+    private val backPressedHandler by lazy { ContainerBackPressedHandler(childFragmentManager) }
+
     override fun onStop() {
         super.onStop()
         view?.hideKeyboard()
-    }
-
-    open fun onBackPressed(): Boolean {
-        return false
     }
 
     @CallSuper
@@ -25,5 +24,9 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
                 fragment.onApplyWindowInsets(insets)
             }
         }
+    }
+
+    open fun onBackPressed(): Boolean {
+        return backPressedHandler.onBackPressed()
     }
 }

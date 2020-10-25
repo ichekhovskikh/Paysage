@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:splitMotionEvents="false">
 
     <com.chekh.paysage.feature.main.presentation.apps.view.DockBarView
         android:id="@+id/dbvApps"
@@ -26,9 +27,9 @@
             android:layout_marginEnd="@dimen/small"
             android:clipToPadding="false"
             android:layoutAnimation="@anim/layout_animation_from_bottom"
+            android:overScrollMode="never"
             android:paddingTop="@dimen/small"
             android:paddingBottom="@dimen/medium"
-            android:overScrollMode="never"
             app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

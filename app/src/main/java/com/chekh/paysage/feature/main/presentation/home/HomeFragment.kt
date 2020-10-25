@@ -7,10 +7,8 @@ import android.view.WindowInsets
 import androidx.core.view.marginTop
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
-import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
-import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
-import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
+import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
@@ -21,8 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home),
-    CustomBottomSheetBehavior.BottomSheetCallback {
+class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -30,11 +27,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home),
     @Inject
     lateinit var metricsConverter: MetricsConverter
 
-    private val bottomSheetBehavior by lazy { CustomBottomSheetBehavior.from(svBottomSheet) }
-
-    private val backPressedHandler: BackPressedHandler by lazy {
-        SlidingPanelBackPressedHandler(bottomSheetBehavior, childFragmentManager)
-    }
+    private val bottomSheetBehavior by lazy { from(svBottomSheet) }
 
     private val searchBarSlideHandler by lazy {
         SearchBarSlideHandler(msbSearch)
@@ -77,9 +70,5 @@ class HomeFragment : BaseFragment(R.layout.fragment_home),
         val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
         val insetTop = insets.systemWindowInsetTop
         msbSearch.setMarginTop(searchMarginTop + insetTop)
-    }
-
-    override fun onBackPressed(): Boolean {
-        return backPressedHandler.onBackPressed()
     }
 }

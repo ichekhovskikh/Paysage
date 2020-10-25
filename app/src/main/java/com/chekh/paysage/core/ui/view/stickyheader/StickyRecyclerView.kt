@@ -27,7 +27,7 @@ class StickyRecyclerView @JvmOverloads constructor(
         setOnTouchListener(touchListener)
     }
 
-    override fun smoothScrollToPosition(position: Int) {
+    fun smoothScrollToHeader(position: Int) {
         val view = layoutManager?.findViewByPosition(position) ?: return
         if (view.top < 0) {
             super.smoothScrollToPosition(position)

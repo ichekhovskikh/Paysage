@@ -14,7 +14,7 @@ class FastSmoothScroller(
 
     override fun computeScrollVectorForPosition(targetPosition: Int): PointF? {
         val firstChildPos = layoutManager.findFirstCompletelyVisibleItemPosition()
-        val direction = if (targetPosition < firstChildPos) -1 else 1
+        val direction = if (firstChildPos < 0 || targetPosition < firstChildPos) -1 else 1
 
         return if (layoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
             vectorPosition.apply { set(direction.toFloat(), 0f) }
