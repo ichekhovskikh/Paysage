@@ -6,8 +6,10 @@ import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.CategoryModel
 
 interface HomeGateway {
-    fun startObserveUpdates()
-    fun stopObserveUpdates()
+    fun startObserveAppUpdates()
+    fun stopObserveAppUpdates()
+    fun startObserveWidgetUpdates()
+    fun stopObserveWidgetUpdates()
     fun getDockApps(): LiveData<List<AppModel>>
     fun getDockAppSettings(): LiveData<AppSettingsModel>
     fun getAppCategories(): LiveData<List<CategoryModel>>

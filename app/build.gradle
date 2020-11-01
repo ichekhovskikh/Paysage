@@ -43,6 +43,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation libraries.fragmentktx
     implementation libraries.appCompat

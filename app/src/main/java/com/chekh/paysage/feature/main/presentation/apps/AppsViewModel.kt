@@ -9,11 +9,12 @@ import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.domain.model.AppsModel
 import com.chekh.paysage.feature.main.domain.usecase.GetAppsGroupByCategoriesScenario
 import com.chekh.paysage.feature.main.domain.usecase.GetDockAppsWithSettingsScenario
-import com.chekh.paysage.feature.main.presentation.apps.model.ExpandableAppsGroupByCategoryModel
+import com.chekh.paysage.feature.main.presentation.apps.mapper.ExpandableAppsGroupByCategoryModelMapper
 
 class AppsViewModel @ViewModelInject constructor(
     private val getAppsGroupByCategoriesScenario: GetAppsGroupByCategoriesScenario,
-    private val getDockAppsWithSettingsScenario: GetDockAppsWithSettingsScenario
+    private val getDockAppsWithSettingsScenario: GetDockAppsWithSettingsScenario,
+    private val expandableAppsGroupByCategoryMapper: ExpandableAppsGroupByCategoryModelMapper
 ) : BaseViewModel<Unit>() {
 
     private val expandedCategoryIds = mutableSetOf<String?>()
@@ -25,7 +26,7 @@ class AppsViewModel @ViewModelInject constructor(
         .switchMap { getAppsGroupByCategoriesScenario() }
         .repeat(expandTrigger)
         .foreachMap {
-            ExpandableAppsGroupByCategoryModel(it, isExpanded(it), scrollOffset(it))
+            expandableAppsGroupByCategoryMapper.map(it, isExpanded(it), scrollOffset(it))
         }
         .distinctUntilChanged()
 

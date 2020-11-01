@@ -21,6 +21,7 @@ ext {
         gsonVersion = '2.8.6',
         picassoVersion = '2.71828',
         lifecycleVersion = '2.2.0',
+        lifecyclektxVersion = '2.3.0-beta01',
         hiltLifecycleVersion = '1.0.0-alpha02',
         roomVersion = '2.2.5',
         additiveAnimationsVersion = '1.6.0',
@@ -51,6 +52,7 @@ ext {
         picasso               : "com.squareup.picasso:picasso:$picassoVersion",
         lifecycleViewModel    : "androidx.lifecycle:lifecycle-viewmodel:$lifecycleVersion",
         lifecycleExtensions   : "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion",
+        lifecycleLiveDataktx  : "androidx.lifecycle:lifecycle-livedata-ktx:$lifecyclektxVersion",
         hiltLifecycleViewModel: "androidx.hilt:hilt-lifecycle-viewmodel:$hiltLifecycleVersion",
         hiltLifecycleCompiler : "androidx.hilt:hilt-compiler:$hiltLifecycleVersion",
         hiltDagger            : "com.google.dagger:hilt-android:$hiltVersion",
@@ -59,7 +61,7 @@ ext {
         roomCompiler          : "androidx.room:room-compiler:$roomVersion",
         additiveAnimations    : "at.wirecube:additive_animations:$additiveAnimationsVersion",
         overscrollBouncy      : "com.chauthai.overscroll:overscroll-bouncy:$overscrollBouncyVersion",
-        overscrollDecor      : "me.everything:overscroll-decor-android:$overscrollDecorVersion",
+        overscrollDecor       : "me.everything:overscroll-decor-android:$overscrollDecorVersion",
         searchBar             : "com.github.mancj:MaterialSearchBar:$searchBarVersion"
     ]
     testLibraries = [

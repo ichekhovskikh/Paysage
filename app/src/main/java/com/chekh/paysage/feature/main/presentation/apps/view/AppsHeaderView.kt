@@ -13,6 +13,6 @@ class AppsHeaderView @JvmOverloads constructor(
 ) : ArrowItemView(context, attrs, defStyle) {
 
     init {
-        background = ContextCompat.getDrawable(context, R.color.white_alpha_95)
+        background = ContextCompat.getDrawable(context, R.color.whiteAlpha95)
     }
 }

@@ -1752,11 +1752,8 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             public void onStateChanged(@NonNull View bottomSheet, @State int newState) {
                 View view = findVerticalScrollingChild(bottomSheet, 1);
                 if (view instanceof ViewGroup) {
-                    if (newState == STATE_SETTLING || newState == STATE_DRAGGING) {
-                        disableTouchViews((ViewGroup) view, true);
-                    } else {
-                        disableTouchViews((ViewGroup) view, false);
-                    }
+                    boolean isDisable = newState == STATE_SETTLING || newState == STATE_DRAGGING;
+                    disableTouchViews((ViewGroup) view, isDisable);
                 }
             }
         });

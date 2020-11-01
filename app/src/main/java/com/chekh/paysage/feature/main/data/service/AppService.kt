@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 interface AppService {
 
-    val appsLiveData: LiveData<List<AppModel>>
+    val installedAppsLiveData: LiveData<List<AppModel>>
 
     fun startObserveUpdates()
 
@@ -37,7 +37,7 @@ class AppServiceImpl @Inject constructor(
     private val appMapper: AppModelMapper
 ) : AppService, AppsChangedCallback() {
 
-    override val appsLiveData: LiveData<List<AppModel>> = appDao.getAllLive()
+    override val installedAppsLiveData: LiveData<List<AppModel>> = appDao.getAllLive()
         .foreachMap { appMapper.map(it) }
 
     init {

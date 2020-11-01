@@ -11,7 +11,10 @@ abstract class AppDao {
     abstract fun getByUnique(packageName: String, className: String): AppSettingsEntity
 
     @Query("SELECT * FROM app WHERE packageName = :packageName")
-    abstract fun getByPackageName(packageName: String): List<AppSettingsEntity>
+    abstract fun getByPackageNameLive(packageName: String): LiveData<List<AppSettingsEntity>>
+
+    @Query("SELECT * FROM app WHERE packageName = :packageName LIMIT 1")
+    abstract fun getFirstByPackageNameLive(packageName: String): LiveData<AppSettingsEntity>
 
     @Query("SELECT * FROM app")
     abstract fun getAll(): List<AppSettingsEntity>

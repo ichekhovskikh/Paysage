@@ -1,5 +1,7 @@
 package com.chekh.paysage.di.application
 
+import com.chekh.paysage.core.provider.SettingsProvider
+import com.chekh.paysage.core.provider.SettingsProviderImpl
 import com.chekh.paysage.core.provider.*
 import dagger.Binds
 import dagger.Module
@@ -10,6 +12,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 abstract class ProviderModule {
+
+    @Singleton
+    @Binds
+    abstract fun bindSettingsProvider(
+        service: SettingsProviderImpl
+    ): SettingsProvider
 
     @Singleton
     @Binds

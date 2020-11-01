@@ -34,12 +34,6 @@ class AppsDataView @JvmOverloads constructor(
             linearLayoutManager.scrollToPositionWithOffset(0, -value)
         }
 
-    var appSize: Int = WRAP_CONTENT
-        set(value) {
-            field = value
-            adapter.appSize = field
-        }
-
     var spanCount
         get() = gridLayoutManager.spanCount
         set(value) {
@@ -61,6 +55,13 @@ class AppsDataView @JvmOverloads constructor(
         transformAnimation = TransformAnimation(this)
 
         setupOffsetListener()
+    }
+
+    fun setAppSize(size: Int, isRequireUpdateImmediately: Boolean = true) {
+        adapter.appSize = size
+        if (isRequireUpdateImmediately) {
+            adapter.notifyDataSetChanged()
+        }
     }
 
     fun setApps(

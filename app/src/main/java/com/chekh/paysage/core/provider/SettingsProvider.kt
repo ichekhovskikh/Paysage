@@ -1,4 +1,4 @@
-package com.chekh.paysage.common.data.service
+package com.chekh.paysage.core.provider
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -9,7 +9,7 @@ import com.chekh.paysage.core.tools.SharedPreferenceLiveData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-interface SettingsService {
+interface SettingsProvider {
     var boardAppsSize: Int
     val boardAppsSizeLiveData: LiveData<Int>
 
@@ -27,13 +27,16 @@ interface SettingsService {
 
     var dockAppSettings: AppSettingsModel
     val dockAppSettingsLiveData: LiveData<AppSettingsModel>
+
+    var desktopGridSpan: Int
+    val desktopGridSpanLiveData: LiveData<Int>
 }
 
-class SettingsServiceImpl @Inject constructor(
+class SettingsProviderImpl @Inject constructor(
     @ApplicationContext
     context: Context,
     private val appSettingsModelMapper: AppSettingsModelMapper
-) : SettingsService {
+) : SettingsProvider {
 
     private val pref = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
 
@@ -89,11 +92,19 @@ class SettingsServiceImpl @Inject constructor(
             appSettingsModelMapper.map(size, span)
         }
 
+    override var desktopGridSpan: Int
+        get() = pref.getInt(DESKTOP_GRID_SPAN, 5)
+        set(value) = pref.edit().putInt(DESKTOP_GRID_SPAN, value).apply()
+
+    override val desktopGridSpanLiveData: LiveData<Int> =
+        SharedPreferenceLiveData(pref, DESKTOP_GRID_SPAN, 5)
+
     private companion object {
         const val SP_NAME = "settings_prefs"
         const val BOARD_APP_SIZE = "board_app_size"
         const val DOCK_APP_SIZE = "dock_app_size"
         const val BOARD_APP_SPAN = "board_app_span"
         const val DOCK_APP_SPAN = "dock_app_span"
+        const val DESKTOP_GRID_SPAN = "desktop_grid_span"
     }
 }

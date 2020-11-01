@@ -2,7 +2,6 @@ package com.chekh.paysage.core.ui.tools
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.Bitmap
 import android.graphics.Color.argb
 import android.graphics.drawable.BitmapDrawable
 import android.renderscript.Allocation
@@ -71,15 +70,17 @@ fun View.makeBitmapScreenshot(scaleFactor: Float): Bitmap {
     return bitmap
 }
 
-fun Bitmap.blur(context: Context, radius: Float) {
+fun Bitmap.blur(context: Context, radius: Float): Bitmap {
+    val blurBitmap = copy(config, true)
     val renderScript = RenderScript.create(context)
-    val input = Allocation.createFromBitmap(renderScript, this)
+    val input = Allocation.createFromBitmap(renderScript, blurBitmap)
     val output = Allocation.createTyped(renderScript, input.type)
     val script = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
     script.setRadius(radius)
     script.setInput(input)
     script.forEach(output)
-    output.copyTo(this)
+    output.copyTo(blurBitmap)
+    return blurBitmap
 }
 
 fun Bitmap?.isSame(other: Bitmap?): Boolean {

@@ -3,6 +3,7 @@
     <string name="search_apps">\ \ \ \ Поиск приложений</string>
     <string name="expand">Показать все</string>
     <string name="collapse">Свернуть</string>
+    <string name="grid_size">%1$dx%2$d</string>
 
     <string name="category_messaging">Общение</string>
     <string name="category_media_and_video">Медиа</string>

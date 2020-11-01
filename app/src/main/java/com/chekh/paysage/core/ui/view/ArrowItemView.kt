@@ -81,13 +81,13 @@ open class ArrowItemView @JvmOverloads constructor(
         }
     }
 
-    var title: CharSequence
+    var title: CharSequence?
         get() = tvTitle.text
         set(value) {
             tvTitle.text = value
         }
 
-    var icon: Drawable
+    var icon: Drawable?
         get() = ivIcon.drawable
         set(value) {
             ivIcon.setImageDrawable(value)

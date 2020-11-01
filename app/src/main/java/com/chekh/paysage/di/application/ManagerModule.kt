@@ -1,9 +1,11 @@
 package com.chekh.paysage.di.application
 
 import android.app.UiModeManager
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
+import android.os.UserManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +23,20 @@ class ManagerModule {
         @ApplicationContext
         context: Context
     ): LauncherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+
+    @Singleton
+    @Provides
+    fun provideUserManager(
+        @ApplicationContext
+        context: Context
+    ): UserManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+
+    @Singleton
+    @Provides
+    fun provideAppWidgetManager(
+        @ApplicationContext
+        context: Context
+    ): AppWidgetManager = AppWidgetManager.getInstance(context)
 
     @Singleton
     @Provides

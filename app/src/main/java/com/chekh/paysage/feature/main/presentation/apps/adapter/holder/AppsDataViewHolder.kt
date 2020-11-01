@@ -44,7 +44,7 @@ class AppsDataViewHolder(
         onUpdated: (() -> Unit)? = null
     ) {
         view.spanCount = appSettings.appSpan
-        view.appSize = appSettings.appSize
+        view.setAppSize(appSettings.appSize, isRequireUpdateImmediately = false)
         view.setApps(apps, isAnimate, onUpdated)
     }
 

@@ -108,3 +108,20 @@ fun <X, R : Comparable<R>> LiveData<List<X>>.sortedBy(selector: (X) -> R?): Live
 fun <X, Y> LiveData<List<X>>.foreachMap(body: (X) -> Y): LiveData<List<Y>> {
     return map { x -> x?.map { body(it) } }
 }
+
+fun <X, Y> LiveData<List<LiveData<X>>>.collect(body: (X) -> Y): LiveData<List<Y>> {
+    val collectLiveData = MediatorLiveData<List<Y>>()
+    collectLiveData.addSource(this) { listOfLiveData ->
+        val list = mutableListOf<Y>()
+        listOfLiveData.forEach { liveData ->
+            collectLiveData.addSource(liveData) { x ->
+                collectLiveData.removeSource(liveData)
+                list.add(body(x))
+                if (list.size == listOfLiveData.size) {
+                    collectLiveData.value = list
+                }
+            }
+        }
+    }
+    return collectLiveData
+}
