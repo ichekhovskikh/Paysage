@@ -61,7 +61,7 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
             WidgetFlowListItem("19", 1, 41, 3, 2)
         )
         glWidgets.adapter = adapter.apply {
-            items = first
+            items = second
         }
         tvShuffle.setOnClickListener {
             adapter.items = if (adapter.items == second) first else second

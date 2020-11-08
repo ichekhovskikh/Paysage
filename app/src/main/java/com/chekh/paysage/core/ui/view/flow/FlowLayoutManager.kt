@@ -98,24 +98,10 @@ class FlowLayoutManager @JvmOverloads constructor(
         }
         preLayoutChildIndexes.clear()
         preLayoutChildIndexes.addAll(newPreLayoutIndexes)
-        rectList.clear()
-    }
-
-    override fun onItemsAdded(recyclerView: RecyclerView, positionStart: Int, itemCount: Int) {
-        rectList.clear()
-    }
-
-    override fun onItemsChanged(recyclerView: RecyclerView) {
-        rectList.clear()
-    }
-
-    override fun onItemsMoved(recyclerView: RecyclerView, from: Int, to: Int, itemCount: Int) {
-        rectList.clear()
     }
 
     override fun onItemsUpdated(recyclerView: RecyclerView, from: Int, itemCount: Int) {
         preLayoutChildIndexes.addAll(from until from + itemCount)
-        rectList.clear()
     }
 
     override fun onAdapterChanged(
@@ -135,6 +121,8 @@ class FlowLayoutManager @JvmOverloads constructor(
             return
         }
         if (state.isPreLayout) {
+            preLayoutChildren(recycler)
+            rectList.clear()
             return
         }
         if (childCount <= 0 || rectList.size == 0) {
@@ -168,10 +156,16 @@ class FlowLayoutManager @JvmOverloads constructor(
         val viewport = Rect(0, verticalOffset, availableWidth, verticalOffset + availableHeight)
         rectList.forEachIndexed { index, viewRect ->
             if (viewport.intersects(viewRect)) {
-                preLayoutChildIndexes.remove(index)
                 visibleChildIndexes.add(index)
             }
         }
+    }
+
+    private fun preLayoutChildren(recycler: RecyclerView.Recycler) {
+        preLayoutChildIndexes.forEach { itemIndex ->
+            attachNewViewForPosition(recycler, itemIndex)
+        }
+        preLayoutChildIndexes.clear()
     }
 
     private fun layoutChildren(recycler: RecyclerView.Recycler) {
@@ -179,26 +173,30 @@ class FlowLayoutManager @JvmOverloads constructor(
         visibleChildIndexes.union(preLayoutChildIndexes).forEach { itemIndex ->
             val cachedView = viewCache[itemIndex]
             if (cachedView == null) {
-                val view = recycler.getViewForPosition(itemIndex)
-                val rect = rectList[itemIndex]
-                view.layoutParams.width = rect.width()
-                view.layoutParams.height = rect.height()
-                addView(view)
-                viewToItemIndexMap[view] = itemIndex
-                measureChildWithMargins(view, 0, 0)
-                val top = rect.top - verticalOffset
-                val bottom = rect.bottom - verticalOffset
-                layoutDecorated(view, rect.left, top, rect.right, bottom)
+                attachNewViewForPosition(recycler, itemIndex)
             } else {
                 attachView(cachedView)
                 viewCache.remove(itemIndex)
             }
         }
-
+        preLayoutChildIndexes.clear()
         viewCache.forEach { entry ->
             viewToItemIndexMap.remove(entry.value)
             recycler.recycleView(entry.value)
         }
+    }
+
+    private fun attachNewViewForPosition(recycler: RecyclerView.Recycler, itemIndex: Int) {
+        val view = recycler.getViewForPosition(itemIndex)
+        val rect = rectList[itemIndex]
+        view.layoutParams.width = rect.width()
+        view.layoutParams.height = rect.height()
+        addView(view)
+        viewToItemIndexMap[view] = itemIndex
+        measureChildWithMargins(view, 0, 0)
+        val top = rect.top - verticalOffset
+        val bottom = rect.bottom - verticalOffset
+        layoutDecorated(view, rect.left, top, rect.right, bottom)
     }
 
     private fun detachAllChildren(): MutableMap<Int, View> {
