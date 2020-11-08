@@ -17,4 +17,8 @@
     <declare-styleable name="ShadowView">
         <attr name="shadowDrawable" format="reference" />>
     </declare-styleable>
+
+    <declare-styleable name="FlowLayoutManager">
+        <attr name="spanCount" format="integer" />>
+    </declare-styleable>
 </resources>
