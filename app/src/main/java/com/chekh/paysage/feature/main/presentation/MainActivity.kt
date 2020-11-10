@@ -12,11 +12,11 @@ import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.feature.main.presentation.home.HomeFragment
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(R.layout.activity_home) {
+class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -29,10 +29,11 @@ class MainActivity : BaseActivity(R.layout.activity_home) {
         super.onCreate(savedInstanceState)
         statusBarDecorator.setTransparentStatusBar(this)
         addHomeFragmentIfNeed()
-        initViewModel()
+        setupViewModel()
     }
 
-    private fun initViewModel() {
+    private fun setupViewModel() {
+        viewModel.init(Unit)
         viewModel.startObserveUpdates()
     }
 

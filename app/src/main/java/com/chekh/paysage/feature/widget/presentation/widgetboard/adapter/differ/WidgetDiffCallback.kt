@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.differ
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel

@@ -2,22 +2,39 @@ package com.chekh.paysage.feature.main.presentation.desktop
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
+import com.chekh.paysage.core.extension.onClick
+import com.chekh.paysage.core.extension.setOnGestureScaleAndLongPress
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.WidgetFlowListItem
+import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_desktop.*
 
 @AndroidEntryPoint
 class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
 
+    private val viewModel: HomeViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
+
     private val adapter = FlowListAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        super.onCreate(savedInstanceState)
+        testFlowLayout()
+        setupListeners()
+    }
 
+    private fun setupListeners() {
+        glWidgets.setOnGestureScaleAndLongPress {
+            viewModel.isEnabledHomeButtonsLiveData.postValue(true)
+        }
+    }
+
+    private fun testFlowLayout() {
         val first = listOf(
             WidgetFlowListItem("0", 0, 0, 2, 2),
             WidgetFlowListItem("1", 2, 2, 1, 1),
@@ -63,7 +80,7 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
         glWidgets.adapter = adapter.apply {
             items = second
         }
-        tvShuffle.setOnClickListener {
+        tvShuffle.onClick {
             adapter.items = if (adapter.items == second) first else second
         }
     }

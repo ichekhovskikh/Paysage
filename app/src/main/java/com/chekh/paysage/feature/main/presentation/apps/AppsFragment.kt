@@ -47,10 +47,10 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupParentSlidingPanel(view)
-        initViewModel()
+        setupViewModel()
     }
 
-    private fun initViewModel() {
+    private fun setupViewModel() {
         viewModel.init(Unit)
 
         viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->

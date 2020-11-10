@@ -1,13 +1,12 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.view
+package com.chekh.paysage.feature.widget.presentation.widgetboard.view
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chekh.paysage.R
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.WidgetListAdapter
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetListAdapter
 
 class WidgetsDataView @JvmOverloads constructor(
     context: Context,
@@ -19,14 +18,6 @@ class WidgetsDataView @JvmOverloads constructor(
 
     private val linearLayoutManager: LinearLayoutManager
     private var onOffsetChange: ((Int) -> Unit)? = null
-
-    private val previewWidth by lazy {
-        context.resources.getDimension(R.dimen.thumbnail_size)
-    }
-
-    private val widgetCardCommonPadding by lazy {
-        context.resources.getDimension(R.dimen.widget_card_common_padding)
-    }
 
     var scrollOffset
         get() = computeHorizontalScrollOffset()
@@ -53,17 +44,6 @@ class WidgetsDataView @JvmOverloads constructor(
         onUpdated: (() -> Unit)? = null
     ) {
         adapter.setWidgets(widgets, isAnimate, onUpdated)
-        recalculateHeight(findMaxWidgetPreviewHeight(widgets))
-    }
-
-    private fun findMaxWidgetPreviewHeight(widgets: List<WidgetModel>) = widgets.maxOf { widget ->
-        widget.previewImage?.let { (it.height * previewWidth / it.width).toDouble() } ?: -1.0
-    }
-
-    private fun recalculateHeight(maxWidgetPreviewHeight: Double) {
-        layoutParams = layoutParams.apply {
-            height = (maxWidgetPreviewHeight + widgetCardCommonPadding).toInt()
-        }
     }
 
     fun setOffsetChangeListener(onOffsetChange: (Int) -> Unit) {

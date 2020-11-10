@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.holder
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder
 
 import android.content.Context
 import android.content.res.Resources

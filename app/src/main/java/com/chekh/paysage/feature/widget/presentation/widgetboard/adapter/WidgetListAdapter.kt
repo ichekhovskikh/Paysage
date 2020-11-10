@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.differ.WidgetDiffCallback
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.holder.WidgetViewHolder
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ.WidgetDiffCallback
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder.WidgetViewHolder
 
 class WidgetListAdapter : ListAdapter<WidgetModel, WidgetViewHolder>(WidgetDiffCallback()) {
 

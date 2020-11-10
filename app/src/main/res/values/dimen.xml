@@ -10,13 +10,14 @@
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
 
-    <dimen name="widget_card_common_padding">116dp</dimen>
-
+    <dimen name="point">1dp</dimen>
     <dimen name="micro">4dp</dimen>
     <dimen name="small">8dp</dimen>
     <dimen name="medium">16dp</dimen>
     <dimen name="xmedium">18dp</dimen>
     <dimen name="large">24dp</dimen>
+    <dimen name="xxlarge">64dp</dimen>
+    <dimen name="xxxlarge">92dp</dimen>
 
 
 </resources>

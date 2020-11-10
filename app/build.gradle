@@ -63,6 +63,7 @@ dependencies {
     implementation libraries.lifecycleExtensions
     implementation libraries.overscrollBouncy
     implementation libraries.overscrollDecor
+    implementation libraries.blurView
     implementation libraries.searchBar
 
     implementation libraries.hiltLifecycleViewModel

@@ -1,17 +1,17 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.data.WidgetsPackageStateChanged
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.data.WidgetsPackageWidgetsChanged
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.differ.WidgetsGroupByPackageDiffCallback
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.holder.WidgetsDataViewHolder
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.holder.WidgetsHeaderViewHolder
-import com.chekh.paysage.feature.widget.preentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.view.WidgetsDataView
-import com.chekh.paysage.feature.widget.preentation.widgetboard.view.WidgetsHeaderView
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetsPackageStateChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetsPackageWidgetsChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ.WidgetsGroupByPackageDiffCallback
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder.WidgetsDataViewHolder
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder.WidgetsHeaderViewHolder
+import com.chekh.paysage.feature.widget.presentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
+import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetsDataView
+import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetsHeaderView
 
 class WidgetsPackageAdapter(
     private val onScrollPackageChange: (Int, String) -> Unit

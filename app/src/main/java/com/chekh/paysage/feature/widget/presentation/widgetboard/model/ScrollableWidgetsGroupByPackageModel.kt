@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.model
+package com.chekh.paysage.feature.widget.presentation.widgetboard.model
 
 import com.chekh.paysage.feature.widget.domain.model.WidgetsGroupByPackageModel
 

@@ -27,6 +27,7 @@ ext {
         additiveAnimationsVersion = '1.6.0',
         overscrollBouncyVersion = '0.1.1',
         overscrollDecorVersion = '1.1.0',
+        blurViewVersion = '1.6.5',
         searchBarVersion = '0.8.2',
 
         junitVersion = '4.13',
@@ -62,6 +63,7 @@ ext {
         additiveAnimations    : "at.wirecube:additive_animations:$additiveAnimationsVersion",
         overscrollBouncy      : "com.chauthai.overscroll:overscroll-bouncy:$overscrollBouncyVersion",
         overscrollDecor       : "me.everything:overscroll-decor-android:$overscrollDecorVersion",
+        blurView              : "com.eightbitlab:blurview:$blurViewVersion",
         searchBar             : "com.github.mancj:MaterialSearchBar:$searchBarVersion"
     ]
     testLibraries = [

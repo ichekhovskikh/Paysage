@@ -18,4 +18,5 @@
     <color name="whiteAlpha95">#F2FFFFFF</color>
     <color name="whiteAlpha90">#E6FFFFFF</color>
     <color name="whiteAlpha80">#CCFFFFFF</color>
+    <color name="whiteAlpha70">#99FFFFFF</color>
 </resources>

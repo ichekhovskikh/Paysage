@@ -1,8 +1,8 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.mapper
+package com.chekh.paysage.feature.widget.presentation.widgetboard.mapper
 
 import com.chekh.paysage.core.mapper.TwoParametersMapper
 import com.chekh.paysage.feature.widget.domain.model.WidgetsGroupByPackageModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
+import com.chekh.paysage.feature.widget.presentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
 import javax.inject.Inject
 
 class ScrollableWidgetsGroupByPackageModelMapper @Inject constructor() :

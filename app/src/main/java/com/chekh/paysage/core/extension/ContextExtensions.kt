@@ -1,5 +1,6 @@
 package com.chekh.paysage.core.extension
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 
@@ -12,6 +13,7 @@ fun Context.startApp(packageName: String, className: String) {
     startActivityIfFound(intent)
 }
 
+@SuppressLint("QueryPermissionsNeeded")
 fun Context.startActivityIfFound(intent: Intent): Boolean {
     val packageManager = packageManager ?: return false
     val activityInfo = intent.resolveActivityInfo(packageManager, intent.flags) ?: return false

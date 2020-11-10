@@ -1,9 +1,9 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.differ
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.data.WidgetsPackageStateChanged
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.data.WidgetsPackageWidgetsChanged
-import com.chekh.paysage.feature.widget.preentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetsPackageStateChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetsPackageWidgetsChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
 
 class WidgetsGroupByPackageDiffCallback :
     DiffUtil.ItemCallback<ScrollableWidgetsGroupByPackageModel>() {

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<eightbitlab.com.blurview.BlurView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/blBackgroundBlur"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    tools:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/xxlarge">
+
+        <TextView
+            android:id="@+id/tvWallpaper"
+            android:layout_width="@dimen/xxxlarge"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/micro"
+            android:drawableTop="@drawable/ic_wallpaper"
+            android:drawablePadding="@dimen/small"
+            android:drawableTint="@color/home_button_color_selector"
+            android:text="@string/wallpaper"
+            android:textAlignment="center"
+            android:textColor="@color/home_button_color_selector"
+            android:textSize="@dimen/small_text_size"
+            tools:ignore="UnusedAttribute,UseCompatTextViewDrawableXml" />
+
+        <TextView
+            android:id="@+id/tvWidgets"
+            android:layout_width="@dimen/xxxlarge"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/micro"
+            android:drawableTop="@drawable/ic_widget"
+            android:drawablePadding="@dimen/small"
+            android:drawableTint="@color/home_button_color_selector"
+            android:text="@string/widgets"
+            android:textAlignment="center"
+            android:textColor="@color/home_button_color_selector"
+            android:textSize="@dimen/small_text_size"
+            tools:ignore="UnusedAttribute,UseCompatTextViewDrawableXml" />
+
+        <TextView
+            android:id="@+id/tvSettings"
+            android:layout_width="@dimen/xxxlarge"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/micro"
+            android:drawableTop="@drawable/ic_settings"
+            android:drawablePadding="@dimen/small"
+            android:drawableTint="@color/home_button_color_selector"
+            android:text="@string/settings"
+            android:textAlignment="center"
+            android:textColor="@color/home_button_color_selector"
+            android:textSize="@dimen/small_text_size"
+            tools:ignore="UnusedAttribute,UseCompatTextViewDrawableXml" />
+
+    </LinearLayout>
+
+</eightbitlab.com.blurview.BlurView>

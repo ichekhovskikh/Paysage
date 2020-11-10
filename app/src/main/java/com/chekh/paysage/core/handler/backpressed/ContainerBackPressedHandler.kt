@@ -4,18 +4,21 @@ import androidx.fragment.app.FragmentManager
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 
 class ContainerBackPressedHandler(
-    private val fragmentManager: FragmentManager
+    private val childFragmentManager: FragmentManager,
+    private val parentFragmentManager: FragmentManager? = null
 ) : BackPressedHandler {
 
     override fun onBackPressed(): Boolean {
-        val fragments = fragmentManager.fragments
-        var handled = false
-        for (fragment in fragments) {
-            if (fragment is BaseFragment) {
-                handled = fragment.onBackPressed()
-                if (handled) break
+        val fragments = childFragmentManager.fragments
+        fragments.forEach { fragment ->
+            if (fragment is BaseFragment && fragment.onBackPressed()) {
+                return true
             }
         }
-        return handled
+        if (parentFragmentManager != null && parentFragmentManager.backStackEntryCount > 0) {
+            parentFragmentManager.popBackStack()
+            return true
+        }
+        return false
     }
 }

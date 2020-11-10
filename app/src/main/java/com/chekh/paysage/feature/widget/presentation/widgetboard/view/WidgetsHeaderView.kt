@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.view
+package com.chekh.paysage.feature.widget.presentation.widgetboard.view
 
 import android.content.Context
 import android.util.AttributeSet

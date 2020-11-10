@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard
+package com.chekh.paysage.feature.widget.presentation.widgetboard
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
-import com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.WidgetsPackageAdapter
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetsPackageAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_widget_board.*
 
@@ -28,10 +28,10 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        setupViewModel()
     }
 
-    private fun initViewModel() {
+    private fun setupViewModel() {
         viewModel.init(Unit)
 
         viewModel.widgetsGroupByPackageLiveData.observe(viewLifecycleOwner) { widgetsGroupByPackage ->

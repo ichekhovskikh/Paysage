@@ -3,12 +3,14 @@ package com.chekh.paysage.core.ui.view.flow
 import android.content.Context
 import android.graphics.PointF
 import android.graphics.Rect
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import kotlinx.android.parcel.Parcelize
 import java.lang.IllegalArgumentException
 import kotlin.math.max
 
@@ -66,7 +68,7 @@ class FlowLayoutManager @JvmOverloads constructor(
         get() = columnWidth
 
     private val totalChildrenHeight: Int
-        get() = rectList.maxOf { it.bottom }
+        get() = rectList.maxOfOrNull { it.bottom } ?: 0
 
     override fun onAttachedToWindow(view: RecyclerView?) {
         super.onAttachedToWindow(view)
@@ -283,6 +285,25 @@ class FlowLayoutManager @JvmOverloads constructor(
     private fun Rect.intersects(other: Rect): Boolean {
         return intersects(other.left, other.top, other.right, other.bottom)
     }
+
+    override fun onSaveInstanceState() =
+        SavedState(spanCount, verticalOffset, preLayoutChildIndexes, visibleChildIndexes)
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        if (state !is SavedState) return
+        verticalOffset = state.verticalOffset
+        preLayoutChildIndexes.addAll(state.preLayoutChildIndexes)
+        visibleChildIndexes.addAll(state.visibleChildIndexes)
+        spanCount = state.spanCount
+    }
+
+    @Parcelize
+    data class SavedState(
+        internal val spanCount: Int,
+        internal val verticalOffset: Int,
+        internal val preLayoutChildIndexes: Set<Int>,
+        internal val visibleChildIndexes: Set<Int>
+    ) : Parcelable
 
     private companion object {
         const val SPAN_COUNt_DEFAULT = 4

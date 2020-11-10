@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import com.chekh.paysage.core.extension.onClick
 import com.chekh.paysage.core.ui.view.AppView
 import com.chekh.paysage.feature.main.domain.model.AppModel
 
@@ -25,7 +26,7 @@ class AppViewHolder(
         // TODO make BadgerDrawable
         appView.setIcon(app.icon)
         appView.label = app.title
-        appView.setOnClickListener {
+        appView.onClick {
             // startApp(app)
         }
     }

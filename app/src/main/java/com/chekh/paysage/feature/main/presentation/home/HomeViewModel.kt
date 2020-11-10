@@ -1,7 +1,8 @@
 package com.chekh.paysage.feature.main.presentation.home
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.usecase.StartObserveAppUpdatesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.StartObserveWidgetUpdatesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.StopObserveAppUpdatesUseCase
@@ -12,7 +13,9 @@ class HomeViewModel @ViewModelInject constructor(
     private val stopObserveAppUpdatesUseCase: StopObserveAppUpdatesUseCase,
     private val startObserveWidgetUpdatesUseCase: StartObserveWidgetUpdatesUseCase,
     private val stopObserveWidgetUpdatesUseCase: StopObserveWidgetUpdatesUseCase
-) : ViewModel() {
+) : BaseViewModel<Unit>() {
+
+    val isEnabledHomeButtonsLiveData = MutableLiveData<Boolean>()
 
     fun startObserveUpdates() {
         startObserveAppUpdatesUseCase()

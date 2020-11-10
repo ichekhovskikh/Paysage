@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.preentation.widgetboard.adapter.holder
+package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -6,8 +6,8 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
-import com.chekh.paysage.feature.widget.preentation.widgetboard.view.WidgetsDataView
+import com.chekh.paysage.feature.widget.presentation.widgetboard.model.ScrollableWidgetsGroupByPackageModel
+import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetsDataView
 
 class WidgetsDataViewHolder(
     private val view: WidgetsDataView,

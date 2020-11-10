@@ -23,6 +23,9 @@ data class WidgetFlowListItem(
         payloads: List<Any>
     ) = with(holder) {
         text_view.text = "${columnCount}x$rowCount"
+        text_view.setOnLongClickListener {
+            true
+        }
     }
 
     override fun getChangePayload(another: ListItem): Any? = Unit
