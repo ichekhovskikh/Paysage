@@ -59,6 +59,7 @@ ext {
         hiltDagger            : "com.google.dagger:hilt-android:$hiltVersion",
         hiltCompiler          : "com.google.dagger:hilt-android-compiler:$hiltVersion",
         roomRuntime           : "androidx.room:room-runtime:$roomVersion",
+        roomktx               : "androidx.room:room-ktx:$roomVersion",
         roomCompiler          : "androidx.room:room-compiler:$roomVersion",
         additiveAnimations    : "at.wirecube:additive_animations:$additiveAnimationsVersion",
         overscrollBouncy      : "com.chauthai.overscroll:overscroll-bouncy:$overscrollBouncyVersion",

@@ -1,18 +1,26 @@
 package com.chekh.paysage.feature.main.domain.gateway
 
-import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.domain.model.AppSettingsModel
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.CategoryModel
+import com.chekh.paysage.feature.main.tools.AppsChangedCallback
+import kotlinx.coroutines.flow.Flow
 
 interface HomeGateway {
-    fun startObserveAppUpdates()
-    fun stopObserveAppUpdates()
-    fun startObserveWidgetUpdates()
-    fun stopObserveWidgetUpdates()
-    fun getDockApps(): LiveData<List<AppModel>>
-    fun getDockAppSettings(): LiveData<AppSettingsModel>
-    fun getAppCategories(): LiveData<List<CategoryModel>>
-    fun getBoardApps(): LiveData<List<AppModel>>
-    fun getBoardAppSettings(): LiveData<AppSettingsModel>
+    suspend fun startObserveWidgetEvents()
+    suspend fun stopObserveWidgetEvents()
+
+    suspend fun startObserveAppUpdates(callback: AppsChangedCallback)
+    suspend fun stopObserveAppUpdates(callback: AppsChangedCallback)
+
+    fun getDockApps(): Flow<List<AppModel>>
+    fun getDockAppSettings(): Flow<AppSettingsModel>
+
+    fun getAppCategories(): Flow<List<CategoryModel>>
+
+    fun getBoardApps(): Flow<List<AppModel>>
+    fun getBoardAppSettings(): Flow<AppSettingsModel>
+
+    suspend fun pullBoardApps(packageName: String)
+    suspend fun pullDesktopWidgets(packageName: String)
 }

@@ -61,6 +61,7 @@ dependencies {
     implementation libraries.picasso
     implementation libraries.lifecycleViewModel
     implementation libraries.lifecycleExtensions
+    implementation libraries.lifecycleLiveDataktx
     implementation libraries.overscrollBouncy
     implementation libraries.overscrollDecor
     implementation libraries.blurView
@@ -73,6 +74,7 @@ dependencies {
     kapt libraries.hiltCompiler
 
     implementation libraries.roomRuntime
+    implementation libraries.roomktx
     kapt libraries.roomCompiler
 
     testImplementation testLibraries.junit

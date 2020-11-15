@@ -30,7 +30,7 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
 
     private fun setupListeners() {
         glWidgets.setOnGestureScaleAndLongPress {
-            viewModel.isEnabledHomeButtonsLiveData.postValue(true)
+            viewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.core.extension.*
 import androidx.hilt.lifecycle.ViewModelInject
+import com.chekh.paysage.core.provider.DispatcherProvider
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.domain.model.AppsModel
@@ -12,6 +13,7 @@ import com.chekh.paysage.feature.main.domain.usecase.GetDockAppsWithSettingsScen
 import com.chekh.paysage.feature.main.presentation.apps.mapper.ExpandableAppsGroupByCategoryModelMapper
 
 class AppsViewModel @ViewModelInject constructor(
+    private val dispatcherProvider: DispatcherProvider,
     private val getAppsGroupByCategoriesScenario: GetAppsGroupByCategoriesScenario,
     private val getDockAppsWithSettingsScenario: GetDockAppsWithSettingsScenario,
     private val expandableAppsGroupByCategoryMapper: ExpandableAppsGroupByCategoryModelMapper
@@ -23,7 +25,7 @@ class AppsViewModel @ViewModelInject constructor(
     private val expandTrigger = MutableLiveData<Unit>()
 
     val appsGroupByCategoriesLiveData = trigger
-        .switchMap { getAppsGroupByCategoriesScenario() }
+        .switchMap { getAppsGroupByCategoriesScenario().asConflateLiveData(dispatcherProvider.io) }
         .repeat(expandTrigger)
         .foreachMap {
             expandableAppsGroupByCategoryMapper.map(it, isExpanded(it), scrollOffset(it))
@@ -34,7 +36,8 @@ class AppsViewModel @ViewModelInject constructor(
     val scrollPositionLiveData: LiveData<Int> = scrollPositionMutableLiveData
 
     val dockAppsLiveData: LiveData<AppsModel> = trigger
-        .switchMap { getDockAppsWithSettingsScenario() }
+        .switchMap { getDockAppsWithSettingsScenario().asConflateLiveData(dispatcherProvider.io) }
+        .distinctUntilChanged()
 
     fun scrollCategoryOffset(scrollOffset: Int, categoryId: String) {
         scrollCategoriesOffsets[categoryId] = scrollOffset

@@ -28,7 +28,7 @@ class WidgetViewHolder(
     fun bind(widget: WidgetModel) {
         setPreviewImage(widget.previewImage)
         tvLabel.text = widget.label
-        tvGridSize.text = context.getString(R.string.grid_size, widget.minWidth, widget.minHeight)
+        tvGridSize.text = context.getString(R.string.grid_size, widget.minColumns, widget.minRows)
     }
 
     private fun setPreviewImage(previewImage: Bitmap?) {

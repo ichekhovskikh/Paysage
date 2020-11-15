@@ -9,9 +9,7 @@ class WidgetDiffCallback : DiffUtil.ItemCallback<WidgetModel>() {
         oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: WidgetModel, newItem: WidgetModel) =
-        oldItem.previewImageRes == newItem.previewImageRes &&
-            oldItem.minHeight != newItem.minHeight &&
-            oldItem.minWidth != newItem.minWidth
+        oldItem == newItem
 
     override fun getChangePayload(oldItem: WidgetModel, newItem: WidgetModel) = Unit
 }

@@ -3,66 +3,56 @@ package com.chekh.paysage.feature.main.data.service
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
 import android.os.Process
-import android.os.UserHandle
-import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.data.dao.AppDao
 import com.chekh.paysage.common.data.dao.PackageDao
 import com.chekh.paysage.common.data.model.AppCategory.OTHER
 import com.chekh.paysage.common.data.model.AppSettingsEntity
 import com.chekh.paysage.core.extension.foreachMap
-import com.chekh.paysage.core.provider.DispatcherProvider
 import com.chekh.paysage.feature.main.data.factory.AppSettingsFactory
 import com.chekh.paysage.feature.main.data.mapper.AppModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onStart
 
 interface AppService {
 
-    val installedAppsLiveData: LiveData<List<AppModel>>
+    val installedApps: Flow<List<AppModel>>
 
-    fun startObserveUpdates()
+    suspend fun pullApps(packageName: String? = null)
 
-    fun stopObserveUpdates()
+    suspend fun startObserveAppUpdates(callback: AppsChangedCallback)
+
+    suspend fun stopObserveAppUpdates(callback: AppsChangedCallback)
 }
 
+@ExperimentalCoroutinesApi
 class AppServiceImpl @Inject constructor(
     private val launcherApps: LauncherApps,
-    private val dispatcherProvider: DispatcherProvider,
     private val appDao: AppDao,
     private val packageDao: PackageDao,
     private val appSettingsFactory: AppSettingsFactory,
     private val appMapper: AppModelMapper
-) : AppService, AppsChangedCallback() {
+) : AppService {
 
-    override val installedAppsLiveData: LiveData<List<AppModel>> = appDao.getAllLive()
+    override val installedApps: Flow<List<AppModel>> = appDao.getAllFlow()
+        .onStart {
+            emit(appDao.getAll())
+            pullApps()
+        }
         .foreachMap { appMapper.map(it) }
 
-    init {
-        pullAppsAsync()
+    override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
+        launcherApps.registerCallback(callback)
     }
 
-    override fun startObserveUpdates() {
-        launcherApps.registerCallback(this)
+    override suspend fun stopObserveAppUpdates(callback: AppsChangedCallback) {
+        launcherApps.unregisterCallback(callback)
     }
 
-    override fun stopObserveUpdates() {
-        launcherApps.unregisterCallback(this)
-    }
-
-    override fun onAppsChanged(packageName: String, userHandle: UserHandle) {
-        pullAppsAsync(packageName)
-    }
-
-    private fun pullAppsAsync(packageName: String? = null) {
-        CoroutineScope(dispatcherProvider.io).launch {
-            pullApps(packageName)
-        }
-    }
-
-    private fun pullApps(packageName: String?) {
+    override suspend fun pullApps(packageName: String?) {
         val activityInfos = launcherApps.getActivityList(packageName, Process.myUserHandle())
         if (activityInfos.isEmpty()) {
             removePackage(packageName)
@@ -80,14 +70,14 @@ class AppServiceImpl @Inject constructor(
         appDao.updateAll(newAppsSettings)
     }
 
-    private fun removePackage(packageName: String?) {
+    private suspend fun removePackage(packageName: String?) {
         when (packageName == null) {
             true -> appDao.removeAll()
             else -> appDao.removeByPackageName(packageName)
         }
     }
 
-    private fun pullUpdatedAppSettings(
+    private suspend fun pullUpdatedAppSettings(
         activityInfo: LauncherActivityInfo,
         appsSettings: List<AppSettingsEntity>
     ): AppSettingsEntity {
@@ -106,7 +96,7 @@ class AppServiceImpl @Inject constructor(
         }
     }
 
-    private fun createAppSettings(
+    private suspend fun createAppSettings(
         activityInfo: LauncherActivityInfo,
         appsSettings: List<AppSettingsEntity>
     ): AppSettingsEntity {

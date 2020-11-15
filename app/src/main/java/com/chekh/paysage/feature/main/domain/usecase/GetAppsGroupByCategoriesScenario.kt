@@ -1,9 +1,9 @@
 package com.chekh.paysage.feature.main.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.chekh.paysage.core.extension.zip
 import com.chekh.paysage.feature.main.domain.mapper.AppsGroupByCategoryModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetAppsGroupByCategoriesScenario @Inject constructor(
@@ -13,8 +13,7 @@ class GetAppsGroupByCategoriesScenario @Inject constructor(
     private val appsGroupByCategoryMapper: AppsGroupByCategoryModelMapper
 ) {
 
-    operator fun invoke(): LiveData<List<AppsGroupByCategoryModel>> = zip(
-        getAppCategoriesUseCase(),
+    operator fun invoke(): Flow<List<AppsGroupByCategoryModel>> = getAppCategoriesUseCase().zip(
         getBoardAppsUseCase(),
         getBoardAppSettingsUseCase()
     ) { categories, apps, settings ->

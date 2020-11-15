@@ -1,9 +1,9 @@
 package com.chekh.paysage.feature.main.domain.usecase
 
-import androidx.lifecycle.LiveData
-import com.chekh.paysage.core.extension.zip
 import com.chekh.paysage.feature.main.domain.mapper.AppsModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppsModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.zip
 import javax.inject.Inject
 
 class GetDockAppsWithSettingsScenario @Inject constructor(
@@ -12,10 +12,8 @@ class GetDockAppsWithSettingsScenario @Inject constructor(
     private val appsModelMapper: AppsModelMapper
 ) {
 
-    operator fun invoke(): LiveData<AppsModel> = zip(
-        getDockAppsUseCase(),
-        getDockAppSettingsUseCase()
-    ) { dockApps, dockAppSettings ->
-        appsModelMapper.map(dockApps, dockAppSettings)
-    }
+    operator fun invoke(): Flow<AppsModel> =
+        getDockAppsUseCase().zip(getDockAppSettingsUseCase()) { dockApps, dockAppSettings ->
+            appsModelMapper.map(dockApps, dockAppSettings)
+        }
 }

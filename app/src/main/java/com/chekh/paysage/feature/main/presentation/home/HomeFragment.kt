@@ -19,7 +19,7 @@ import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
-import com.chekh.paysage.feature.main.presentation.home.anim.HomeButtonsAnimationFacade
+import com.chekh.paysage.feature.main.presentation.home.anim.OverlayHomeButtonsAnimationFacade
 import com.chekh.paysage.feature.widget.presentation.widgetboard.WidgetBoardFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -43,7 +43,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
     private val bottomSheetBehavior by lazy { from(svBottomSheet) }
 
     private val buttonsAnimationFacade by lazy {
-        HomeButtonsAnimationFacade(blBackgroundBlur, tvWallpaper, tvWidgets, tvSettings)
+        OverlayHomeButtonsAnimationFacade(blBackgroundBlur, tvWallpaper, tvWidgets, tvSettings)
     }
 
     private val searchBarSlideHandler by lazy {
@@ -87,7 +87,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
 
     private fun setupListeners() {
         blBackgroundBlur.onClick {
-            setEnabledHomeButtons(false)
+            setEnabledOverlayHomeButtons(false)
         }
         tvWallpaper.onVibrateClick {
             // TODO open Wallpaper Screen
@@ -107,12 +107,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
     }
 
     private fun setupViewModel() {
-        viewModel.isEnabledHomeButtonsLiveData.observe(viewLifecycleOwner) { isEnabled ->
-            setEnabledHomeButtons(isEnabled)
+        viewModel.isEnabledOverlayHomeButtonsLiveData.observe(viewLifecycleOwner) { isEnabled ->
+            setEnabledOverlayHomeButtons(isEnabled)
         }
     }
 
-    private fun setEnabledHomeButtons(isEnabled: Boolean) {
+    private fun setEnabledOverlayHomeButtons(isEnabled: Boolean) {
         if (blBackgroundBlur.isVisible == isEnabled) return
 
         blBackgroundBlur.setBlurEnabled(isEnabled)
@@ -151,7 +151,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
 
     override fun onBackPressed(): Boolean {
         if (flContainer.childCount <= 0 && blBackgroundBlur.isVisible) {
-            setEnabledHomeButtons(false)
+            setEnabledOverlayHomeButtons(false)
             return true
         }
         return super.onBackPressed()

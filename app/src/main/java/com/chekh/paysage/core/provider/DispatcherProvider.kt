@@ -7,12 +7,12 @@ import kotlinx.coroutines.Dispatchers.Main
 import javax.inject.Singleton
 
 interface DispatcherProvider {
-    val ui: CoroutineDispatcher
+    val main: CoroutineDispatcher
     val io: CoroutineDispatcher
 }
 
 @Singleton
 class DispatcherProviderImpl @Inject constructor() : DispatcherProvider {
-    override val ui = Main
+    override val main = Main
     override val io = IO
 }

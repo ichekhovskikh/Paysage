@@ -5,7 +5,7 @@ import android.animation.PropertyValuesHolder
 import android.view.View
 import androidx.core.animation.doOnEnd
 
-class HomeButtonsAnimationFacade(
+class OverlayHomeButtonsAnimationFacade(
     blBackgroundBlur: View,
     tvWallpaper: View,
     tvWidgets: View,

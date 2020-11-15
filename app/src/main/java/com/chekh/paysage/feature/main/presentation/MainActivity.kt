@@ -34,7 +34,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
     private fun setupViewModel() {
         viewModel.init(Unit)
-        viewModel.startObserveUpdates()
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {
@@ -60,10 +59,5 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             swNavigationBarShadow.shadowHeight = navigationShadowHeight
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.stopObserveUpdates()
     }
 }
