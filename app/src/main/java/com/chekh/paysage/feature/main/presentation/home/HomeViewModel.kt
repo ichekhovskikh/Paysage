@@ -21,16 +21,19 @@ class HomeViewModel @ViewModelInject constructor(
 
     val isEnabledOverlayHomeButtonsLiveData = MutableLiveData<Boolean>()
 
-    private val appsChangedCallback = onAppsChanged { packageName, _ ->
-        viewModelScope.launch(dispatcherProvider.io) {
-            pullBoardAppsUseCase(packageName)
-            pullDesktopWidgetsUseCase(packageName)
-        }
-    }
+    private val appsChangedCallback = onAppsChanged { packageName, _ -> pullAll(packageName) }
 
     override fun init(trigger: Unit) {
         startObserveUpdates()
+        pullAll()
         super.init(trigger)
+    }
+
+    private fun pullAll(packageName: String? = null) {
+        viewModelScope.launch(dispatcherProvider.background) {
+            pullBoardAppsUseCase(packageName)
+            pullDesktopWidgetsUseCase(packageName)
+        }
     }
 
     private fun startObserveUpdates() {

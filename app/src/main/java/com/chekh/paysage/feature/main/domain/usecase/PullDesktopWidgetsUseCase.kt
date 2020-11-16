@@ -7,6 +7,6 @@ class PullDesktopWidgetsUseCase @Inject constructor(
     private val gateway: HomeGateway
 ) {
 
-    suspend operator fun invoke(packageName: String) =
+    suspend operator fun invoke(packageName: String?) =
         gateway.pullDesktopWidgets(packageName)
 }

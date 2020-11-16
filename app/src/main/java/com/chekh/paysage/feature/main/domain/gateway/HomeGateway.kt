@@ -21,6 +21,6 @@ interface HomeGateway {
     fun getBoardApps(): Flow<List<AppModel>>
     fun getBoardAppSettings(): Flow<AppSettingsModel>
 
-    suspend fun pullBoardApps(packageName: String)
-    suspend fun pullDesktopWidgets(packageName: String)
+    suspend fun pullBoardApps(packageName: String?)
+    suspend fun pullDesktopWidgets(packageName: String?)
 }

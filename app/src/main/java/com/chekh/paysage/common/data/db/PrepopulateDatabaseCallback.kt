@@ -22,7 +22,7 @@ class PrepopulateDatabaseCallback(
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
         db.enableWriteAheadLogging()
-        CoroutineScope(dispatcherProvider.io).launch {
+        CoroutineScope(dispatcherProvider.background).launch {
             prepopulateCategories()
             prepopulatePackages()
         }

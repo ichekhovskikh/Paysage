@@ -25,7 +25,7 @@ class AppsViewModel @ViewModelInject constructor(
     private val expandTrigger = MutableLiveData<Unit>()
 
     val appsGroupByCategoriesLiveData = trigger
-        .switchMap { getAppsGroupByCategoriesScenario().asConflateLiveData(dispatcherProvider.io) }
+        .switchMap { getAppsGroupByCategoriesScenario().asConflateLiveData(dispatcherProvider.background) }
         .repeat(expandTrigger)
         .foreachMap {
             expandableAppsGroupByCategoryMapper.map(it, isExpanded(it), scrollOffset(it))
@@ -36,7 +36,7 @@ class AppsViewModel @ViewModelInject constructor(
     val scrollPositionLiveData: LiveData<Int> = scrollPositionMutableLiveData
 
     val dockAppsLiveData: LiveData<AppsModel> = trigger
-        .switchMap { getDockAppsWithSettingsScenario().asConflateLiveData(dispatcherProvider.io) }
+        .switchMap { getDockAppsWithSettingsScenario().asConflateLiveData(dispatcherProvider.background) }
         .distinctUntilChanged()
 
     fun scrollCategoryOffset(scrollOffset: Int, categoryId: String) {

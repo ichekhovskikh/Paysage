@@ -30,7 +30,7 @@ class WidgetBoardViewModel @ViewModelInject constructor(
 
     val widgetsGroupByPackageLiveData = trigger
         .switchMap {
-            getSortedWidgetsGroupByPackageScenario().asConflateLiveData(dispatcherProvider.io)
+            getSortedWidgetsGroupByPackageScenario().asConflateLiveData(dispatcherProvider.background)
         }
         .repeat(scrollTrigger)
         .foreachMap {
@@ -38,16 +38,18 @@ class WidgetBoardViewModel @ViewModelInject constructor(
         }
         .distinctUntilChanged()
 
-    private val widgetsChangedCallback = onAppsChanged { _, _ ->
-        viewModelScope.launch(dispatcherProvider.io) {
-            pullBoardWidgetsUseCase()
-        }
-    }
+    private val widgetsChangedCallback = onAppsChanged { _, _ -> pullBoardWidgets() }
 
     override fun init(trigger: Unit) {
         startObserveWidgetUpdates()
+        pullBoardWidgets()
         super.init(trigger)
+    }
 
+    private fun pullBoardWidgets() {
+        viewModelScope.launch(dispatcherProvider.background) {
+            pullBoardWidgetsUseCase()
+        }
     }
 
     private fun startObserveWidgetUpdates() {

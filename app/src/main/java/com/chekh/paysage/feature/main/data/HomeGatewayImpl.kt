@@ -43,11 +43,11 @@ class HomeGatewayImpl @Inject constructor(
         desktopWidgetService.stopObserveWidgetEvents()
     }
 
-    override suspend fun pullBoardApps(packageName: String) {
+    override suspend fun pullBoardApps(packageName: String?) {
         appService.pullApps(packageName)
     }
 
-    override suspend fun pullDesktopWidgets(packageName: String) {
+    override suspend fun pullDesktopWidgets(packageName: String?) {
         desktopWidgetService.pullWidgets(packageName)
     }
 }

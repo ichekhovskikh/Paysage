@@ -15,7 +15,6 @@ import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onStart
 
 interface AppService {
 
@@ -38,10 +37,6 @@ class AppServiceImpl @Inject constructor(
 ) : AppService {
 
     override val installedApps: Flow<List<AppModel>> = appDao.getAllFlow()
-        .onStart {
-            emit(appDao.getAll())
-            pullApps()
-        }
         .foreachMap { appMapper.map(it) }
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
