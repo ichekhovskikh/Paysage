@@ -94,8 +94,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
         }
         tvWidgets.onVibrateClick {
             val fragment = WidgetBoardFragment()
-            fragment.enterTransition = Slide()
-            fragment.exitTransition = Slide()
+            fragment.enterTransition = Fade()
+            fragment.exitTransition = Fade()
             childFragmentManager.inTransaction {
                 replace(R.id.flContainer, fragment)
                 addToBackStack(fragment::class.simpleName)

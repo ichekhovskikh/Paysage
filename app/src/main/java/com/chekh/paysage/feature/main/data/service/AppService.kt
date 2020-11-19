@@ -5,10 +5,10 @@ import android.content.pm.LauncherApps
 import android.os.Process
 import com.chekh.paysage.common.data.dao.AppDao
 import com.chekh.paysage.common.data.dao.PackageDao
+import com.chekh.paysage.common.data.factory.AppSettingsFactory
 import com.chekh.paysage.common.data.model.AppCategory.OTHER
 import com.chekh.paysage.common.data.model.AppSettingsEntity
 import com.chekh.paysage.core.extension.foreachMap
-import com.chekh.paysage.feature.main.data.factory.AppSettingsFactory
 import com.chekh.paysage.feature.main.data.mapper.AppModelMapper
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback

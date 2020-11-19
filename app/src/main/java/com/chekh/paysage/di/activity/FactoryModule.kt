@@ -1,7 +1,7 @@
 package com.chekh.paysage.di.activity
 
-import com.chekh.paysage.feature.main.data.factory.AppSettingsFactory
-import com.chekh.paysage.feature.main.data.factory.AppSettingsFactoryImpl
+import com.chekh.paysage.common.data.factory.AppSettingsFactory
+import com.chekh.paysage.common.data.factory.AppSettingsFactoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

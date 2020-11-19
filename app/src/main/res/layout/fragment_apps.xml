@@ -25,7 +25,7 @@
             android:layout_marginStart="@dimen/small"
             android:layout_marginEnd="@dimen/small"
             android:clipToPadding="false"
-            android:layoutAnimation="@anim/layout_animation_from_bottom"
+            android:layoutAnimation="@anim/layout_animation_from_bottom_50"
             android:overScrollMode="never"
             android:paddingTop="@dimen/small"
             android:paddingBottom="@dimen/medium"
