@@ -1,7 +1,6 @@
 package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.view.View
 import androidx.annotation.ColorRes
@@ -11,6 +10,7 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.isWhite
+import com.chekh.paysage.core.extension.setHeight
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_widget_card.*
@@ -22,9 +22,6 @@ class WidgetViewHolder(
     private val context: Context
         get() = containerView.context
 
-    private val resources: Resources
-        get() = containerView.context.resources
-
     fun bind(widget: WidgetModel) {
         setPreviewImage(widget.previewImage)
         tvLabel.text = widget.label
@@ -32,26 +29,18 @@ class WidgetViewHolder(
     }
 
     private fun setPreviewImage(previewImage: Bitmap?) {
-        val imageViewWidth = resources.getDimension(R.dimen.thumbnail_size)
         if (previewImage == null) {
             ivPreviewImage.setImageDrawable(null)
-            ivPreviewImage.layoutParams = ivPreviewImage.layoutParams.apply {
-                width = imageViewWidth.toInt()
-                height = imageViewWidth.toInt()
-            }
+            ivPreviewImage.setHeight(ivPreviewImage.layoutParams.width)
             cvContent.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
             setTextColors(R.color.black, R.color.mediumGrayColor)
             return
         }
-        val scale = imageViewWidth / previewImage.width
-        val newWidth = (previewImage.width * scale).toInt()
+        val scale = ivPreviewImage.layoutParams.width.toFloat() / previewImage.width
         val newHeight = (previewImage.height * scale).toInt()
-        val scaledPreview = previewImage.scale(newWidth, newHeight)
+        val scaledPreview = previewImage.scale(ivPreviewImage.layoutParams.width, newHeight)
         ivPreviewImage.setImageBitmap(scaledPreview)
-        ivPreviewImage.layoutParams = ivPreviewImage.layoutParams.apply {
-            width = newWidth
-            height = newHeight
-        }
+        ivPreviewImage.setHeight(newHeight)
         val swatch = Palette.from(scaledPreview).generate().vibrantSwatch
         val cardColor = swatch?.rgb ?: ContextCompat.getColor(context, R.color.white)
         cvContent.setCardBackgroundColor(cardColor)

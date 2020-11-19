@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.data.factory
+package com.chekh.paysage.common.data.factory
 
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.PackageManager
