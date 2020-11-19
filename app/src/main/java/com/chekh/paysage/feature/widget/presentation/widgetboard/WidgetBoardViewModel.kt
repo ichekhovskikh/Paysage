@@ -4,33 +4,33 @@ import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.core.extension.*
 import androidx.hilt.lifecycle.ViewModelInject
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
-import com.chekh.paysage.feature.widget.domain.model.WidgetsGroupByPackageModel
-import com.chekh.paysage.feature.widget.domain.usecase.GetSortedWidgetsGroupByPackageScenario
-import com.chekh.paysage.feature.widget.presentation.widgetboard.mapper.ScrollableWidgetsGroupByPackageModelMapper
+import com.chekh.paysage.feature.widget.domain.model.WidgetsGroupByAppModel
+import com.chekh.paysage.feature.widget.domain.usecase.GetSortedWidgetsGroupByAppScenario
+import com.chekh.paysage.feature.widget.presentation.widgetboard.mapper.WidgetGroupModelMapper
 
 class WidgetBoardViewModel @ViewModelInject constructor(
-    private val getSortedWidgetsGroupByPackageScenario: GetSortedWidgetsGroupByPackageScenario,
-    private val scrollableWidgetsGroupByPackageMapper: ScrollableWidgetsGroupByPackageModelMapper
+    private val getSortedWidgetsGroupByAppScenario: GetSortedWidgetsGroupByAppScenario,
+    private val widgetGroupMapper: WidgetGroupModelMapper
 ) : BaseViewModel<Unit>() {
 
-    private val scrollCategoriesOffsets: MutableMap<String, Int> = hashMapOf()
+    private val groupScrollOffsets: MutableMap<String, Int> = hashMapOf()
 
     private val scrollTrigger = MutableLiveData<Unit>()
 
-    val widgetsGroupByPackageLiveData = trigger
-        .switchMap { getSortedWidgetsGroupByPackageScenario() }
+    val widgetGroupsLiveData = trigger
+        .switchMap { getSortedWidgetsGroupByAppScenario() }
         .repeat(scrollTrigger)
         .foreachMap {
-            scrollableWidgetsGroupByPackageMapper.map(it, scrollOffset(it))
+            widgetGroupMapper.map(it, scrollOffset(it))
         }
         .distinctUntilChanged()
 
-    fun scrollCategoryOffset(scrollOffset: Int, widgetAppId: String) {
-        scrollCategoriesOffsets[widgetAppId] = scrollOffset
+    fun onGroupScrollOffsetChanged(scrollOffset: Int, widgetAppId: String) {
+        groupScrollOffsets[widgetAppId] = scrollOffset
         scrollTrigger.postValue(Unit)
     }
 
-    private fun scrollOffset(data: WidgetsGroupByPackageModel?): Int {
-        return scrollCategoriesOffsets[data?.widgetApp?.id] ?: 0
+    private fun scrollOffset(data: WidgetsGroupByAppModel?): Int {
+        return groupScrollOffsets[data?.app?.id] ?: 0
     }
 }

@@ -16,7 +16,7 @@ import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
-import com.chekh.paysage.feature.main.presentation.apps.adapter.AppsCategoryAdapter
+import com.chekh.paysage.feature.main.presentation.apps.adapter.AppGroupAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_apps.*
 
@@ -25,8 +25,8 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     private val viewModel: AppsViewModel by viewModels()
 
-    private val adapter: AppsCategoryAdapter by lazy {
-        AppsCategoryAdapter(viewModel::toggleCategory, viewModel::scrollCategoryOffset)
+    private val adapter: AppGroupAdapter by lazy {
+        AppGroupAdapter(viewModel::toggleCategory, viewModel::onGroupScrollOffsetChanged)
     }
 
     private var bottomSheetBehavior: CustomBottomSheetBehavior<View>? = null
@@ -56,8 +56,8 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->
             srvCategories.smoothScrollToHeader(position)
         }
-        viewModel.appsGroupByCategoriesLiveData.observe(viewLifecycleOwner) { categories ->
-            adapter.setAppsCategories(categories)
+        viewModel.appGroupsLiveData.observe(viewLifecycleOwner) { categories ->
+            adapter.setAppGroups(categories)
         }
         viewModel.dockAppsLiveData.observe(viewLifecycleOwner) { dockApps ->
             dbvApps.setApps(dockApps)

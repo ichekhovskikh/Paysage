@@ -73,6 +73,7 @@ dependencies {
     kapt libraries.hiltCompiler
 
     implementation libraries.roomRuntime
+    implementation libraries.roomktx
     kapt libraries.roomCompiler
 
     testImplementation testLibraries.junit

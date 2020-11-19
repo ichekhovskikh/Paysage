@@ -55,6 +55,11 @@ fun <X> LiveData<X>.distinctUntilChanged(): LiveData<X> {
     return Transformations.distinctUntilChanged(this)
 }
 
+fun <X, Y, Z> LiveData<X>.with(
+    y: LiveData<Y>,
+    merge: (x: X, z: Y) -> Z
+): LiveData<Z> = zip(this, y, merge)
+
 fun <X, Y, Z> zip(
     x: LiveData<X>,
     y: LiveData<Y>,

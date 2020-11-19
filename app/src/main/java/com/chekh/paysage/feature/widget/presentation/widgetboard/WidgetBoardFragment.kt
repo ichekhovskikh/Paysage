@@ -8,7 +8,7 @@ import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
-import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetsPackageAdapter
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_widget_board.*
 
@@ -17,8 +17,8 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
 
     private val viewModel: WidgetBoardViewModel by viewModels()
 
-    private val adapter: WidgetsPackageAdapter by lazy {
-        WidgetsPackageAdapter(viewModel::scrollCategoryOffset)
+    private val adapter: WidgetGroupAdapter by lazy {
+        WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -34,9 +34,9 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     private fun setupViewModel() {
         viewModel.init(Unit)
 
-        viewModel.widgetsGroupByPackageLiveData.observe(viewLifecycleOwner) { widgetsGroupByPackage ->
+        viewModel.widgetGroupsLiveData.observe(viewLifecycleOwner) { widgetGroups ->
             val isAnimate = adapter.itemCount == 0
-            adapter.setWidgetPackages(widgetsGroupByPackage, isAnimate)
+            adapter.setWidgetGroups(widgetGroups, isAnimate)
         }
     }
 

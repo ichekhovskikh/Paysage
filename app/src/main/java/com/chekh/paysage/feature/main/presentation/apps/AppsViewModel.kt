@@ -9,24 +9,24 @@ import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.domain.model.AppsModel
 import com.chekh.paysage.feature.main.domain.usecase.GetAppsGroupByCategoriesScenario
 import com.chekh.paysage.feature.main.domain.usecase.GetDockAppsWithSettingsScenario
-import com.chekh.paysage.feature.main.presentation.apps.mapper.ExpandableAppsGroupByCategoryModelMapper
+import com.chekh.paysage.feature.main.presentation.apps.mapper.AppGroupsModelMapper
 
 class AppsViewModel @ViewModelInject constructor(
     private val getAppsGroupByCategoriesScenario: GetAppsGroupByCategoriesScenario,
     private val getDockAppsWithSettingsScenario: GetDockAppsWithSettingsScenario,
-    private val expandableAppsGroupByCategoryMapper: ExpandableAppsGroupByCategoryModelMapper
+    private val appGroupsMapper: AppGroupsModelMapper
 ) : BaseViewModel<Unit>() {
 
     private val expandedCategoryIds = mutableSetOf<String?>()
-    private val scrollCategoriesOffsets: MutableMap<String, Int> = hashMapOf()
+    private val groupScrollOffsets: MutableMap<String, Int> = hashMapOf()
 
     private val expandTrigger = MutableLiveData<Unit>()
 
-    val appsGroupByCategoriesLiveData = trigger
+    val appGroupsLiveData = trigger
         .switchMap { getAppsGroupByCategoriesScenario() }
         .repeat(expandTrigger)
         .foreachMap {
-            expandableAppsGroupByCategoryMapper.map(it, isExpanded(it), scrollOffset(it))
+            appGroupsMapper.map(it, isExpanded(it), scrollOffset(it))
         }
         .distinctUntilChanged()
 
@@ -36,22 +36,22 @@ class AppsViewModel @ViewModelInject constructor(
     val dockAppsLiveData: LiveData<AppsModel> = trigger
         .switchMap { getDockAppsWithSettingsScenario() }
 
-    fun scrollCategoryOffset(scrollOffset: Int, categoryId: String) {
-        scrollCategoriesOffsets[categoryId] = scrollOffset
+    fun onGroupScrollOffsetChanged(scrollOffset: Int, categoryId: String) {
+        groupScrollOffsets[categoryId] = scrollOffset
         expandTrigger.postValue(Unit)
     }
 
     fun toggleCategory(position: Int, categoryId: String) {
         scrollPositionMutableLiveData.postValue(position)
         expandedCategoryIds.toggle(categoryId)
-        scrollCategoriesOffsets.remove(categoryId)
+        groupScrollOffsets.remove(categoryId)
         expandTrigger.postValue(Unit)
     }
 
     fun collapseAll() {
         scrollPositionMutableLiveData.postValue(0)
         expandedCategoryIds.clear()
-        scrollCategoriesOffsets.clear()
+        groupScrollOffsets.clear()
         expandTrigger.postValue(Unit)
     }
 
@@ -60,6 +60,6 @@ class AppsViewModel @ViewModelInject constructor(
     }
 
     private fun scrollOffset(data: AppsGroupByCategoryModel?): Int {
-        return scrollCategoriesOffsets[data?.category?.id] ?: 0
+        return groupScrollOffsets[data?.category?.id] ?: 0
     }
 }

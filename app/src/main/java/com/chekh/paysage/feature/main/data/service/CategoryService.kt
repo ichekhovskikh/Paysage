@@ -8,7 +8,7 @@ import com.chekh.paysage.feature.main.domain.model.CategoryModel
 import javax.inject.Inject
 
 interface CategoryService {
-    val categoriesLiveData: LiveData<List<CategoryModel>>
+    val categories: LiveData<List<CategoryModel>>
 }
 
 class CategoryServiceImpl @Inject constructor(
@@ -16,6 +16,6 @@ class CategoryServiceImpl @Inject constructor(
     private val categoryMapper: CategoryModelMapper
 ) : CategoryService {
 
-    override val categoriesLiveData = categoryDao.getAllLive()
+    override val categories = categoryDao.getAll()
         .foreachMap { categoryMapper.map(it) }
 }

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.feature.main.domain.model.AppsModel
-import com.chekh.paysage.feature.main.presentation.apps.adapter.AppListAdapter
+import com.chekh.paysage.feature.main.presentation.apps.adapter.AppAdapter
 import kotlin.math.max
 
 class DockBarView @JvmOverloads constructor(
@@ -16,7 +16,7 @@ class DockBarView @JvmOverloads constructor(
 ) : RecyclerView(context, attrs, defStyle) {
 
     private val gridLayoutManager: GridLayoutManager
-    private val adapter = AppListAdapter()
+    private val adapter = AppAdapter()
 
     init {
         setAdapter(adapter)

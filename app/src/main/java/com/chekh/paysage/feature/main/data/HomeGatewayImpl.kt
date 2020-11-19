@@ -1,44 +1,53 @@
 package com.chekh.paysage.feature.main.data
 
-import com.chekh.paysage.core.provider.SettingsProvider
+import com.chekh.paysage.common.data.service.SettingsService
 import com.chekh.paysage.feature.main.data.service.AppService
 import com.chekh.paysage.feature.main.data.service.CategoryService
 import com.chekh.paysage.feature.main.data.service.DesktopWidgetService
 import com.chekh.paysage.feature.main.data.service.DockAppService
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
 
 class HomeGatewayImpl @Inject constructor(
     private val categoryService: CategoryService,
-    private val settingsProvider: SettingsProvider,
+    private val settingsService: SettingsService,
     private val appService: AppService,
     private val dockAppService: DockAppService,
     private val desktopWidgetService: DesktopWidgetService
 ) : HomeGateway {
 
-    override fun getDockApps() = dockAppService.dockAppsLiveData
+    override fun getDockApps() = dockAppService.dockApps
 
-    override fun getDockAppSettings() = settingsProvider.dockAppSettingsLiveData
+    override fun getDockAppSettings() = settingsService.dockAppSettings
 
-    override fun getAppCategories() = categoryService.categoriesLiveData
+    override fun getAppCategories() = categoryService.categories
 
-    override fun getBoardApps() = appService.installedAppsLiveData
+    override fun getBoardApps() = appService.installedApps
 
-    override fun getBoardAppSettings() = settingsProvider.boardAppSettingsLiveData
+    override fun getBoardAppSettings() = settingsService.boardAppSettings
 
-    override fun startObserveAppUpdates() {
-        appService.startObserveUpdates()
+    override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
+        appService.startObserveAppUpdates(callback)
     }
 
-    override fun stopObserveAppUpdates() {
-        appService.stopObserveUpdates()
+    override suspend fun stopObserveAppUpdates(callback: AppsChangedCallback) {
+        appService.stopObserveAppUpdates(callback)
     }
 
-    override fun startObserveWidgetUpdates() {
-        desktopWidgetService.startObserveUpdates()
+    override suspend fun startObserveWidgetEvents() {
+        desktopWidgetService.startObserveWidgetEvents()
     }
 
-    override fun stopObserveWidgetUpdates() {
-        desktopWidgetService.stopObserveUpdates()
+    override suspend fun stopObserveWidgetEvents() {
+        desktopWidgetService.stopObserveWidgetEvents()
+    }
+
+    override suspend fun pullBoardApps(packageName: String?) {
+        appService.pullApps(packageName)
+    }
+
+    override suspend fun pullDesktopWidgets(packageName: String?) {
+        desktopWidgetService.pullWidgets(packageName)
     }
 }

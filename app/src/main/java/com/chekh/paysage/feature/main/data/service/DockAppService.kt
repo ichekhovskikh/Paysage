@@ -8,7 +8,7 @@ import com.chekh.paysage.feature.main.domain.model.AppModel
 import javax.inject.Inject
 
 interface DockAppService {
-    val dockAppsLiveData: LiveData<List<AppModel>>
+    val dockApps: LiveData<List<AppModel>>
 }
 
 class DockAppServiceImpl @Inject constructor(
@@ -16,6 +16,6 @@ class DockAppServiceImpl @Inject constructor(
     private val appMapper: AppModelMapper
 ) : DockAppService {
 
-    override val dockAppsLiveData: LiveData<List<AppModel>> =
-        appDao.getDockAppAllLive().foreachMap { appMapper.map(it) }
+    override val dockApps: LiveData<List<AppModel>> =
+        appDao.getDockAppAll().foreachMap { appMapper.map(it) }
 }

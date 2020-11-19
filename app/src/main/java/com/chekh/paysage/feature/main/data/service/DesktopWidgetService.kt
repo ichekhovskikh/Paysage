@@ -2,40 +2,32 @@ package com.chekh.paysage.feature.main.data.service
 
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetManager
-import android.content.pm.LauncherApps
-import android.os.UserHandle
-import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
 
 // TODO WIP
 interface DesktopWidgetService {
 
-    fun startObserveUpdates()
+    suspend fun startObserveWidgetEvents()
 
-    fun stopObserveUpdates()
+    suspend fun stopObserveWidgetEvents()
+
+    suspend fun pullWidgets(packageName: String? = null)
 }
 
 class DesktopWidgetServiceImpl @Inject constructor(
-    private val launcherApps: LauncherApps,
     private val widgetManager: AppWidgetManager,
     private val widgetHost: AppWidgetHost
-) : DesktopWidgetService, AppsChangedCallback() {
+) : DesktopWidgetService {
 
-    override fun startObserveUpdates() {
-        runCatching {
-            widgetHost.startListening()
-            launcherApps.registerCallback(this)
-        }
+    override suspend fun startObserveWidgetEvents() {
+        widgetHost.startListening()
     }
 
-    override fun stopObserveUpdates() {
-        runCatching {
-            widgetHost.stopListening()
-            launcherApps.unregisterCallback(this)
-        }
+    override suspend fun stopObserveWidgetEvents() {
+        widgetHost.stopListening()
     }
 
-    override fun onAppsChanged(packageName: String, userHandle: UserHandle) {
+    override suspend fun pullWidgets(packageName: String?) {
         // TODO update desktop widgets
         // val widgetId = widgetHost.allocateAppWidgetId()
         // widgetManager.bindAppWidgetIdIfAllowed(widgetId, it.provider)

@@ -33,3 +33,10 @@ abstract class AppsChangedCallback : LauncherApps.Callback() {
 
     abstract fun onAppsChanged(packageName: String, userHandle: UserHandle)
 }
+
+fun onAppsChanged(action: (packageName: String, userHandle: UserHandle) -> Unit) =
+    object : AppsChangedCallback() {
+        override fun onAppsChanged(packageName: String, userHandle: UserHandle) {
+            action(packageName, userHandle)
+        }
+    }

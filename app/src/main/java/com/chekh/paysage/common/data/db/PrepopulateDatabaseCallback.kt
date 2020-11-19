@@ -28,12 +28,12 @@ class PrepopulateDatabaseCallback(
         }
     }
 
-    private fun prepopulateCategories() {
+    private suspend fun prepopulateCategories() {
         val categories = categoriesProvider.provide()
         categoryDao.get().add(categories)
     }
 
-    private fun prepopulatePackages() {
+    private suspend fun prepopulatePackages() {
         val packages = packagesProvider.provide()
         packageDao.get().add(packages)
     }
