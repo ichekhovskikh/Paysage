@@ -5,18 +5,12 @@ import android.view.*
 import android.view.MotionEvent.ACTION_DOWN
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.chekh.paysage.core.ui.listener.SimpleGestureListener
 import com.chekh.paysage.core.ui.listener.SimpleScaleGestureListener
 import com.chekh.paysage.core.ui.tools.OnDebounceClickListener
 import kotlin.math.abs
 
 private const val AVAILABLE_MOVE_PX = 5
-
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction?) {
-    beginTransaction().func()?.commit()
-}
 
 fun View.onClick(listener: View.OnClickListener?) =
     listener?.let { setOnClickListener(OnDebounceClickListener(it)) }
@@ -69,7 +63,7 @@ fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
     val longPressGestureDetector = GestureDetector(
         context,
         object : SimpleGestureListener {
-            override fun onLongPress(e: MotionEvent) {
+            override fun onLongPress(e: MotionEvent?) {
                 if (!hasMoveBeforeCall) {
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                     listener()

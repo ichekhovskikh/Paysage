@@ -8,7 +8,10 @@ import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
+import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_widget_board.*
 
@@ -18,7 +21,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     private val viewModel: WidgetBoardViewModel by viewModels()
 
     private val adapter: WidgetGroupAdapter by lazy {
-        WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged)
+        WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged, ::startDragAndDrop)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,5 +51,11 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
 
     private fun setupListView() {
         bsrvWidgetPackages.adapter = adapter
+    }
+
+    private fun startDragAndDrop(view: View, widget: WidgetModel) {
+        val activity = activity as? MainActivity ?: return
+        activity.startDragAndDrop(view, data = WidgetClipData(widget))
+        exit()
     }
 }

@@ -1,6 +1,7 @@
 package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetViewHolder>(WidgetDiffCallb
 
     private var recycler: RecyclerView? = null
     private var itemAnimator: RecyclerView.ItemAnimator? = null
+    private var onStartDragAndDrop: ((View, WidgetModel) -> Unit)? = null
 
     fun setWidgets(
         widgets: List<WidgetModel>,
@@ -33,8 +35,13 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetViewHolder>(WidgetDiffCallb
         recycler?.itemAnimator = if (isAnimate) itemAnimator else null
     }
 
+    fun setOnStartAndDropListener(onStartDragAndDrop: ((View, WidgetModel) -> Unit)?) {
+        this.onStartDragAndDrop = onStartDragAndDrop
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = WidgetViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_widget_card, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.item_widget_card, parent, false),
+        onStartDragAndDrop
     )
 
     override fun onBindViewHolder(holder: WidgetViewHolder, position: Int) {

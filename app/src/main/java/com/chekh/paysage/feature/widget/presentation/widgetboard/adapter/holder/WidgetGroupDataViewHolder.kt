@@ -1,5 +1,6 @@
 package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.holder
 
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -11,7 +12,8 @@ import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetGrou
 
 class WidgetGroupDataViewHolder(
     private val view: WidgetGroupDataView,
-    private val onScrollChanged: (Int, String) -> Unit
+    private val onScrollChanged: (Int, String) -> Unit,
+    private val onStartDragAndDrop: ((View, WidgetModel) -> Unit)? = null
 ) : RecyclerView.ViewHolder(view) {
 
     init {
@@ -19,6 +21,7 @@ class WidgetGroupDataViewHolder(
             layoutParams = ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
             val padding = resources.getDimension(R.dimen.small).toInt()
             setPadding(padding, padding, padding, padding)
+            setOnStartAndDropListener(onStartDragAndDrop)
         }
     }
 

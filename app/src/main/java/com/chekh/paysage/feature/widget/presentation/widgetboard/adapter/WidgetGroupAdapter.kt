@@ -1,9 +1,11 @@
 package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
+import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetGroupStateChanged
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetGroupWidgetsChanged
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ.WidgetsGroupDiffCallback
@@ -14,7 +16,8 @@ import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetGrou
 import com.chekh.paysage.feature.widget.presentation.widgetboard.view.WidgetGroupHeaderView
 
 class WidgetGroupAdapter(
-    private val onGroupScrollOffsetChanged: (Int, String) -> Unit
+    private val onGroupScrollOffsetChanged: (Int, String) -> Unit,
+    private val onStartDragAndDrop: ((View, WidgetModel) -> Unit)? = null
 ) : StickyAdapter<WidgetGroupModel, WidgetGroupHeaderViewHolder, WidgetGroupDataViewHolder>(
     WidgetsGroupDiffCallback()
 ) {
@@ -43,7 +46,8 @@ class WidgetGroupAdapter(
     override fun onCreateContentViewHolder(parent: ViewGroup, viewType: Int): WidgetGroupDataViewHolder =
         WidgetGroupDataViewHolder(
             view = WidgetGroupDataView(parent.context).apply { setRecycledViewPool(sharedPool) },
-            onScrollChanged = onGroupScrollOffsetChanged
+            onScrollChanged = onGroupScrollOffsetChanged,
+            onStartDragAndDrop = onStartDragAndDrop
         )
 
     override fun onBindHeaderViewHolder(

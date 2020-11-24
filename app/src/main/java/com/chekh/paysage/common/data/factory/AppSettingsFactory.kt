@@ -1,7 +1,6 @@
 package com.chekh.paysage.common.data.factory
 
 import android.content.pm.LauncherActivityInfo
-import android.content.pm.PackageManager
 import androidx.core.graphics.drawable.toBitmap
 import com.chekh.paysage.common.data.model.AppSettingsEntity
 import com.chekh.paysage.core.extension.toIconColor
@@ -18,9 +17,7 @@ interface AppSettingsFactory {
     ): AppSettingsEntity
 }
 
-class AppSettingsFactoryImpl @Inject constructor(
-    private val packageManager: PackageManager
-) : AppSettingsFactory {
+class AppSettingsFactoryImpl @Inject constructor() : AppSettingsFactory {
 
     override fun create(
         activityInfo: LauncherActivityInfo,
@@ -33,9 +30,8 @@ class AppSettingsFactoryImpl @Inject constructor(
         val packageName = componentName.packageName
         val className = componentName.className
         val id = packageName + className
-        val applicationInfo = activityInfo.applicationInfo
-        val title = applicationInfo.loadLabel(packageManager).toString()
-        val icon = applicationInfo.loadIcon(packageManager).toBitmap()
+        val title = activityInfo.label.toString()
+        val icon = activityInfo.getIcon(0).toBitmap()
         val iconColor = icon.toIconColor()
 
         return AppSettingsEntity(

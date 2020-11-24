@@ -99,3 +99,9 @@ fun createColorAlpha(@ColorInt color: Int, alpha: Float): Int {
         Color.blue(color)
     )
 }
+
+fun paint(style: Paint.Style, @ColorInt color: Int, strokeWidth: Float) = Paint().apply {
+    this.style = style
+    this.color = color
+    this.strokeWidth = strokeWidth
+}

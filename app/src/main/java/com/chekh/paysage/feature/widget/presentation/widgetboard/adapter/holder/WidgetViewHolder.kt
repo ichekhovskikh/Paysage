@@ -16,7 +16,8 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_widget_card.*
 
 class WidgetViewHolder(
-    override val containerView: View
+    override val containerView: View,
+    private val onStartDragAndDrop: ((View, WidgetModel) -> Unit)? = null
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
     private val context: Context
@@ -26,6 +27,11 @@ class WidgetViewHolder(
         setPreviewImage(widget.previewImage)
         tvLabel.text = widget.label
         tvGridSize.text = context.getString(R.string.grid_size, widget.minWidth, widget.minHeight)
+        containerView.setOnLongClickListener {
+            onStartDragAndDrop?.invoke(ivPreviewImage, widget)
+            onStartDragAndDrop != null
+
+        }
     }
 
     private fun setPreviewImage(previewImage: Bitmap?) {

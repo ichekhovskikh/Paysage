@@ -46,6 +46,10 @@ class WidgetGroupDataView @JvmOverloads constructor(
         adapter.setWidgets(widgets, isAnimate, onUpdated)
     }
 
+    fun setOnStartAndDropListener(onStartDragAndDrop: ((View, WidgetModel) -> Unit)?) {
+        adapter.setOnStartAndDropListener(onStartDragAndDrop)
+    }
+
     fun setOffsetChangeListener(onOffsetChange: (Int) -> Unit) {
         this.onOffsetChange = onOffsetChange
     }

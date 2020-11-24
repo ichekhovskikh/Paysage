@@ -1,5 +1,6 @@
 package com.chekh.paysage.feature.main.presentation.home
 
+import android.graphics.RectF
 import android.os.Bundle
 import android.transition.*
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
 import androidx.core.view.isVisible
 import androidx.core.view.marginTop
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
@@ -17,6 +19,9 @@ import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.from
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
+import com.chekh.paysage.core.ui.view.drag.ClipData
+import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
+import com.chekh.paysage.feature.main.presentation.MainActivity
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
 import com.chekh.paysage.feature.main.presentation.home.anim.OverlayHomeButtonsAnimationFacade
@@ -28,7 +33,10 @@ import kotlinx.android.synthetic.main.layout_overlay_home_buttons.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
+class HomeFragment :
+    BaseFragment(R.layout.fragment_home),
+    BottomSheetCallback,
+    DragAndDropListener {
 
     private val viewModel: HomeViewModel by viewModels(
         ownerProducer = { requireActivity() }
@@ -67,7 +75,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
     private fun setupSlidingPanel() {
         val desktopFragment = DesktopFragment()
         val appsFragment = AppsFragment()
-        childFragmentManager.inTransaction {
+        childFragmentManager.commit {
             replace(R.id.flDesktop, desktopFragment)
             replace(R.id.flApps, appsFragment)
         }
@@ -86,6 +94,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
     }
 
     private fun setupListeners() {
+        val activity = activity as? MainActivity
+        activity?.addDragAndDropListener(this)
         blBackgroundBlur.onClick {
             setOverlayEnabledHomeButtons(false)
         }
@@ -96,7 +106,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
             val fragment = WidgetBoardFragment()
             fragment.enterTransition = Fade()
             fragment.exitTransition = Fade()
-            childFragmentManager.inTransaction {
+            childFragmentManager.commit {
                 replace(R.id.flContainer, fragment)
                 addToBackStack(fragment::class.simpleName)
             }
@@ -138,6 +148,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home), BottomSheetCallback {
 
         val anchor = bottomSheetBehavior.halfExpandedRatio
         searchBarSlideHandler.slideToTop(slideOffset, anchor)
+    }
+
+    override fun onDragStart(location: RectF, data: ClipData?) {
+        setOverlayEnabledHomeButtons(false)
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {
