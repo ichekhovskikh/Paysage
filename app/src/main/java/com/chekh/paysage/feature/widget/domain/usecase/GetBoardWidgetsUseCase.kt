@@ -14,7 +14,7 @@ class GetBoardWidgetsUseCase @Inject constructor(
 
     operator fun invoke() = gateway.getBoardWidgets()
         .with(gateway.getDesktopGridSpan()) { widgets, gridSpan ->
-            val spanWidth = displayMetrics.densityDpi.toFloat() / gridSpan
+            val spanWidth = displayMetrics.widthPixels.toFloat() / gridSpan
             widgets.map {
                 val minColumns = min(ceil(it.minWidth.toFloat() / spanWidth).toInt(), gridSpan)
                 val minRows = ceil(it.minHeight.toFloat() / it.minWidth * minColumns).toInt()

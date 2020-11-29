@@ -13,7 +13,7 @@ import com.chekh.paysage.core.extension.isWhite
 import com.chekh.paysage.core.extension.setHeight
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_widget_card.*
+import kotlinx.android.synthetic.main.item_board_widget_card.*
 
 class WidgetViewHolder(
     override val containerView: View,
@@ -26,7 +26,7 @@ class WidgetViewHolder(
     fun bind(widget: WidgetModel) {
         setPreviewImage(widget.previewImage)
         tvLabel.text = widget.label
-        tvGridSize.text = context.getString(R.string.grid_size, widget.minWidth, widget.minHeight)
+        tvGridSize.text = context.getString(R.string.grid_size, widget.minColumns, widget.minRows)
         containerView.setOnLongClickListener {
             onStartDragAndDrop?.invoke(ivPreviewImage, widget)
             onStartDragAndDrop != null

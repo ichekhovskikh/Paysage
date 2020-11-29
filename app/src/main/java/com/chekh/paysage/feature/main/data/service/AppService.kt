@@ -1,9 +1,8 @@
-
 package com.chekh.paysage.feature.main.data.service
 
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
-import android.os.Process
+import android.os.UserManager
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.data.dao.AppDao
 import com.chekh.paysage.common.data.dao.PackageDao
@@ -29,6 +28,7 @@ interface AppService {
 
 class AppServiceImpl @Inject constructor(
     private val launcherApps: LauncherApps,
+    private val userManager: UserManager,
     private val appDao: AppDao,
     private val packageDao: PackageDao,
     private val appSettingsFactory: AppSettingsFactory,
@@ -47,7 +47,9 @@ class AppServiceImpl @Inject constructor(
     }
 
     override suspend fun pullApps(packageName: String?) {
-        val activityInfos = launcherApps.getActivityList(packageName, Process.myUserHandle())
+        val activityInfos = userManager.userProfiles.flatMap {
+            launcherApps.getActivityList(packageName, it)
+        }
         if (activityInfos.isEmpty()) {
             removePackage(packageName)
             return

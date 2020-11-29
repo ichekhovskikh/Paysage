@@ -88,7 +88,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
         dragLayerRef.get()?.invalidate()
     }
 
-    fun setTargetViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
+    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
         if (!isDragAndDropStarted) return
         targetViewRect = RectF(left, top, right, bottom)
     }
@@ -113,11 +113,8 @@ class DragAndDropLayerDelegate(dragLayer: View) {
                 return true
             }
             ACTION_CANCEL, ACTION_UP -> {
-                isDragAndDropStarted = false
                 touchLocation = null
-                if (targetViewRect != null) {
-                    toTargetMoveAnimator.reStart()
-                }
+                stopDragAndDrop()
                 return true
             }
         }

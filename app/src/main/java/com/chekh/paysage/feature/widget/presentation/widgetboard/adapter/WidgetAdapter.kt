@@ -40,7 +40,7 @@ class WidgetAdapter : ListAdapter<WidgetModel, WidgetViewHolder>(WidgetDiffCallb
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = WidgetViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_widget_card, parent, false),
+        LayoutInflater.from(parent.context).inflate(R.layout.item_board_widget_card, parent, false),
         onStartDragAndDrop
     )
 

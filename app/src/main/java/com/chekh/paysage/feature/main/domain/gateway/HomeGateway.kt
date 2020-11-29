@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.domain.model.AppSettingsModel
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.CategoryModel
+import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 
 interface HomeGateway {
@@ -12,10 +13,15 @@ interface HomeGateway {
     suspend fun startObserveWidgetEvents()
     suspend fun stopObserveWidgetEvents()
     suspend fun pullBoardApps(packageName: String?)
-    suspend fun pullDesktopWidgets(packageName: String?)
+    suspend fun pullDesktopWidgets()
+    suspend fun updateDesktopWidget(widget: DesktopWidgetModel)
+    suspend fun addDesktopWidget(widget: DesktopWidgetModel)
+    suspend fun removeDesktopWidget(widgetId: String)
     fun getDockApps(): LiveData<List<AppModel>>
     fun getDockAppSettings(): LiveData<AppSettingsModel>
     fun getAppCategories(): LiveData<List<CategoryModel>>
     fun getBoardApps(): LiveData<List<AppModel>>
+    fun getDesktopWidgets(): LiveData<List<DesktopWidgetModel>>
     fun getBoardAppSettings(): LiveData<AppSettingsModel>
+    fun getDesktopGridSpan(): LiveData<Int>
 }

@@ -3,6 +3,7 @@ package com.chekh.paysage.common.data.db
 import android.graphics.Bitmap
 import androidx.room.TypeConverter
 import com.chekh.paysage.common.data.model.AppCategory
+import com.chekh.paysage.common.data.model.DesktopWidgetType
 import com.chekh.paysage.common.data.model.IconColor
 import com.chekh.paysage.core.extension.toIconColor
 import com.chekh.paysage.core.ui.tools.createBitmap
@@ -13,52 +14,45 @@ object Converters {
     class BooleanTypeConverter {
 
         @TypeConverter
-        fun toBoolean(value: Int): Boolean {
-            return value == 1
-        }
+        fun toBoolean(value: Int) = value == 1
 
         @TypeConverter
-        fun toInt(value: Boolean): Int {
-            return if (value) 1 else 0
-        }
+        fun toInt(value: Boolean) = if (value) 1 else 0
     }
 
     class IconColorTypeConverter {
 
         @TypeConverter
-        fun toIconColor(value: Int): IconColor {
-            return value.toIconColor()
-        }
+        fun toIconColor(value: Int) = value.toIconColor()
 
         @TypeConverter
-        fun toInt(value: IconColor): Int {
-            return value.color
-        }
+        fun toInt(value: IconColor) = value.color
     }
 
     class AppCategoryTypeConverter {
 
         @TypeConverter
-        fun toAppCategory(value: String): AppCategory {
-            return AppCategory.get(value)
-        }
+        fun toAppCategory(value: String) = AppCategory.get(value)
 
         @TypeConverter
-        fun toString(value: AppCategory): String {
-            return value.id
-        }
+        fun toString(value: AppCategory) = value.id
     }
 
     class BitmapTypeConverter {
 
         @TypeConverter
-        fun toBitmap(value: String): Bitmap {
-            return createBitmap(value)
-        }
+        fun toBitmap(value: String) = createBitmap(value)
 
         @TypeConverter
-        fun toString(value: Bitmap): String {
-            return value.toBase64()
-        }
+        fun toString(value: Bitmap) = value.toBase64()
+    }
+
+    class DesktopWidgetTypeConverter {
+
+        @TypeConverter
+        fun toBDesktopWidgetType(value: String) = DesktopWidgetType.valueOf(value)
+
+        @TypeConverter
+        fun toString(value: DesktopWidgetType) = value.toString()
     }
 }

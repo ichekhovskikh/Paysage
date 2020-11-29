@@ -6,10 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "package")
 data class PackageSettingsEntity(
-
     @PrimaryKey
     var name: String,
-
     @ForeignKey(
         entity = CategorySettingsEntity::class,
         parentColumns = ["id"],

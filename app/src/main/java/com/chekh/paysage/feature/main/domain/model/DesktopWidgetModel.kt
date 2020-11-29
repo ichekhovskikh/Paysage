@@ -1,18 +1,24 @@
 package com.chekh.paysage.feature.main.domain.model
 
-import android.graphics.Point
+import com.chekh.paysage.common.data.model.DesktopWidgetType
 
 data class DesktopWidgetModel(
     val id: String,
-    val title: String,
-    val position: Point,
-    val width: Int,
+    val packageName: String,
+    val className: String,
+    val label: String,
+    val type: DesktopWidgetType,
+    val x: Int,
+    val y: Int,
     val height: Int,
+    val width: Int,
+    val minHeight: Int,
+    val minWidth: Int,
     val style: DesktopWidgetStyleModel? = null
 )
 
 data class DesktopWidgetStyleModel(
-    val radius: Int,
-    val elevation: Int,
-    val color: Int
+    val color: Int = 0,
+    val alpha: Int = 0,
+    val corner: Int = 0
 )

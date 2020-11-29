@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    tools:background="@color/black">
+    android:background="@color/black_50">
 
     <LinearLayout
         android:id="@+id/llButtons"

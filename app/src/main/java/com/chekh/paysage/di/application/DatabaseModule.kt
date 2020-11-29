@@ -6,6 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.chekh.paysage.common.data.dao.AppDao
 import com.chekh.paysage.common.data.dao.CategoryDao
+import com.chekh.paysage.common.data.dao.DesktopWidgetDao
 import com.chekh.paysage.common.data.dao.PackageDao
 import com.chekh.paysage.common.data.db.ApplicationDatabase
 import com.chekh.paysage.common.data.db.Migrations
@@ -52,7 +53,7 @@ class DatabaseModule {
         context: Context,
         migrations: Array<Migration>,
         callback: RoomDatabase.Callback
-    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v9.db")
+    ) = Room.databaseBuilder(context, ApplicationDatabase::class.java, "debug_v1.db")
         .addCallback(callback)
         .addMigrations(*migrations)
         .build()
@@ -68,4 +69,8 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providePackageDao(db: ApplicationDatabase): PackageDao = db.packageDao
+
+    @Singleton
+    @Provides
+    fun provideDesktopWidgetDao(db: ApplicationDatabase): DesktopWidgetDao = db.desktopWidgetDao
 }

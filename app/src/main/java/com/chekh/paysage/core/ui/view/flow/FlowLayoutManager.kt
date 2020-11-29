@@ -10,9 +10,11 @@ import android.view.View
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import com.chekh.paysage.core.ui.view.flow.items.FlowListItem
 import kotlinx.android.parcel.Parcelize
 import java.lang.IllegalArgumentException
 import kotlin.math.max
+import kotlin.math.min
 
 class FlowLayoutManager @JvmOverloads constructor(
     context: Context,
@@ -20,31 +22,6 @@ class FlowLayoutManager @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : RecyclerView.LayoutManager() {
-
-    var spanCount = SPAN_COUNt_DEFAULT
-        set(value) {
-            field = value
-            rectList.clear()
-            verticalOffset = 0
-            removeAllViews()
-            requestLayout()
-        }
-
-    init {
-        val attributes = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.FlowLayoutManager,
-            defStyleAttr,
-            0
-        )
-        if (attributes.hasValue(R.styleable.FlowLayoutManager_spanCount)) {
-            spanCount = attributes.getInteger(
-                R.styleable.FlowLayoutManager_spanCount,
-                SPAN_COUNt_DEFAULT
-            )
-        }
-        attributes.recycle()
-    }
 
     private val tag = javaClass.simpleName
 
@@ -54,6 +31,15 @@ class FlowLayoutManager @JvmOverloads constructor(
     private val visibleChildIndexes = mutableSetOf<Int>()
     private var attachedRecycler: RecyclerView? = null
     private var verticalOffset = 0
+
+    var spanCount = SPAN_COUNt_DEFAULT
+        set(value) {
+            field = value
+            rectList.clear()
+            verticalOffset = 0
+            removeAllViews()
+            requestLayout()
+        }
 
     private val availableWidth: Int
         get() = width - paddingStart - paddingEnd
@@ -70,6 +56,22 @@ class FlowLayoutManager @JvmOverloads constructor(
     private val totalChildrenHeight: Int
         get() = rectList.maxOfOrNull { it.bottom } ?: 0
 
+    init {
+        val attributes = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.FlowLayoutManager,
+            defStyleAttr,
+            defStyleRes
+        )
+        if (attributes.hasValue(R.styleable.FlowLayoutManager_spanCount)) {
+            spanCount = attributes.getInteger(
+                R.styleable.FlowLayoutManager_spanCount,
+                SPAN_COUNt_DEFAULT
+            )
+        }
+        attributes.recycle()
+    }
+
     override fun onAttachedToWindow(view: RecyclerView?) {
         super.onAttachedToWindow(view)
         attachedRecycler = view
@@ -79,12 +81,6 @@ class FlowLayoutManager @JvmOverloads constructor(
         super.onDetachedFromWindow(view, recycler)
         attachedRecycler = null
     }
-
-    private fun getItemSize(item: FlowListItem) =
-        item.columnCount * columnWidth to item.rowCount * rowHeight
-
-    private fun getItemCoordinates(item: FlowListItem) =
-        item.columnIndex * columnWidth to item.rowIndex * rowHeight
 
     override fun generateDefaultLayoutParams() = RecyclerView.LayoutParams(
         RecyclerView.LayoutParams.WRAP_CONTENT,
@@ -140,11 +136,20 @@ class FlowLayoutManager @JvmOverloads constructor(
         rectList.clear()
         val adapter = attachedRecycler?.adapter as? FlowListAdapter
             ?: throw IllegalArgumentException("Cannot display without FlowListAdapter")
-        adapter.currentList.forEach { item ->
-            val (width, height) = getItemSize(item)
-            val (x, y) = getItemCoordinates(item)
-            rectList.add(Rect(x, y, x + width, y + height))
-        }
+        adapter.currentList.forEach { item -> rectList.add(item.getRect()) }
+    }
+
+    private fun FlowListItem.getRect(): Rect {
+        val x = getX(columnWidth)
+        val y = getY(rowHeight)
+        val width = getWidth(columnWidth)
+        val height = getHeight(rowHeight)
+
+        val left = min(max(x, 0), max(availableWidth - width, 0))
+        val right = min(left + width, availableWidth)
+        val top = max(y, 0)
+        val bottom = top + height
+        return Rect(left, top, right, bottom)
     }
 
     private fun updateScrollOffset() {

@@ -39,13 +39,9 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         AppsBoardSlideHandler(dbvApps, oclPanel)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupListView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListView()
         setupParentSlidingPanel(view)
         setupViewModel()
     }

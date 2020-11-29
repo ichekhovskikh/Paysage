@@ -59,9 +59,9 @@ class DragLayerLayout @JvmOverloads constructor(
         dragResizeLayerDelegate.stopDragResize()
     }
 
-    fun setTargetViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
-        dragAndDropLayerDelegate.setTargetViewBounds(left, top, right, bottom)
-        dragResizeLayerDelegate.setTargetViewBounds(left, top, right, bottom)
+    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
+        dragAndDropLayerDelegate.setTargetDragViewBounds(left, top, right, bottom)
+        dragResizeLayerDelegate.setTargetDragViewBounds(left, top, right, bottom)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {

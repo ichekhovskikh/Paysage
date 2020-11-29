@@ -4,6 +4,7 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.transition.*
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
 import androidx.core.view.isVisible
@@ -84,9 +85,10 @@ class HomeFragment :
     }
 
     private fun setupBackgroundBlur() {
-        blBackgroundBlur.setupWith(clContent)
+        val view = view as? ViewGroup ?: return
+        blBackgroundBlur.setupWith(view)
             .setBlurEnabled(false)
-            .setFrameClearDrawable(clContent.background)
+            .setFrameClearDrawable(view.background)
             .setBlurAlgorithm(RenderScriptBlur(context))
             .setBlurRadius(BACKGROUND_BLUR_RADIUS)
             .setBlurAutoUpdate(true)

@@ -1,5 +1,7 @@
 package com.chekh.paysage.core.ui.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.WindowInsets
@@ -18,6 +20,7 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         )
     }
 
+    private val activityResultListeners = mutableSetOf<ActivityResultListener>()
     private var params: Any? = null
 
     override fun onStop() {
@@ -45,9 +48,29 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         arguments = args
     }
 
+    protected fun registerActivityResultListener(
+        requestCode: Int,
+        listener: (data: Intent?) -> Unit
+    ) {
+        activityResultListeners.add(ActivityResultListener(requestCode, listener))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) return
+        val listeners = activityResultListeners.filter { it.requestCode == requestCode }
+        listeners.forEach { it.listener(data) }
+        activityResultListeners.removeAll(listeners)
+    }
+
     open fun onBackPressed(): Boolean {
         return backPressedHandler.onBackPressed()
     }
+
+    private class ActivityResultListener(
+        val requestCode: Int,
+        val listener: (data: Intent?) -> Unit
+    )
 
     private companion object {
         const val PARAMS_EXTRA_TAG = "paramsExtraTag"

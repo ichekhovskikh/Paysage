@@ -24,13 +24,9 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
         WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged, ::startDragAndDrop)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setupListView()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupListView()
         setupViewModel()
     }
 

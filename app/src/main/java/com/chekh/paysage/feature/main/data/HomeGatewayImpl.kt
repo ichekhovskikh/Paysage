@@ -6,6 +6,7 @@ import com.chekh.paysage.feature.main.data.service.CategoryService
 import com.chekh.paysage.feature.main.data.service.DesktopWidgetService
 import com.chekh.paysage.feature.main.data.service.DockAppService
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
 
@@ -25,7 +26,11 @@ class HomeGatewayImpl @Inject constructor(
 
     override fun getBoardApps() = appService.installedApps
 
+    override fun getDesktopWidgets() = desktopWidgetService.desktopWidgets
+
     override fun getBoardAppSettings() = settingsService.boardAppSettings
+
+    override fun getDesktopGridSpan() = settingsService.desktopGridSpan
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
         appService.startObserveAppUpdates(callback)
@@ -47,7 +52,19 @@ class HomeGatewayImpl @Inject constructor(
         appService.pullApps(packageName)
     }
 
-    override suspend fun pullDesktopWidgets(packageName: String?) {
-        desktopWidgetService.pullWidgets(packageName)
+    override suspend fun pullDesktopWidgets() {
+        desktopWidgetService.pullWidgets()
+    }
+
+    override suspend fun updateDesktopWidget(widget: DesktopWidgetModel) {
+        desktopWidgetService.updateDesktopWidget(widget)
+    }
+
+    override suspend fun addDesktopWidget(widget: DesktopWidgetModel) {
+        desktopWidgetService.addDesktopWidget(widget)
+    }
+
+    override suspend fun removeDesktopWidget(widgetId: String) {
+        desktopWidgetService.removeDesktopWidget(widgetId)
     }
 }

@@ -87,8 +87,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         dllContent.stopDragResize()
     }
 
-    fun setTargetViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
-        dllContent.setTargetViewBounds(left, top, right, bottom)
+    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
+        dllContent.setTargetDragViewBounds(left, top, right, bottom)
     }
 
     fun addDragAndDropListener(listener: DragAndDropListener) {

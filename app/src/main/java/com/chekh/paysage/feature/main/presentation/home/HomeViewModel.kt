@@ -32,7 +32,7 @@ class HomeViewModel @ViewModelInject constructor(
     private fun pullAll(packageName: String? = null) {
         viewModelScope.launch(dispatcherProvider.back) {
             pullBoardAppsUseCase(packageName)
-            pullDesktopWidgetsUseCase(packageName)
+            pullDesktopWidgetsUseCase()
         }
     }
 

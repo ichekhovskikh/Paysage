@@ -1,87 +1,95 @@
 package com.chekh.paysage.feature.main.presentation.desktop
 
+import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
-import com.chekh.paysage.core.extension.onClick
 import com.chekh.paysage.core.extension.setOnGestureScaleAndLongPress
 import com.chekh.paysage.core.ui.fragment.BaseFragment
+import com.chekh.paysage.core.ui.view.drag.ClipData
+import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
+import com.chekh.paysage.core.ui.view.flow.FlowLayoutManager
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
-import com.chekh.paysage.feature.main.presentation.desktop.adapter.WidgetFlowListItem
+import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
+import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
+import com.chekh.paysage.feature.widget.domain.model.WidgetModel
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_desktop.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
+class DesktopFragment :
+    BaseFragment(R.layout.fragment_desktop),
+    DragAndDropListener {
 
-    private val viewModel: HomeViewModel by viewModels(
+    private val desktopViewModel: DesktopViewModel by viewModels()
+
+    private val homeViewModel: HomeViewModel by viewModels(
         ownerProducer = { requireActivity() }
     )
 
-    private val adapter = FlowListAdapter()
+    @Inject
+    lateinit var widgetHostManager: DesktopWidgetHostManager
+
+    private val adapter by lazy { FlowListAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        testFlowLayout()
+        setupListView()
         setupListeners()
+        setupViewModel()
+    }
+
+    private fun setupListView() {
+        rvWidgets.adapter = adapter
     }
 
     private fun setupListeners() {
-        glWidgets.setOnGestureScaleAndLongPress {
-            viewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
+        val activity = activity as? MainActivity
+        activity?.addDragAndDropListener(this)
+        rvWidgets.setOnGestureScaleAndLongPress {
+            homeViewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
         }
     }
 
-    private fun testFlowLayout() {
-        val first = listOf(
-            WidgetFlowListItem("0", 0, 0, 2, 2),
-            WidgetFlowListItem("1", 2, 2, 1, 1),
-            WidgetFlowListItem("2", 0, 4, 2, 1),
-            WidgetFlowListItem("3", 1, 8, 3, 2),
-            WidgetFlowListItem("4", 1, 12, 3, 2),
-            WidgetFlowListItem("5", 1, 15, 3, 2),
-            WidgetFlowListItem("6", 1, 17, 3, 2),
-            WidgetFlowListItem("7", 1, 19, 3, 2),
-            WidgetFlowListItem("9", 1, 21, 3, 2),
-            WidgetFlowListItem("10", 1, 23, 3, 2),
-            WidgetFlowListItem("11", 1, 25, 3, 2),
-            WidgetFlowListItem("12", 1, 27, 3, 2),
-            WidgetFlowListItem("13", 1, 29, 3, 2),
-            WidgetFlowListItem("14", 1, 31, 3, 2),
-            WidgetFlowListItem("15", 1, 33, 3, 2),
-            WidgetFlowListItem("16", 1, 35, 3, 2),
-            WidgetFlowListItem("17", 1, 37, 3, 2),
-            WidgetFlowListItem("18", 1, 39, 3, 2),
-            WidgetFlowListItem("19", 1, 41, 3, 2)
-        )
-        val second = listOf(
-            WidgetFlowListItem("0", 0, 0, 2, 2),
-            WidgetFlowListItem("1", 2, 2, 1, 1),
-            WidgetFlowListItem("2", 0, 2, 2, 1),
-            WidgetFlowListItem("3", 1, 8, 3, 2),
-            WidgetFlowListItem("4", 1, 12, 3, 2),
-            WidgetFlowListItem("5", 1, 15, 3, 2),
-            WidgetFlowListItem("6", 1, 17, 3, 2),
-            WidgetFlowListItem("7", 1, 19, 3, 2),
-            WidgetFlowListItem("9", 1, 21, 3, 2),
-            WidgetFlowListItem("10", 1, 23, 3, 2),
-            WidgetFlowListItem("11", 1, 25, 3, 2),
-            WidgetFlowListItem("12", 1, 27, 3, 2),
-            WidgetFlowListItem("13", 1, 29, 3, 2),
-            WidgetFlowListItem("14", 1, 31, 3, 2),
-            WidgetFlowListItem("15", 1, 33, 3, 2),
-            WidgetFlowListItem("16", 1, 35, 3, 2),
-            WidgetFlowListItem("17", 1, 37, 3, 2),
-            WidgetFlowListItem("18", 1, 39, 3, 2),
-            WidgetFlowListItem("19", 1, 41, 3, 2)
-        )
-        glWidgets.adapter = adapter.apply {
-            items = second
+    private fun setupViewModel() {
+        desktopViewModel.init(Unit)
+
+        desktopViewModel.desktopGridSpan.observe(viewLifecycleOwner) { spanCount ->
+            val layoutManager = rvWidgets.layoutManager as FlowLayoutManager
+            layoutManager.spanCount = spanCount
         }
-        tvShuffle.onClick {
-            adapter.items = if (adapter.items == second) first else second
+        desktopViewModel.desktopWidgets.observe(viewLifecycleOwner) { items ->
+            adapter.items = items
+        }
+    }
+
+    override fun onDragEnd(location: RectF, data: ClipData?) {
+        when (data) {
+            is WidgetClipData -> {
+                addDesktopWidget(location, data.widget)
+            }
+        }
+    }
+
+    private fun addDesktopWidget(location: RectF, widget: WidgetModel) {
+        val widgetId = widgetHostManager.allocateDesktopWidgetId()
+        val hasWidgetAttachPermissions = widgetHostManager.requestWidgetAttachPermissionsIfNeed(
+            this,
+            widgetId,
+            widget.packageName,
+            widget.className
+        )
+        if (hasWidgetAttachPermissions) {
+            desktopViewModel.addDesktopWidget(widgetId, widget, location)
+        } else {
+            registerActivityResultListener(WIDGET_ATTACH_REQUEST_CODE) {
+                desktopViewModel.addDesktopWidget(widgetId, widget, location)
+            }
         }
     }
 }
