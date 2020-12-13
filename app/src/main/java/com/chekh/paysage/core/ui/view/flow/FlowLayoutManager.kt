@@ -10,6 +10,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import com.chekh.paysage.core.extension.isIntersect
 import com.chekh.paysage.core.ui.view.flow.items.FlowListItem
 import kotlinx.android.parcel.Parcelize
 import java.lang.IllegalArgumentException
@@ -30,7 +31,9 @@ class FlowLayoutManager @JvmOverloads constructor(
     private val preLayoutChildIndexes = mutableSetOf<Int>()
     private val visibleChildIndexes = mutableSetOf<Int>()
     private var attachedRecycler: RecyclerView? = null
-    private var verticalOffset = 0
+
+    var verticalOffset = 0
+        private set
 
     var spanCount = SPAN_COUNt_DEFAULT
         set(value) {
@@ -136,14 +139,14 @@ class FlowLayoutManager @JvmOverloads constructor(
         rectList.clear()
         val adapter = attachedRecycler?.adapter as? FlowListAdapter
             ?: throw IllegalArgumentException("Cannot display without FlowListAdapter")
-        adapter.currentList.forEach { item -> rectList.add(item.getRect()) }
+        adapter.currentList.forEach { item -> rectList.add(getItemBounds(item)) }
     }
 
-    private fun FlowListItem.getRect(): Rect {
-        val x = getX(columnWidth)
-        val y = getY(rowHeight)
-        val width = getWidth(columnWidth)
-        val height = getHeight(rowHeight)
+    fun getItemBounds(item: FlowListItem): Rect {
+        val x = item.getX(columnWidth)
+        val y = item.getY(rowHeight)
+        val width = item.getWidth(columnWidth)
+        val height = item.getHeight(rowHeight)
 
         val left = min(max(x, 0), max(availableWidth - width, 0))
         val right = min(left + width, availableWidth)
@@ -162,7 +165,7 @@ class FlowLayoutManager @JvmOverloads constructor(
         visibleChildIndexes.clear()
         val viewport = Rect(0, verticalOffset, availableWidth, verticalOffset + availableHeight)
         rectList.forEachIndexed { index, viewRect ->
-            if (viewport.intersects(viewRect)) {
+            if (viewport.isIntersect(viewRect)) {
                 visibleChildIndexes.add(index)
             }
         }
@@ -285,10 +288,6 @@ class FlowLayoutManager @JvmOverloads constructor(
         }
         scroller.targetPosition = position
         startSmoothScroll(scroller)
-    }
-
-    private fun Rect.intersects(other: Rect): Boolean {
-        return intersects(other.left, other.top, other.right, other.bottom)
     }
 
     override fun onSaveInstanceState() =

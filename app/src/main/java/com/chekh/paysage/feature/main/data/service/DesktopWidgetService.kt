@@ -24,7 +24,7 @@ interface DesktopWidgetService {
 
     suspend fun updateDesktopWidget(widget: DesktopWidgetModel)
 
-    suspend fun addDesktopWidget(widget: DesktopWidgetModel)
+    suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?)
 
     suspend fun removeDesktopWidget(widgetId: String)
 
@@ -56,8 +56,13 @@ class DesktopWidgetServiceImpl @Inject constructor(
         desktopWidgetDao.update(desktopWidgetMapper.unmap(widget))
     }
 
-    override suspend fun addDesktopWidget(widget: DesktopWidgetModel) {
-        desktopWidgetDao.add(desktopWidgetMapper.unmap(widget))
+    override suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?) {
+        if (widgets == null) {
+            desktopWidgetDao.removeAll()
+            return
+        }
+        val newWidgets = widgets.map { desktopWidgetMapper.unmap(it) }
+        desktopWidgetDao.updateAll(newWidgets)
     }
 
     override suspend fun removeDesktopWidget(widgetId: String) {

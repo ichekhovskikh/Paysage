@@ -1,14 +1,11 @@
 package com.chekh.paysage.common.data.model
 
+import android.graphics.Rect
 import androidx.room.Embedded
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "desktop_widget",
-    indices = [Index(value = ["packageName", "className"], unique = true)]
-)
+@Entity(tableName = "desktop_widget")
 data class DesktopWidgetSettingsEntity(
     @PrimaryKey
     var id: String = "",
@@ -16,10 +13,7 @@ data class DesktopWidgetSettingsEntity(
     var className: String = "",
     var label: String = "",
     var type: DesktopWidgetType = DesktopWidgetType.WIDGET,
-    var x: Int = 0,
-    var y: Int = 0,
-    var height: Int = 0,
-    var width: Int = 0,
+    var bounds: Rect = Rect(),
     var minHeight: Int = 0,
     var minWidth: Int = 0,
     @Embedded(prefix = "style")
@@ -28,6 +22,7 @@ data class DesktopWidgetSettingsEntity(
 
 data class DesktopWidgetStyleSettingsEntity(
     var color: Int = 0,
-    var alpha: Int = 0,
-    var corner: Int = 0
+    var alpha: Float = 0f,
+    var corner: Int = 0,
+    var elevation: Int = 0
 )

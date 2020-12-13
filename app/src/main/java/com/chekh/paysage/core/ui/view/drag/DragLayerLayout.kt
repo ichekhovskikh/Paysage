@@ -2,6 +2,7 @@ package com.chekh.paysage.core.ui.view.drag
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -59,9 +60,9 @@ class DragLayerLayout @JvmOverloads constructor(
         dragResizeLayerDelegate.stopDragResize()
     }
 
-    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
-        dragAndDropLayerDelegate.setTargetDragViewBounds(left, top, right, bottom)
-        dragResizeLayerDelegate.setTargetDragViewBounds(left, top, right, bottom)
+    fun setTargetDragViewBounds(bounds: RectF) {
+        dragAndDropLayerDelegate.setTargetDragViewBounds(bounds)
+        dragResizeLayerDelegate.setTargetDragViewBounds(bounds)
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {

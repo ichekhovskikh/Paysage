@@ -4,10 +4,10 @@ import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import javax.inject.Inject
 
-class AddDesktopWidgetUseCase @Inject constructor(
+class UpdateAllDesktopWidgetsUseCase @Inject constructor(
     private val gateway: HomeGateway
 ) {
 
-    suspend operator fun invoke(widget: DesktopWidgetModel) =
-        gateway.addDesktopWidget(widget)
+    suspend operator fun invoke(widgets: List<DesktopWidgetModel>?) =
+        gateway.updateAllDesktopWidgets(widgets)
 }

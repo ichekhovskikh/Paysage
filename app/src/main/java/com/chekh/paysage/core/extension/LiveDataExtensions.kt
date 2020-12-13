@@ -1,5 +1,7 @@
 package com.chekh.paysage.core.extension
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.*
 
 fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
@@ -17,6 +19,21 @@ private class OnceObserver<T>(val liveData: LiveData<T>, val observer: Observer<
     }
 }
 
+fun <T> LiveData<T>.debounce(duration: Long = 1000L): LiveData<T> {
+    val result = MediatorLiveData<T>()
+    val source = this
+    val handler = Handler(Looper.getMainLooper())
+
+    val runnable = Runnable {
+        result.value = source.value
+    }
+    result.addSource(source) {
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable, duration)
+    }
+    return result
+}
+
 fun <X> LiveData<X>.doNext(body: (X?) -> Unit): LiveData<X> {
     val result = MediatorLiveData<X>()
     result.addSource(this) { x ->
@@ -24,6 +41,10 @@ fun <X> LiveData<X>.doNext(body: (X?) -> Unit): LiveData<X> {
         result.value = x
     }
     return result
+}
+
+fun <X> after(trigger: LiveData<X>): LiveData<Unit> {
+    return trigger.map { Unit }
 }
 
 fun <X, Y> LiveData<X>.map(body: (X?) -> Y?): LiveData<Y> {
@@ -37,7 +58,9 @@ fun <X, Y> LiveData<X>.switchMap(body: (X?) -> LiveData<Y>): LiveData<Y> {
 fun <X, Y> LiveData<X>.repeat(trigger: LiveData<Y>): LiveData<X> {
     val mergeLiveData = MediatorLiveData<X>()
     mergeLiveData.addSource(trigger) {
-        mergeLiveData.value = this.value
+        if (this.value != null) {
+            mergeLiveData.value = this.value
+        }
     }
     mergeLiveData.addSource(this) { value ->
         mergeLiveData.value = value

@@ -105,3 +105,6 @@ fun paint(style: Paint.Style, @ColorInt color: Int, strokeWidth: Float) = Paint(
     this.color = color
     this.strokeWidth = strokeWidth
 }
+
+fun alphaColor(color: Int, alpha: Float): Int =
+    argb((255 * alpha).toInt(), Color.red(color), Color.green(color), Color.blue(color))

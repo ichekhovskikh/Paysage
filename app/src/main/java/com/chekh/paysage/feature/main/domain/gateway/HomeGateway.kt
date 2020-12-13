@@ -15,7 +15,7 @@ interface HomeGateway {
     suspend fun pullBoardApps(packageName: String?)
     suspend fun pullDesktopWidgets()
     suspend fun updateDesktopWidget(widget: DesktopWidgetModel)
-    suspend fun addDesktopWidget(widget: DesktopWidgetModel)
+    suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?)
     suspend fun removeDesktopWidget(widgetId: String)
     fun getDockApps(): LiveData<List<AppModel>>
     fun getDockAppSettings(): LiveData<AppSettingsModel>

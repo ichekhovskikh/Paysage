@@ -60,8 +60,8 @@ class HomeGatewayImpl @Inject constructor(
         desktopWidgetService.updateDesktopWidget(widget)
     }
 
-    override suspend fun addDesktopWidget(widget: DesktopWidgetModel) {
-        desktopWidgetService.addDesktopWidget(widget)
+    override suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?) {
+        desktopWidgetService.updateAllDesktopWidgets(widgets)
     }
 
     override suspend fun removeDesktopWidget(widgetId: String) {

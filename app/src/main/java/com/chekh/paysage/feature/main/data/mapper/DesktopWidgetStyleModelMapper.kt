@@ -12,7 +12,8 @@ class DesktopWidgetStyleModelMapper @Inject constructor() :
         DesktopWidgetStyleModel(
             color = color,
             alpha = alpha,
-            corner = corner
+            corner = corner,
+            elevation = elevation
         )
     }
 
@@ -20,7 +21,8 @@ class DesktopWidgetStyleModelMapper @Inject constructor() :
         DesktopWidgetStyleSettingsEntity(
             color = color,
             alpha = alpha,
-            corner = corner
+            corner = corner,
+            elevation = elevation
         )
     }
 }

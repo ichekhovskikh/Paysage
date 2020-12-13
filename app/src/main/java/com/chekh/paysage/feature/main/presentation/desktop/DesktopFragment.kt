@@ -1,8 +1,10 @@
 package com.chekh.paysage.feature.main.presentation.desktop
 
+import android.app.Activity
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
+import androidx.core.graphics.toRectF
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.setOnGestureScaleAndLongPress
@@ -11,7 +13,10 @@ import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.core.ui.view.flow.FlowLayoutManager
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
+import com.chekh.paysage.core.ui.view.flow.items.FlowListItem
 import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
+import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopItemAnimator
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
@@ -37,6 +42,11 @@ class DesktopFragment :
 
     private val adapter by lazy { FlowListAdapter() }
 
+    private val layoutManager get() = rvWidgets.layoutManager as FlowLayoutManager
+
+    private val maxAvailableItemWidth: Int
+        get() = layoutManager.width - layoutManager.paddingStart - layoutManager.paddingEnd
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListView()
@@ -46,6 +56,7 @@ class DesktopFragment :
 
     private fun setupListView() {
         rvWidgets.adapter = adapter
+        rvWidgets.itemAnimator = DesktopItemAnimator()
     }
 
     private fun setupListeners() {
@@ -54,21 +65,42 @@ class DesktopFragment :
         rvWidgets.setOnGestureScaleAndLongPress {
             homeViewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
         }
+        adapter.setOnItemsCommittedListener {
+            val item = it.getDraggingItem() ?: return@setOnItemsCommittedListener
+            val bounds = layoutManager.getItemBounds(item)
+                .apply { offset(0, -layoutManager.verticalOffset) }
+                .toRectF()
+            activity?.setTargetDragViewBounds(bounds)
+        }
     }
 
     private fun setupViewModel() {
         desktopViewModel.init(Unit)
 
-        desktopViewModel.desktopGridSpan.observe(viewLifecycleOwner) { spanCount ->
-            val layoutManager = rvWidgets.layoutManager as FlowLayoutManager
+        rvWidgets.post { desktopViewModel.setMaxWidgetWidth(maxAvailableItemWidth) }
+        desktopViewModel.desktopGridSpanLiveData.observe(viewLifecycleOwner) { spanCount ->
             layoutManager.spanCount = spanCount
         }
-        desktopViewModel.desktopWidgets.observe(viewLifecycleOwner) { items ->
+        desktopViewModel.desktopWidgetsLiveData.observe(viewLifecycleOwner) { items ->
             adapter.items = items
         }
     }
 
+    override fun onDragStart(location: RectF, data: ClipData?) {
+        onDragMove(location, data)
+    }
+
+    override fun onDragMove(location: RectF, data: ClipData?) {
+        location.offset(0f, layoutManager.verticalOffset.toFloat())
+        when (data) {
+            is WidgetClipData -> {
+                desktopViewModel.setDraggingDesktopWidget(null, data.widget, location)
+            }
+        }
+    }
+
     override fun onDragEnd(location: RectF, data: ClipData?) {
+        location.offset(0f, layoutManager.verticalOffset.toFloat())
         when (data) {
             is WidgetClipData -> {
                 addDesktopWidget(location, data.widget)
@@ -86,10 +118,16 @@ class DesktopFragment :
         )
         if (hasWidgetAttachPermissions) {
             desktopViewModel.addDesktopWidget(widgetId, widget, location)
-        } else {
-            registerActivityResultListener(WIDGET_ATTACH_REQUEST_CODE) {
-                desktopViewModel.addDesktopWidget(widgetId, widget, location)
+            return
+        }
+        registerActivityResultListener(WIDGET_ATTACH_REQUEST_CODE) { resultCode, _ ->
+            when (resultCode) {
+                Activity.RESULT_OK -> desktopViewModel.addDesktopWidget(widgetId, widget, location)
+                else -> desktopViewModel.clearDraggingDesktopWidget()
             }
         }
     }
+
+    private fun List<FlowListItem>.getDraggingItem() =
+        find { it is DesktopWidgetFlowListItem && it.isDragging }
 }

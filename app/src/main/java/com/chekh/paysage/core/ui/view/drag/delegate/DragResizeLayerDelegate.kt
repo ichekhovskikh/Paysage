@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
 import androidx.core.animation.doOnStart
+import com.chekh.paysage.core.extension.copy
 import com.chekh.paysage.core.extension.reReverse
 import com.chekh.paysage.core.extension.reStart
 import com.chekh.paysage.core.ui.tools.Size
@@ -99,7 +100,7 @@ class DragResizeLayerDelegate(dragLayer: View) {
         viewRect = RectF(x, y, x + view.width, y + view.height)
         targetViewRect = null
         listeners.forEach { listener ->
-            viewRect?.let { listener.onResizeStart(it, data) }
+            viewRect?.let { listener.onResizeStart(it.copy(), data) }
         }
         rectWithPointsAlphaAnimator.reReverse()
     }
@@ -110,7 +111,7 @@ class DragResizeLayerDelegate(dragLayer: View) {
         toTargetChangeAnimator.cancel()
         rectWithPointsAlphaAnimator.cancel()
         onlyPointsAlphaAnimator.cancel()
-        listeners.forEach { viewRect?.let { rect -> it.onResizeEnd(rect, data) } }
+        listeners.forEach { viewRect?.let { rect -> it.onResizeEnd(rect.copy(), data) } }
         isDragResizeStarted = false
         draggedSide = null
         distanceToRect = 0f
@@ -122,9 +123,9 @@ class DragResizeLayerDelegate(dragLayer: View) {
         dragLayerRef.get()?.invalidate()
     }
 
-    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
+    fun setTargetDragViewBounds(bounds: RectF) {
         if (!isDragResizeStarted) return
-        targetViewRect = RectF(left, top, right, bottom)
+        targetViewRect = bounds.copy()
     }
 
     fun onInterceptTouchEvent() = isDragResizeStarted
@@ -145,7 +146,7 @@ class DragResizeLayerDelegate(dragLayer: View) {
                 rect.offsetTo(draggedSide, event.x, event.y, distanceToRect, minSize, maxSize)
                 if (viewRect != rect) {
                     viewRect = rect
-                    listeners.forEach { it.onResizeChange(rect, data) }
+                    listeners.forEach { it.onResizeChange(rect.copy(), data) }
                     return true
                 }
                 return false

@@ -7,6 +7,8 @@ import android.view.MotionEvent.*
 import android.view.View
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.graphics.toRect
+import com.chekh.paysage.core.extension.copy
 import com.chekh.paysage.core.extension.reStart
 import com.chekh.paysage.core.ui.tools.makeBitmapScreenshot
 import com.chekh.paysage.core.ui.view.drag.ClipData
@@ -63,7 +65,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
         viewRect = RectF(x, y, x + thumbnail.width, y + thumbnail.height)
         targetViewRect = null
         listeners.forEach { listener ->
-            viewRect?.let { listener.onDragStart(it, data) }
+            viewRect?.let { listener.onDragStart(it.copy(), data) }
         }
     }
 
@@ -78,7 +80,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
     }
 
     private fun clearDrag() {
-        listeners.forEach { viewRect?.let { rect -> it.onDragEnd(rect, data) } }
+        listeners.forEach { viewRect?.let { rect -> it.onDragEnd(rect.copy(), data) } }
         isDragAndDropStarted = false
         thumbnail = null
         data = null
@@ -88,9 +90,9 @@ class DragAndDropLayerDelegate(dragLayer: View) {
         dragLayerRef.get()?.invalidate()
     }
 
-    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
+    fun setTargetDragViewBounds(bounds: RectF) {
         if (!isDragAndDropStarted) return
-        targetViewRect = RectF(left, top, right, bottom)
+        targetViewRect = bounds.copy()
     }
 
     fun onInterceptTouchEvent() = isDragAndDropStarted || toTargetMoveAnimator.isRunning
@@ -109,7 +111,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
                 this.touchLocation = PointF(event.x, event.y)
                 viewRect?.offset(dx, dy)
                 val rect = viewRect ?: return false
-                listeners.forEach { it.onDragMove(rect, data) }
+                listeners.forEach { it.onDragMove(rect.copy(), data) }
                 return true
             }
             ACTION_CANCEL, ACTION_UP -> {
@@ -126,9 +128,9 @@ class DragAndDropLayerDelegate(dragLayer: View) {
             return
         }
         val thumbnail = thumbnail ?: return
-        val viewRect = viewRect ?: return
+        val viewRect = viewRect?.toRect() ?: return
         canvas.save()
-        canvas.drawBitmap(thumbnail, viewRect.left, viewRect.top, null)
+        canvas.drawBitmap(thumbnail, null, viewRect, null)
         canvas.restore()
     }
 }

@@ -12,3 +12,8 @@ fun <T> MutableList<T>.updateAll(item: List<T>) {
     clear()
     addAll(item)
 }
+
+fun <T> MutableList<T>.update(oldItem: T, newItem: T) {
+    remove(oldItem)
+    add(newItem)
+}

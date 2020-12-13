@@ -153,7 +153,13 @@ class HomeFragment :
     }
 
     override fun onDragStart(location: RectF, data: ClipData?) {
-        setOverlayEnabledHomeButtons(false)
+        blBackgroundBlur.setBlurEnabled(false)
+        blBackgroundBlur.isVisible = false
+    }
+
+    override fun onDragEnd(location: RectF, data: ClipData?) {
+        bottomSheetBehavior.state = CustomBottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.isHideable = false
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets) {

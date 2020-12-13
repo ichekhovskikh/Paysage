@@ -1,6 +1,5 @@
 package com.chekh.paysage.core.ui.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -50,16 +49,15 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
     protected fun registerActivityResultListener(
         requestCode: Int,
-        listener: (data: Intent?) -> Unit
+        listener: (resultCode: Int, data: Intent?) -> Unit
     ) {
         activityResultListeners.add(ActivityResultListener(requestCode, listener))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) return
         val listeners = activityResultListeners.filter { it.requestCode == requestCode }
-        listeners.forEach { it.listener(data) }
+        listeners.forEach { it.listener(resultCode, data) }
         activityResultListeners.removeAll(listeners)
     }
 
@@ -69,7 +67,7 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
     private class ActivityResultListener(
         val requestCode: Int,
-        val listener: (data: Intent?) -> Unit
+        val listener: (resultCode: Int, data: Intent?) -> Unit
     )
 
     private companion object {

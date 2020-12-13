@@ -1,5 +1,6 @@
 package com.chekh.paysage.feature.main.presentation
 
+import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -87,8 +88,8 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         dllContent.stopDragResize()
     }
 
-    fun setTargetDragViewBounds(left: Float, top: Float, right: Float, bottom: Float) {
-        dllContent.setTargetDragViewBounds(left, top, right, bottom)
+    fun setTargetDragViewBounds(bounds: RectF) {
+        dllContent.setTargetDragViewBounds(bounds)
     }
 
     fun addDragAndDropListener(listener: DragAndDropListener) {

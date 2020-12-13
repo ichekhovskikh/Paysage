@@ -4,8 +4,9 @@ import android.util.DisplayMetrics
 import com.chekh.paysage.core.extension.with
 import com.chekh.paysage.feature.widget.domain.gateway.WidgetGateway
 import javax.inject.Inject
-import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.round
 
 class GetBoardWidgetsUseCase @Inject constructor(
     private val gateway: WidgetGateway,
@@ -16,8 +17,14 @@ class GetBoardWidgetsUseCase @Inject constructor(
         .with(gateway.getDesktopGridSpan()) { widgets, gridSpan ->
             val spanWidth = displayMetrics.widthPixels.toFloat() / gridSpan
             widgets.map {
-                val minColumns = min(ceil(it.minWidth.toFloat() / spanWidth).toInt(), gridSpan)
-                val minRows = ceil(it.minHeight.toFloat() / it.minWidth * minColumns).toInt()
+                val minColumns = min(
+                    max(1, round(it.minWidth.toFloat() / spanWidth).toInt()),
+                    gridSpan
+                )
+                val minRows = max(
+                    1,
+                    round(it.minHeight.toFloat() / it.minWidth * minColumns).toInt()
+                )
                 it.copy(minColumns = minColumns, minRows = minRows)
             }
         }

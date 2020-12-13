@@ -1,5 +1,7 @@
 package com.chekh.paysage.feature.main.domain.model
 
+import android.graphics.Color
+import android.graphics.Rect
 import com.chekh.paysage.common.data.model.DesktopWidgetType
 
 data class DesktopWidgetModel(
@@ -8,17 +10,20 @@ data class DesktopWidgetModel(
     val className: String,
     val label: String,
     val type: DesktopWidgetType,
-    val x: Int,
-    val y: Int,
-    val height: Int,
-    val width: Int,
+    val bounds: Rect,
     val minHeight: Int,
     val minWidth: Int,
-    val style: DesktopWidgetStyleModel? = null
+    val style: DesktopWidgetStyleModel,
+    val isDragging: Boolean = false
 )
 
 data class DesktopWidgetStyleModel(
-    val color: Int = 0,
-    val alpha: Int = 0,
+    val color: Int = Color.WHITE,
+    val alpha: Float = 0f,
+    val elevation: Int = 0,
     val corner: Int = 0
-)
+) {
+    companion object {
+        val EMPTY = DesktopWidgetStyleModel()
+    }
+}

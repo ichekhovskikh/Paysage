@@ -3,6 +3,7 @@ package com.chekh.paysage.feature.main.data.mapper
 import com.chekh.paysage.common.data.model.DesktopWidgetSettingsEntity
 import com.chekh.paysage.core.mapper.BidirectionalOneParameterMapper
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
+import com.chekh.paysage.feature.main.domain.model.DesktopWidgetStyleModel
 import javax.inject.Inject
 
 class DesktopWidgetModelMapper @Inject constructor(
@@ -15,13 +16,10 @@ class DesktopWidgetModelMapper @Inject constructor(
         className = source.className,
         label = source.label,
         type = source.type,
-        x = source.x,
-        y = source.y,
-        height = source.height,
-        width = source.width,
+        bounds = source.bounds,
         minHeight = source.minHeight,
         minWidth = source.minWidth,
-        style = desktopWidgetStyleMapper.map(source.style)
+        style = desktopWidgetStyleMapper.map(source.style) ?: DesktopWidgetStyleModel.EMPTY
     )
 
     override fun unmap(source: DesktopWidgetModel) = DesktopWidgetSettingsEntity(
@@ -30,10 +28,7 @@ class DesktopWidgetModelMapper @Inject constructor(
         className = source.className,
         label = source.label,
         type = source.type,
-        x = source.x,
-        y = source.y,
-        height = source.height,
-        width = source.width,
+        bounds = source.bounds,
         minHeight = source.minHeight,
         minWidth = source.minWidth,
         style = desktopWidgetStyleMapper.unmap(source.style)
