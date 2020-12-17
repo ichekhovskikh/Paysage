@@ -21,7 +21,7 @@ import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHo
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
-import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetClipData
+import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_desktop.*
 import javax.inject.Inject

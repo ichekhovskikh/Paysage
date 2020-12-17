@@ -11,7 +11,7 @@ import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.feature.main.presentation.MainActivity
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
-import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetClipData
+import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_widget_board.*
 

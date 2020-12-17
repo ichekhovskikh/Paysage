@@ -1,8 +1,10 @@
 package com.chekh.paysage.feature.main.presentation.apps.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chekh.paysage.feature.main.presentation.apps.data.AppGroupAppsChanged
-import com.chekh.paysage.feature.main.presentation.apps.data.AppGroupStateChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.AppGroupAppsChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.AppGroupStateChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.isAppGroupAppsChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.isAppGroupStateChanged
 import com.chekh.paysage.feature.main.presentation.apps.model.AppGroupModel
 
 class AppGroupDiffCallback :
@@ -22,10 +24,10 @@ class AppGroupDiffCallback :
         oldItem: AppGroupModel,
         newItem: AppGroupModel
     ) = when {
-        oldItem.isExpanded != newItem.isExpanded || oldItem.scrollOffset != newItem.scrollOffset -> {
+        isAppGroupStateChanged(oldItem, newItem) -> {
             AppGroupStateChanged(newItem.isExpanded, newItem.scrollOffset)
         }
-        oldItem.data.category == newItem.data.category -> {
+        isAppGroupAppsChanged(oldItem, newItem) -> {
             AppGroupAppsChanged(newItem.data.apps, newItem.data.settings)
         }
         else -> super.getChangePayload(oldItem, newItem)

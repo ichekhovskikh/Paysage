@@ -1,8 +1,10 @@
 package com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.differ
 
 import androidx.recyclerview.widget.DiffUtil
-import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetGroupStateChanged
-import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.data.WidgetGroupWidgetsChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.WidgetGroupStateChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.WidgetGroupWidgetsChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.isWidgetGroupStateChanged
+import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.isWidgetGroupWidgetsChanged
 import com.chekh.paysage.feature.widget.presentation.widgetboard.model.WidgetGroupModel
 
 class WidgetsGroupDiffCallback :
@@ -22,10 +24,10 @@ class WidgetsGroupDiffCallback :
         oldItem: WidgetGroupModel,
         newItem: WidgetGroupModel
     ) = when {
-        oldItem.scrollOffset != newItem.scrollOffset -> {
+        isWidgetGroupStateChanged(oldItem, newItem) -> {
             WidgetGroupStateChanged(newItem.scrollOffset)
         }
-        oldItem.data.widgets == newItem.data.widgets -> {
+        isWidgetGroupWidgetsChanged(oldItem, newItem) -> {
             WidgetGroupWidgetsChanged(newItem.data.widgets)
         }
         else -> super.getChangePayload(oldItem, newItem)

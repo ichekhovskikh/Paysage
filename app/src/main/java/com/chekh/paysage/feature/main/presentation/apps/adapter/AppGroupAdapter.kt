@@ -7,8 +7,8 @@ import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
 import com.chekh.paysage.feature.main.presentation.apps.adapter.differ.AppGroupDiffCallback
 import com.chekh.paysage.feature.main.presentation.apps.adapter.holder.AppGroupDataViewHolder
 import com.chekh.paysage.feature.main.presentation.apps.adapter.holder.AppGroupHeaderViewHolder
-import com.chekh.paysage.feature.main.presentation.apps.data.AppGroupAppsChanged
-import com.chekh.paysage.feature.main.presentation.apps.data.AppGroupStateChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.AppGroupAppsChanged
+import com.chekh.paysage.feature.main.presentation.apps.adapter.payload.AppGroupStateChanged
 import com.chekh.paysage.feature.main.presentation.apps.model.AppGroupModel
 import com.chekh.paysage.feature.main.presentation.apps.view.AppGroupDataView
 import com.chekh.paysage.feature.main.presentation.apps.view.AppGroupHeaderView

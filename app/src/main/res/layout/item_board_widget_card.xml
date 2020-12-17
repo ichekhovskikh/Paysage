@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/small"
     app:cardCornerRadius="@dimen/medium"
-    app:cardElevation="@dimen/point">
+    app:cardMaxElevation="@dimen/micro"
+    app:cardElevation="@dimen/micro">
 
     <LinearLayout
         android:layout_width="wrap_content"

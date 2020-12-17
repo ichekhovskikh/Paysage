@@ -7,6 +7,10 @@ import com.chekh.paysage.core.ui.view.diffable.ListItem
 import com.chekh.paysage.core.ui.view.flow.items.PixelFlowListItem
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetStyleModel
+import com.chekh.paysage.feature.main.presentation.desktop.adapter.payload.DesktopWidgetBoundsChanged
+import com.chekh.paysage.feature.main.presentation.desktop.adapter.payload.DesktopWidgetStyleChanged
+import com.chekh.paysage.feature.main.presentation.desktop.adapter.payload.isDesktopWidgetBoundsChanged
+import com.chekh.paysage.feature.main.presentation.desktop.adapter.payload.isDesktopWidgetStyleChanged
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
 import kotlinx.android.synthetic.main.item_desktop_widget_card.*
 
@@ -27,9 +31,12 @@ data class DesktopWidgetFlowListItem(
         holder: ListItemAdapter.ListViewHolder,
         payloads: List<Any>
     ) = with(holder) {
+        val payload = payloads.firstOrNull()
         cvContent.setOnLongClickListener { true }
         val widgetId = desktopWidget.id.toIntOrNull()
         when {
+            payload is DesktopWidgetBoundsChanged -> return@with
+            payload is DesktopWidgetStyleChanged -> setStyle(payload.style)
             widgetId == null || desktopWidget.isDragging -> bindStub()
             else -> bindWidget(widgetId)
         }
@@ -61,7 +68,16 @@ data class DesktopWidgetFlowListItem(
     override fun hasSameContentsAs(another: ListItem) =
         another is DesktopWidgetFlowListItem && this.desktopWidget == another.desktopWidget
 
-    override fun getChangePayload(another: ListItem): Any? = Unit
+    override fun getChangePayload(another: ListItem): Any? = when {
+        another !is DesktopWidgetFlowListItem -> null
+        isDesktopWidgetStyleChanged(desktopWidget, another.desktopWidget) -> {
+            DesktopWidgetStyleChanged(another.desktopWidget.style)
+        }
+        isDesktopWidgetBoundsChanged(desktopWidget, another.desktopWidget) -> {
+            DesktopWidgetBoundsChanged(another.desktopWidget.bounds)
+        }
+        else -> null
+    }
 
     private companion object {
         const val DRAGGING_ALPHA = 0.2f
