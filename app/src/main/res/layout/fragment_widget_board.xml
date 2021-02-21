@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <com.chekh.paysage.core.ui.view.stickyheader.StickyRecyclerView
+    <com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyRecyclerView
         android:id="@+id/bsrvWidgetPackages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,6 +14,6 @@
         android:overScrollMode="never"
         android:paddingTop="@dimen/small"
         android:paddingBottom="@dimen/medium"
-        app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager" />
+        app:layoutManager=".core.ui.view.recycler.fastscroll.FastScrollLinearLayoutManager" />
 
 </FrameLayout>

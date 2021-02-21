@@ -52,6 +52,7 @@ dependencies {
     implementation libraries.appCompat
     implementation libraries.material
     implementation libraries.cardView
+    implementation libraries.viewPager2
     implementation libraries.corektx
     implementation libraries.recyclerView
     implementation libraries.constraintLayout

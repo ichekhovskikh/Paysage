@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.fastscroll
+package com.chekh.paysage.core.ui.view.recycler.fastscroll
 
 import android.content.Context
 import android.graphics.PointF
@@ -12,7 +12,7 @@ class FastSmoothScroller(
 
     private val vectorPosition = PointF(0f, 0f)
 
-    override fun computeScrollVectorForPosition(targetPosition: Int): PointF? {
+    override fun computeScrollVectorForPosition(targetPosition: Int): PointF {
         val firstChildPos = layoutManager.findFirstCompletelyVisibleItemPosition()
         val direction = if (firstChildPos < 0 || targetPosition < firstChildPos) -1 else 1
 

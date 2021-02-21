@@ -15,6 +15,6 @@ class WidgetGatewayImpl @Inject constructor(
     override fun getFirstAppForWidgetPackage(packageName: String) =
         widgetService.getFirstAppForWidgetPackage(packageName)
 
-    override fun getDesktopGridSpan() = settingsService.desktopGridSpan
+    override fun getDesktopGridSize() = settingsService.desktopGridSize
 
 }

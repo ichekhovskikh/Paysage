@@ -11,6 +11,7 @@ data class DesktopWidgetModel(
     val label: String,
     val type: DesktopWidgetType,
     val bounds: Rect,
+    val page: Int,
     val minHeight: Int,
     val minWidth: Int,
     val style: DesktopWidgetStyleModel,

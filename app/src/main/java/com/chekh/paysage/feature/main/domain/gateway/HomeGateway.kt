@@ -2,6 +2,7 @@ package com.chekh.paysage.feature.main.domain.gateway
 
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.domain.model.AppSettingsModel
+import com.chekh.paysage.core.ui.tools.Size
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.CategoryModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
@@ -23,5 +24,5 @@ interface HomeGateway {
     fun getBoardApps(): LiveData<List<AppModel>>
     fun getDesktopWidgets(): LiveData<List<DesktopWidgetModel>>
     fun getBoardAppSettings(): LiveData<AppSettingsModel>
-    fun getDesktopGridSpan(): LiveData<Int>
+    fun getDesktopGridSize(): LiveData<Size>
 }

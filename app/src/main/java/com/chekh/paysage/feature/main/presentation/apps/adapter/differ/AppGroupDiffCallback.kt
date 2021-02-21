@@ -28,7 +28,7 @@ class AppGroupDiffCallback :
             AppGroupStateChanged(newItem.isExpanded, newItem.scrollOffset)
         }
         isAppGroupAppsChanged(oldItem, newItem) -> {
-            AppGroupAppsChanged(newItem.data.apps, newItem.data.settings)
+            AppGroupAppsChanged(newItem.data.apps)
         }
         else -> super.getChangePayload(oldItem, newItem)
     }

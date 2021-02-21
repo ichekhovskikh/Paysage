@@ -9,15 +9,13 @@ import javax.inject.Inject
 class GetAppsGroupByCategoriesScenario @Inject constructor(
     private val getAppCategoriesUseCase: GetAppCategoriesUseCase,
     private val getBoardAppsUseCase: GetBoardAppsUseCase,
-    private val getBoardAppSettingsUseCase: GetBoardAppSettingsUseCase,
     private val appsGroupByCategoryMapper: AppsGroupByCategoryModelMapper
 ) {
 
     operator fun invoke(): LiveData<List<AppsGroupByCategoryModel>> = zip(
         getAppCategoriesUseCase(),
-        getBoardAppsUseCase(),
-        getBoardAppSettingsUseCase()
-    ) { categories, apps, settings ->
+        getBoardAppsUseCase()
+    ) { categories, apps ->
 
         val appsGroupByCategories = mutableListOf<AppsGroupByCategoryModel>()
         val sortedCategories = categories.sortedBy { it.position }
@@ -28,8 +26,7 @@ class GetAppsGroupByCategoriesScenario @Inject constructor(
             if (categoryApps.isNotEmpty()) {
                 val appsGroupByCategory = appsGroupByCategoryMapper.map(
                     category,
-                    categoryApps,
-                    settings
+                    categoryApps
                 )
                 appsGroupByCategories.add(appsGroupByCategory)
             }

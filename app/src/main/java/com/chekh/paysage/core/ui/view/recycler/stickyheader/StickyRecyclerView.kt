@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.stickyheader
+package com.chekh.paysage.core.ui.view.recycler.stickyheader
 
 import android.content.Context
 import android.util.AttributeSet

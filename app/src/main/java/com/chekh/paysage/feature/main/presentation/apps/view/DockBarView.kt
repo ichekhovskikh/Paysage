@@ -5,7 +5,8 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
-import com.chekh.paysage.feature.main.domain.model.AppsModel
+import com.chekh.paysage.common.domain.model.AppSettingsModel
+import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.presentation.apps.adapter.AppAdapter
 import kotlin.math.max
 
@@ -26,11 +27,16 @@ class DockBarView @JvmOverloads constructor(
         overScrollMode = OVER_SCROLL_NEVER
     }
 
-    fun setApps(dockApps: AppsModel) {
-        val limitedApps = dockApps.apps.take(dockApps.settings.appSpan)
-        gridLayoutManager.spanCount = max(MIN_APPS_COUNT, limitedApps.size)
-        adapter.appSize = dockApps.settings.appSize
-        adapter.setApps(limitedApps)
+    fun setAppSettings(settings: AppSettingsModel) {
+        adapter.appSize = settings.appSize
+        if (adapter.itemCount > 0) {
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    fun setApps(dockApps: List<AppModel>) {
+        gridLayoutManager.spanCount = max(MIN_APPS_COUNT, dockApps.size)
+        adapter.setApps(dockApps)
     }
 
     companion object {

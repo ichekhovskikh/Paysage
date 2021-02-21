@@ -1,10 +1,10 @@
 package com.chekh.paysage.feature.main.presentation.desktop.adapter
 
-import com.chekh.paysage.core.ui.view.diffable.ListItemAdapter
+import com.chekh.paysage.core.ui.view.recycler.diffable.ListItemAdapter
 import com.chekh.paysage.R
 import com.chekh.paysage.core.ui.tools.alphaColor
-import com.chekh.paysage.core.ui.view.diffable.ListItem
-import com.chekh.paysage.core.ui.view.flow.items.PixelFlowListItem
+import com.chekh.paysage.core.ui.view.flow.items.IndexFlowListItem
+import com.chekh.paysage.core.ui.view.recycler.diffable.ListItem
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetStyleModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.payload.DesktopWidgetBoundsChanged
@@ -17,21 +17,21 @@ import kotlinx.android.synthetic.main.item_desktop_widget_card.*
 data class DesktopWidgetFlowListItem(
     private val widgetHostManager: DesktopWidgetHostManager,
     private val desktopWidget: DesktopWidgetModel
-) : PixelFlowListItem {
+) : IndexFlowListItem {
 
     override val layout: Int = R.layout.item_desktop_widget_card
     override val id = desktopWidget.id
-    override val x = desktopWidget.bounds.left
-    override val y = desktopWidget.bounds.top
-    override val width = desktopWidget.bounds.width()
-    override val height = desktopWidget.bounds.height()
+    override val columnIndex = desktopWidget.bounds.left
+    override val rowIndex = desktopWidget.bounds.top
+    override val columnCount = desktopWidget.bounds.width()
+    override val rowCount = desktopWidget.bounds.height()
     val isDragging = desktopWidget.isDragging
 
     override fun bind(
         holder: ListItemAdapter.ListViewHolder,
-        payloads: List<Any>
+        payloads: List<Any>?
     ) = with(holder) {
-        val payload = payloads.firstOrNull()
+        val payload = payloads?.firstOrNull()
         cvContent.setOnLongClickListener { true }
         val widgetId = desktopWidget.id.toIntOrNull()
         when {

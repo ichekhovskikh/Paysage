@@ -77,7 +77,7 @@ class HomeFragment :
         val desktopFragment = DesktopFragment()
         val appsFragment = AppsFragment()
         childFragmentManager.commit {
-            replace(R.id.flDesktop, desktopFragment)
+            replace(R.id.flDesktops, desktopFragment)
             replace(R.id.flApps, appsFragment)
         }
         bottomSheetBehavior.halfExpandedOffset = searchHeight
@@ -134,10 +134,6 @@ class HomeFragment :
         buttonsAnimationFacade.start(!isEnabled)
         buttonsAnimationFacade.doOnEnd {
             bottomSheetBehavior.isHideable = isEnabled
-            bottomSheetBehavior.state = when (isEnabled) {
-                true -> CustomBottomSheetBehavior.STATE_HIDDEN
-                else -> CustomBottomSheetBehavior.STATE_COLLAPSED
-            }
             blBackgroundBlur.isVisible = isEnabled
         }
     }
@@ -146,7 +142,7 @@ class HomeFragment :
         val activity = activity ?: return
         val isDark = slideOffset >= bottomSheetBehavior.halfExpandedRatio - 0.1
         statusBarDecorator.statusBarDarkMode(activity, isDark)
-        flDesktop.alpha = 1 - slideOffset
+        flDesktops.alpha = 1 - slideOffset
 
         val anchor = bottomSheetBehavior.halfExpandedRatio
         searchBarSlideHandler.slideToTop(slideOffset, anchor)
@@ -162,13 +158,14 @@ class HomeFragment :
         bottomSheetBehavior.isHideable = false
     }
 
+    @Suppress("DEPRECATION")
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
         val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
         val insetTop = insets.systemWindowInsetTop
         val insetBottom = insets.systemWindowInsetBottom
-        msbSearch.setMarginTop(searchMarginTop + insetTop)
-        llButtons.setMarginBottom(insetBottom)
+        msbSearch.topMargin = searchMarginTop + insetTop
+        llButtons.bottomMargin = insetBottom
     }
 
     override fun onBackPressed(): Boolean {

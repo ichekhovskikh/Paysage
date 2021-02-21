@@ -43,10 +43,6 @@ fun <X> LiveData<X>.doNext(body: (X?) -> Unit): LiveData<X> {
     return result
 }
 
-fun <X> after(trigger: LiveData<X>): LiveData<Unit> {
-    return trigger.map { Unit }
-}
-
 fun <X, Y> LiveData<X>.map(body: (X?) -> Y?): LiveData<Y> {
     return Transformations.map(this, body)
 }
@@ -64,6 +60,27 @@ fun <X, Y> LiveData<X>.repeat(trigger: LiveData<Y>): LiveData<X> {
     }
     mergeLiveData.addSource(this) { value ->
         mergeLiveData.value = value
+    }
+    return mergeLiveData
+}
+
+fun <X, Y> LiveData<X>.after(trigger: LiveData<Y>, isRepeat: Boolean = false): LiveData<X> {
+    if (trigger.value != null) return this
+    val mergeLiveData = MediatorLiveData<X>()
+    mergeLiveData.addSource(trigger) {
+        if (it != null) {
+            if (!isRepeat) {
+                mergeLiveData.removeSource(trigger)
+            }
+            if (this.value != null) {
+                mergeLiveData.value = this.value
+            }
+        }
+    }
+    mergeLiveData.addSource(this) { value ->
+        if (trigger.value != null) {
+            mergeLiveData.value = value
+        }
     }
     return mergeLiveData
 }

@@ -30,7 +30,7 @@ class HomeGatewayImpl @Inject constructor(
 
     override fun getBoardAppSettings() = settingsService.boardAppSettings
 
-    override fun getDesktopGridSpan() = settingsService.desktopGridSpan
+    override fun getDesktopGridSize() = settingsService.desktopGridSize
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
         appService.startObserveAppUpdates(callback)

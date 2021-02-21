@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.stickyheader
+package com.chekh.paysage.core.ui.view.recycler.stickyheader
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.absoluteHeight
-import com.chekh.paysage.core.extension.setMarginTop
+import com.chekh.paysage.core.extension.topMargin
 
 abstract class StickyAdapter<T, HVH : RecyclerView.ViewHolder, CVH : RecyclerView.ViewHolder>(
     diffCallback: DiffUtil.ItemCallback<T>
@@ -76,7 +76,7 @@ abstract class StickyAdapter<T, HVH : RecyclerView.ViewHolder, CVH : RecyclerVie
                 layoutParams = marginLayoutParams
 
                 header.itemView.measure(WRAP_CONTENT, WRAP_CONTENT)
-                content.itemView.setMarginTop(header.itemView.absoluteHeight)
+                content.itemView.topMargin = header.itemView.absoluteHeight
             }
         }
     }

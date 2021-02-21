@@ -18,7 +18,7 @@
         android:background="@drawable/background_white_top_rounded"
         app:outlineRadius="@dimen/default_corner_radius">
 
-        <com.chekh.paysage.core.ui.view.stickyheader.StickyRecyclerView
+        <com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyRecyclerView
             android:id="@+id/srvCategories"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -29,7 +29,7 @@
             android:overScrollMode="never"
             android:paddingTop="@dimen/small"
             android:paddingBottom="@dimen/medium"
-            app:layoutManager=".core.ui.view.fastscroll.FastScrollLinearLayoutManager"
+            app:layoutManager=".core.ui.view.recycler.fastscroll.FastScrollLinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

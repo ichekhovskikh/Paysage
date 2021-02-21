@@ -12,6 +12,6 @@ class AppSettingsModelMapper @Inject constructor() :
         secondSource: Int
     ) = AppSettingsModel(
         appSize = firstSource,
-        appSpan = secondSource
+        appColumnCount = secondSource
     )
 }

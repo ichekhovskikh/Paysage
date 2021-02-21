@@ -18,7 +18,8 @@
         <attr name="shadowDrawable" format="reference" />>
     </declare-styleable>
 
-    <declare-styleable name="FlowLayoutManager">
-        <attr name="spanCount" format="integer" />>
+    <declare-styleable name="FlowLayout">
+        <attr name="columnCount" format="integer" />
+        <attr name="rowCount" format="integer" />
     </declare-styleable>
 </resources>

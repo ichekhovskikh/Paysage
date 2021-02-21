@@ -3,7 +3,7 @@ package com.chekh.paysage.core.handler.slide
 import android.view.View
 import androidx.core.view.isGone
 import com.chekh.paysage.core.extension.absoluteHeight
-import com.chekh.paysage.core.extension.setMarginTop
+import com.chekh.paysage.core.extension.topMargin
 import com.chekh.paysage.core.ui.anim.JumpAnimation
 
 class AppsBoardSlideHandler(private val dock: View, private val panel: View) {
@@ -26,8 +26,7 @@ class AppsBoardSlideHandler(private val dock: View, private val panel: View) {
     private fun slideToHalfExpanded(value: Float) {
         val inverseValue = 1f - value
         dock.alpha = inverseValue
-        val marginTop = (dock.absoluteHeight * inverseValue).toInt()
-        panel.setMarginTop(marginTop)
+        panel.topMargin = (dock.absoluteHeight * inverseValue).toInt()
         dock.isGone = value >= MAX_VALUE
         panel.isGone = value == MIN_VALUE
         if (value == MIN_VALUE) {
@@ -36,8 +35,7 @@ class AppsBoardSlideHandler(private val dock: View, private val panel: View) {
     }
 
     private fun slideToFullExpanded(value: Float) {
-        val marginTop = (expandedMarginTop * (1 - value)).toInt()
-        panel.setMarginTop(marginTop)
+        panel.topMargin = (expandedMarginTop * (1 - value)).toInt()
     }
 
     private companion object {

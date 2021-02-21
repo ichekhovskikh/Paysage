@@ -16,12 +16,13 @@ interface PixelFlowListItem : FlowListItem {
         round(y.toFloat() / rowHeight).toInt() * rowHeight
 
     override fun getWidth(columnWidth: Int) =
-        max(round(width.toFloat() / columnWidth).toInt(), MIN_SPAN_COUNT) * columnWidth
+        max(round(width.toFloat() / columnWidth).toInt(), MIN_COLUMN_COUNT) * columnWidth
 
     override fun getHeight(rowHeight: Int) =
-        max(round(height.toFloat() / rowHeight).toInt(), MIN_SPAN_COUNT) * rowHeight
+        max(round(height.toFloat() / rowHeight).toInt(), MIN_ROW_COUNT) * rowHeight
 
     private companion object {
-        const val MIN_SPAN_COUNT = 1
+        const val MIN_COLUMN_COUNT = 1
+        const val MIN_ROW_COUNT = 1
     }
 }

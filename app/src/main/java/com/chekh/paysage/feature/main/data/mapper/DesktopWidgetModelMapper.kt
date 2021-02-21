@@ -17,6 +17,7 @@ class DesktopWidgetModelMapper @Inject constructor(
         label = source.label,
         type = source.type,
         bounds = source.bounds,
+        page = source.page,
         minHeight = source.minHeight,
         minWidth = source.minWidth,
         style = desktopWidgetStyleMapper.map(source.style) ?: DesktopWidgetStyleModel.EMPTY
@@ -29,6 +30,7 @@ class DesktopWidgetModelMapper @Inject constructor(
         label = source.label,
         type = source.type,
         bounds = source.bounds,
+        page = source.page,
         minHeight = source.minHeight,
         minWidth = source.minWidth,
         style = desktopWidgetStyleMapper.unmap(source.style)

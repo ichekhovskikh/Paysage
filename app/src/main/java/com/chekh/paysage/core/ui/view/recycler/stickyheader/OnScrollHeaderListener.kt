@@ -1,8 +1,8 @@
-package com.chekh.paysage.core.ui.view.stickyheader
+package com.chekh.paysage.core.ui.view.recycler.stickyheader
 
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.core.extension.absoluteHeight
-import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter.StickyViewHolder
+import com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyAdapter.StickyViewHolder
 
 class OnScrollHeaderListener : RecyclerView.OnScrollListener() {
 

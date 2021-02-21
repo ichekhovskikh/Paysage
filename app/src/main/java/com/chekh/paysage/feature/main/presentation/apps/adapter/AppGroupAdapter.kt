@@ -3,7 +3,8 @@ package com.chekh.paysage.feature.main.presentation.apps.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
+import com.chekh.paysage.common.domain.model.AppSettingsModel
+import com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyAdapter
 import com.chekh.paysage.feature.main.presentation.apps.adapter.differ.AppGroupDiffCallback
 import com.chekh.paysage.feature.main.presentation.apps.adapter.holder.AppGroupDataViewHolder
 import com.chekh.paysage.feature.main.presentation.apps.adapter.holder.AppGroupHeaderViewHolder
@@ -22,6 +23,14 @@ class AppGroupAdapter(
 
     private val sharedPool = RecycledViewPool().apply { setMaxRecycledViews(0, SHARED_POOL_SIZE) }
     private var recycler: RecyclerView? = null
+    private var settings: AppSettingsModel? = null
+
+    fun setAppSettings(settings: AppSettingsModel) {
+        this.settings = settings
+        if (itemCount > 0) {
+            notifyDataSetChanged()
+        }
+    }
 
     fun setAppGroups(
         appGroups: List<AppGroupModel>,
@@ -73,7 +82,7 @@ class AppGroupAdapter(
     ) {
         val item = getItem(position)
         if (payloads.isNullOrEmpty()) {
-            contentHolder.bind(item)
+            contentHolder.bind(item, settings)
             return
         }
         for (payload in payloads) {
@@ -83,7 +92,7 @@ class AppGroupAdapter(
                     contentHolder.expand(payload.isExpanded)
                 }
                 is AppGroupAppsChanged -> {
-                    contentHolder.setApps(payload.apps, payload.appSettings)
+                    contentHolder.setApps(payload.apps, settings)
                 }
             }
         }

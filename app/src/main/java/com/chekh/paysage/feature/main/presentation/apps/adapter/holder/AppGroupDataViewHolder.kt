@@ -23,11 +23,11 @@ class AppGroupDataViewHolder(
         }
     }
 
-    fun bind(appCategory: AppGroupModel) {
+    fun bind(appCategory: AppGroupModel, settings: AppSettingsModel?) {
         view.expand(appCategory.isExpanded)
         setApps(
             appCategory.data.apps,
-            appCategory.data.settings,
+            settings,
             isAnimate = false,
             onUpdated = { view.scrollOffset = appCategory.scrollOffset }
         )
@@ -39,12 +39,14 @@ class AppGroupDataViewHolder(
 
     fun setApps(
         apps: List<AppModel>,
-        appSettings: AppSettingsModel,
+        appSettings: AppSettingsModel? = null,
         isAnimate: Boolean = true,
         onUpdated: (() -> Unit)? = null
     ) {
-        view.spanCount = appSettings.appSpan
-        view.setAppSize(appSettings.appSize, isRequireUpdateImmediately = false)
+        if (appSettings != null) {
+            view.spanCount = appSettings.appColumnCount
+            view.setAppSize(appSettings.appSize, isRequireUpdateImmediately = false)
+        }
         view.setApps(apps, isAnimate, onUpdated)
     }
 

@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
-import com.chekh.paysage.core.ui.view.stickyheader.StickyAdapter
+import com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyAdapter
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.WidgetGroupStateChanged
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.payload.WidgetGroupWidgetsChanged

@@ -1,6 +1,6 @@
 package com.chekh.paysage.core.ui.view.flow.items
 
-import com.chekh.paysage.core.ui.view.diffable.ListItem
+import com.chekh.paysage.core.ui.view.recycler.diffable.ListItem
 
 interface FlowListItem : ListItem {
     fun getX(columnWidth: Int): Int

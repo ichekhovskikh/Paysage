@@ -47,7 +47,7 @@ class AppGroupDataView @JvmOverloads constructor(
 
         isNestedScrollingEnabled = false
         linearLayoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-        gridLayoutManager = GridLayoutManager(context, SPAN_COUNT_DEFAULT)
+        gridLayoutManager = GridLayoutManager(context, COLUMN_COUNT_DEFAULT)
         layoutManager = linearLayoutManager
 
         adapter = AppAdapter()
@@ -113,7 +113,7 @@ class AppGroupDataView @JvmOverloads constructor(
     }
 
     private companion object {
-        const val SPAN_COUNT_DEFAULT = 4
+        const val COLUMN_COUNT_DEFAULT = 4
         const val ANIMATION_DURATION_DEFAULT = 250L
     }
 }

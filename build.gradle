@@ -10,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath gradlePlugins.kotlin
-        classpath "com.android.tools.build:gradle:4.1.1"
+        classpath gradlePlugins.buildTools
         classpath gradlePlugins.hilt
     }
 }

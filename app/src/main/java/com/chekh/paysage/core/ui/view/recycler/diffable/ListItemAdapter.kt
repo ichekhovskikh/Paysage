@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.diffable
+package com.chekh.paysage.core.ui.view.recycler.diffable
 
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +35,7 @@ open class ListItemAdapter<T : ListItem> :
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        items[position].bind(holder, null)
     }
 
     override fun getItemViewType(position: Int) = items[position].layout

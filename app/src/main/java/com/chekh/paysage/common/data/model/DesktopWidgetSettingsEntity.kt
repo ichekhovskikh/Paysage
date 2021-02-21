@@ -13,6 +13,7 @@ data class DesktopWidgetSettingsEntity(
     var className: String = "",
     var label: String = "",
     var type: DesktopWidgetType = DesktopWidgetType.WIDGET,
+    var page: Int = -1,
     var bounds: Rect = Rect(),
     var minHeight: Int = 0,
     var minWidth: Int = 0,

@@ -14,16 +14,17 @@ class GetBoardWidgetsUseCase @Inject constructor(
 ) {
 
     operator fun invoke() = gateway.getBoardWidgets()
-        .with(gateway.getDesktopGridSpan()) { widgets, gridSpan ->
-            val spanWidth = displayMetrics.widthPixels.toFloat() / gridSpan
+        .with(gateway.getDesktopGridSize()) { widgets, (columns, rows) ->
+            val columnWidth = displayMetrics.widthPixels.toFloat() / columns
+            val rowWidth = displayMetrics.heightPixels.toFloat() / rows
             widgets.map {
                 val minColumns = min(
-                    max(1, round(it.minWidth.toFloat() / spanWidth).toInt()),
-                    gridSpan
+                    max(1, round(it.minWidth.toFloat() / columnWidth).toInt()),
+                    columns.toInt()
                 )
-                val minRows = max(
-                    1,
-                    round(it.minHeight.toFloat() / it.minWidth * minColumns).toInt()
+                val minRows = min(
+                    max(1, round(it.minHeight.toFloat() / rowWidth).toInt()),
+                    rows.toInt()
                 )
                 it.copy(minColumns = minColumns, minRows = minRows)
             }

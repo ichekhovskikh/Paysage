@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.diffable
+package com.chekh.paysage.core.ui.view.recycler.diffable
 
 interface ListItem {
 
@@ -6,7 +6,7 @@ interface ListItem {
 
     val layout: Int
 
-    fun bind(holder: ListItemAdapter.ListViewHolder, payloads: List<Any>) {}
+    fun bind(holder: ListItemAdapter.ListViewHolder, payloads: List<Any>? = null) {}
 
     fun isSameAs(another: ListItem): Boolean =
         this::class == another::class &&

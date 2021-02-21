@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.fastscroll
+package com.chekh.paysage.core.ui.view.recycler.fastscroll
 
 import android.content.Context
 import android.util.AttributeSet

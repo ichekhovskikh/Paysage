@@ -1,6 +1,6 @@
 package com.chekh.paysage.feature.main.presentation.desktop
 
-import android.graphics.RectF
+import android.graphics.Rect
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -21,7 +21,8 @@ class DesktopViewModel @ViewModelInject constructor(
     private val updateDesktopWidgetUseCase: UpdateDesktopWidgetUseCase,
     private val updateAllDesktopWidgetsUseCase: UpdateAllDesktopWidgetsUseCase,
     private val removeDesktopWidgetUseCase: RemoveDesktopWidgetUseCase,
-    private val getDesktopGridSpanUseCase: GetDesktopGridSpanUseCase,
+    private val getDesktopGridSizeUseCase: GetDesktopGridSizeUseCase,
+    private val getDockAppSizeUseCase: GetDockAppSizeUseCase,
     private val desktopWidgetModelFactory: DesktopWidgetModelFactory,
     private val draggingWidgetSorter: DraggingDesktopWidgetSorter,
     private val flowListItemMapper: DesktopWidgetFlowListItemMapper
@@ -31,17 +32,21 @@ class DesktopViewModel @ViewModelInject constructor(
 
     private val draggingTrigger = MutableLiveData<Unit>()
 
-    val desktopGridSpanLiveData = trigger
-        .switchMap { getDesktopGridSpanUseCase() }
-        .doNext { draggingWidgetSorter.setSpanCount(it) }
+    val desktopGridSizeLiveData = trigger
+        .switchMap { getDesktopGridSizeUseCase() }
+        .doNext { it?.let { draggingWidgetSorter.setDesktopGridSize(it) } }
         .distinctUntilChanged()
 
-    val desktopWidgetsLiveData = after(desktopGridSpanLiveData)
+    val desktopWidgetsLiveData = trigger
         .switchMap { getDesktopWidgetsUseCase() }
         .doNext { desktopWidgets = it }
-        .repeat(draggingTrigger)
+        .after(draggingTrigger, isRepeat = true)
         .map { draggingWidgetSorter.getSorted(it) }
         .foreachMap { flowListItemMapper.map(it) }
+        .distinctUntilChanged()
+
+    val dockAppSizeLiveData = trigger
+        .switchMap { getDockAppSizeUseCase() }
         .distinctUntilChanged()
 
     override fun init(trigger: Unit) {
@@ -51,14 +56,10 @@ class DesktopViewModel @ViewModelInject constructor(
         }
     }
 
-    fun addDesktopWidget(desktopWidgetId: Int, widget: WidgetModel, bounds: RectF) {
+    fun addDesktopWidget(desktopWidgetId: Int, widget: WidgetModel, bounds: Rect) {
         viewModelScope.launch(dispatcherProvider.back) {
             draggingWidgetSorter.setDraggingWidget(
-                desktopWidgetModelFactory.create(
-                    desktopWidgetId.toString(),
-                    widget,
-                    bounds
-                )
+                desktopWidgetModelFactory.create(desktopWidgetId.toString(), widget, bounds)
             )
             val sortedDesktopWidgets = draggingWidgetSorter.getSorted(desktopWidgets)
             draggingWidgetSorter.setDraggingWidget(null)
@@ -72,22 +73,13 @@ class DesktopViewModel @ViewModelInject constructor(
         }
     }
 
-    fun setDraggingDesktopWidget(desktopWidgetId: String?, widget: WidgetModel?, bounds: RectF) {
+    fun setDraggingDesktopWidget(desktopWidgetId: String?, widget: WidgetModel?, bounds: Rect) {
         draggingWidgetSorter.setDraggingWidget(
-            desktopWidgetModelFactory.create(
-                desktopWidgetId = desktopWidgetId,
-                widget = widget,
-                bounds,
-                isDragging = true
-            )
+            desktopWidgetModelFactory.create(desktopWidgetId, widget, bounds, isDragging = true)
         )
     }
 
     fun clearDraggingDesktopWidget() {
         draggingWidgetSorter.setDraggingWidget(null)
-    }
-
-    fun setMaxWidgetWidth(maxWidgetWidth: Int) {
-        draggingWidgetSorter.setMaxWidgetWidth(maxWidgetWidth)
     }
 }

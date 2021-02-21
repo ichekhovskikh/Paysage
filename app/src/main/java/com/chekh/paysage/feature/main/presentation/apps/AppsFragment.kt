@@ -52,16 +52,25 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->
             srvCategories.smoothScrollToHeader(position)
         }
+        viewModel.boardAppSettingsLiveData.observe(viewLifecycleOwner) { appSettings ->
+            adapter.setAppSettings(appSettings)
+        }
         viewModel.appGroupsLiveData.observe(viewLifecycleOwner) { categories ->
             adapter.setAppGroups(categories)
         }
+        viewModel.dockAppSettingsLiveData.observe(viewLifecycleOwner) { appSettings ->
+            dbvApps.setAppSettings(appSettings)
+            if (dbvApps.layoutHeight != appSettings.appSize) {
+                dbvApps.layoutHeight = appSettings.appSize
+                recalculatePeekBottomSheet()
+            }
+        }
         viewModel.dockAppsLiveData.observe(viewLifecycleOwner) { dockApps ->
             dbvApps.setApps(dockApps)
-            dbvApps.setHeight(dockApps.settings.appSize)
-            recalculatePeekBottomSheet()
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
         val smallDimen = resources.getDimension(R.dimen.small).toInt()
@@ -70,10 +79,10 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         srvCategories.applyPadding(bottom = smallDimen + insetBottom)
         appsBoardSlideHandler.setExpandedMarginTop(insetTop)
         if (bottomSheetBehavior?.isOpened == false) {
-            dbvApps.setMarginBottom(smallDimen + insetBottom)
+            dbvApps.bottomMargin = smallDimen + insetBottom
             recalculatePeekBottomSheet()
         } else if (bottomSheetBehavior?.state == STATE_EXPANDED) {
-            oclPanel.setMarginTop(insetTop)
+            oclPanel.topMargin = insetTop
         }
     }
 
@@ -101,7 +110,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         val absoluteHeight = height + dbvApps.marginTop + dbvApps.marginBottom
         bottomSheetBehavior?.peekHeight = absoluteHeight
         if (bottomSheetBehavior?.isClosed == true) {
-            oclPanel.setMarginTop(absoluteHeight)
+            oclPanel.topMargin = absoluteHeight
         }
     }
 

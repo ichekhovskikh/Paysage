@@ -4,24 +4,47 @@ import android.view.*
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 
-fun View.setMarginTop(top: Int) {
-    val params = layoutParams as? ViewGroup.MarginLayoutParams
-    params?.topMargin = top
-    layoutParams = params
-}
+inline var View.topMargin: Int
+    get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.topMargin ?: 0
+    set(value) {
+        val params = layoutParams as? ViewGroup.MarginLayoutParams
+        if (params?.topMargin == value) return
+        params?.topMargin = value
+        layoutParams = params
+    }
 
-fun View.setMarginBottom(bottom: Int) {
-    val params = layoutParams as? ViewGroup.MarginLayoutParams
-    params?.bottomMargin = bottom
-    layoutParams = params
-}
+inline var View.bottomMargin: Int
+    get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+    set(value) {
+        val params = layoutParams as? ViewGroup.MarginLayoutParams
+        if (params?.bottomMargin == value) return
+        params?.bottomMargin = value
+        layoutParams = params
+    }
 
-fun View.setHeight(height: Int) {
-    layoutParams = layoutParams.apply { this.height = height }
-}
+inline var View.startMargin: Int
+    get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.leftMargin ?: 0
+    set(value) {
+        val params = layoutParams as? ViewGroup.MarginLayoutParams
+        if (params?.leftMargin == value) return
+        params?.leftMargin = value
+        layoutParams = params
+    }
+
+inline var View.layoutHeight: Int
+    get() = layoutParams.height
+    set(value) {
+        layoutParams = layoutParams.apply { this.height = value }
+    }
 
 inline val View.absoluteHeight: Int
     get() = measuredHeight + marginTop + marginBottom
+
+inline val View.availableHeight: Int
+    get() = measuredHeight - paddingBottom - paddingTop
+
+inline val View.availableWidth: Int
+    get() = measuredWidth - paddingStart - paddingEnd
 
 fun View.applyPadding(
     left: Int = paddingLeft,

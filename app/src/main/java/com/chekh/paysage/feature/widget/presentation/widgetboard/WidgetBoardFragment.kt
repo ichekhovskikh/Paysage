@@ -39,10 +39,11 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
         }
     }
 
+    @Suppress("DEPRECATION")
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
-        bsrvWidgetPackages.setMarginTop(insets.systemWindowInsetTop)
-        bsrvWidgetPackages.setMarginBottom(insets.systemWindowInsetBottom)
+        bsrvWidgetPackages.topMargin = insets.systemWindowInsetTop
+        bsrvWidgetPackages.bottomMargin = insets.systemWindowInsetBottom
     }
 
     private fun setupListView() {

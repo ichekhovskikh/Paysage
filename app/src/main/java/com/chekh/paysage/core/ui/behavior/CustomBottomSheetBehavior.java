@@ -907,6 +907,8 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             if (!hideable && state == STATE_HIDDEN) {
                 // Lift up to collapsed state
                 setState(STATE_COLLAPSED);
+            } else if (hideable && state != STATE_HIDDEN) {
+                setState(STATE_HIDDEN);
             }
             updateAccessibilityActions();
         }

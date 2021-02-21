@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.ui.view.diffable
+package com.chekh.paysage.core.ui.view.recycler.diffable
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
