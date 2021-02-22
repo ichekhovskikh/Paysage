@@ -152,21 +152,37 @@ class FlowLayout @JvmOverloads constructor(
     }
 
     fun getOccupiedCells(rect: RectF): Rect {
-        val left = round((rect.left - paddingStart) / columnWidth).toInt()
-        val top = round((rect.top - paddingTop) / rowHeight).toInt()
-        val right = left + max(1, round(rect.width() / columnWidth).toInt())
-        val bottom = top + max(1, round(rect.height() / rowHeight).toInt())
+        val height = max(1, round(rect.height() / rowHeight).toInt())
+        val width = max(1, round(rect.width() / columnWidth).toInt())
+        var top = 0
+        var bottom = rowCount
+        var left = 0
+        var right = columnCount
 
-        val dTop = if (top < 0) -top else 0
-        val dBottom = if (bottom + dTop > rowCount) rowCount - bottom else dTop
-        val dLeft = if (left < 0) -left else 0
-        val dRight = if (right + dLeft > columnCount) columnCount - right else dLeft
-        return Rect(
-            left + dLeft,
-            top + dTop,
-            right + dRight,
-            bottom + dBottom
-        )
+        if (height < rowCount) {
+            top = round((rect.top - paddingTop) / rowHeight).toInt()
+            bottom = top + height
+        }
+        if (top < 0) {
+            bottom -= top
+            top = 0
+        } else if (bottom > rowCount) {
+            top -= bottom - rowCount
+            bottom = rowCount
+        }
+
+        if (width < columnCount) {
+            left = round((rect.left - paddingStart) / columnWidth).toInt()
+            right = left + width
+        }
+        if (left < 0) {
+            right -= left
+            left = 0
+        } else if (right > columnCount) {
+            left -= right - columnCount
+            right = columnCount
+        }
+        return Rect(left, top, right, bottom)
     }
 
     fun getItemBounds(item: FlowListItem): Rect {

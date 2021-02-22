@@ -33,7 +33,7 @@ class WidgetServiceImpl @Inject constructor(
 
     override val installedWidgets =
         WidgetProvidersLiveData(launcherApps, widgetManager, userManager)
-            .foreachMap { widgetMapper.map(it) }
+            .foreachMap(widgetMapper::map)
 
     override fun getFirstAppForWidgetPackage(packageName: String) =
         appDao.getFirstByPackageName(packageName)

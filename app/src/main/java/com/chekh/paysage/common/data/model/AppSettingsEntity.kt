@@ -2,6 +2,7 @@ package com.chekh.paysage.common.data.model
 
 import android.graphics.Bitmap
 import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     tableName = "app",
@@ -16,7 +17,8 @@ data class AppSettingsEntity(
     @ForeignKey(
         entity = CategorySettingsEntity::class,
         parentColumns = ["id"],
-        childColumns = ["categoryId"]
+        childColumns = ["categoryId"],
+        onDelete = CASCADE
     )
     var categoryId: String = "",
     var boardPosition: Int = Int.MAX_VALUE,

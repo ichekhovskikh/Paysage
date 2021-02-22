@@ -22,19 +22,19 @@ class PagerFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragm
         recyclerView.itemAnimator = DefaultItemAnimator()
     }
 
-    fun setFragments(fragments: List<Fragment>) {
+    fun setFragments(fragments: List<Pair<Long, Fragment>>) {
         this.items = fragments
-            .mapIndexed { index, fragment -> FragmentItem(index.toLong(), fragment) }
+            .map { (id, fragment) -> FragmentItem(id, fragment) }
             .toMutableList()
         notifyDataSetChanged()
     }
 
-    fun addFragment(fragment: Fragment, position: Int = -1) {
+    fun addFragment(id: Long, fragment: Fragment, position: Int = -1) {
         if (position < 0) {
-            items.add(FragmentItem(items.size.toLong(), fragment))
+            items.add(FragmentItem(id, fragment))
             notifyItemInserted(items.size - 1)
         } else {
-            items.add(position, FragmentItem(items.size.toLong(), fragment))
+            items.add(position, FragmentItem(id, fragment))
             notifyItemInserted(position)
         }
     }

@@ -17,5 +17,5 @@ class DockAppServiceImpl @Inject constructor(
 ) : DockAppService {
 
     override val dockApps: LiveData<List<AppModel>> =
-        appDao.getDockAppAll().foreachMap { appMapper.map(it) }
+        appDao.getDockAppAll().foreachMap(appMapper::map)
 }

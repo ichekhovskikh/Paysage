@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
-import com.chekh.paysage.common.data.dao.AppDao
-import com.chekh.paysage.common.data.dao.CategoryDao
-import com.chekh.paysage.common.data.dao.DesktopWidgetDao
-import com.chekh.paysage.common.data.dao.PackageDao
+import com.chekh.paysage.common.data.dao.*
 import com.chekh.paysage.common.data.db.ApplicationDatabase
 import com.chekh.paysage.common.data.db.Migrations
 import com.chekh.paysage.common.data.db.PrepopulateDatabaseCallback
@@ -73,4 +70,8 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideDesktopWidgetDao(db: ApplicationDatabase): DesktopWidgetDao = db.desktopWidgetDao
+
+    @Singleton
+    @Provides
+    fun provideDesktopPageDao(db: ApplicationDatabase): DesktopPageDao = db.desktopPageDao
 }

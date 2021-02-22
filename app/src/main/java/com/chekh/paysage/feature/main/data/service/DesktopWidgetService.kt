@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 interface DesktopWidgetService {
 
-    val desktopWidgets: LiveData<List<DesktopWidgetModel>>
+    fun getDesktopWidgets(pageId: Long): LiveData<List<DesktopWidgetModel>>
 
     suspend fun startObserveWidgetEvents()
 
@@ -24,7 +24,7 @@ interface DesktopWidgetService {
 
     suspend fun updateDesktopWidget(widget: DesktopWidgetModel)
 
-    suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?)
+    suspend fun updateDesktopWidgetsByPage(pageId: Long, widgets: List<DesktopWidgetModel>?)
 
     suspend fun removeDesktopWidget(widgetId: String)
 
@@ -40,9 +40,9 @@ class DesktopWidgetServiceImpl @Inject constructor(
     private val desktopWidgetMapper: DesktopWidgetModelMapper
 ) : DesktopWidgetService {
 
-    override val desktopWidgets: LiveData<List<DesktopWidgetModel>> = desktopWidgetDao.getAll()
+    override fun getDesktopWidgets(pageId: Long) = desktopWidgetDao.getByPage(pageId)
         .map { it?.filterInstalled() }
-        .foreachMap { desktopWidgetMapper.map(it) }
+        .foreachMap(desktopWidgetMapper::map)
 
     override suspend fun startObserveWidgetEvents() {
         widgetHost.startListening()
@@ -56,13 +56,16 @@ class DesktopWidgetServiceImpl @Inject constructor(
         desktopWidgetDao.update(desktopWidgetMapper.unmap(widget))
     }
 
-    override suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?) {
+    override suspend fun updateDesktopWidgetsByPage(
+        pageId: Long,
+        widgets: List<DesktopWidgetModel>?
+    ) {
         if (widgets == null) {
-            desktopWidgetDao.removeAll()
+            desktopWidgetDao.removeByPage(pageId)
             return
         }
-        val newWidgets = widgets.map { desktopWidgetMapper.unmap(it) }
-        desktopWidgetDao.updateAll(newWidgets)
+        val newWidgets = widgets.map(desktopWidgetMapper::unmap)
+        desktopWidgetDao.updateByPage(pageId, newWidgets)
     }
 
     override suspend fun removeDesktopWidget(widgetId: String) {

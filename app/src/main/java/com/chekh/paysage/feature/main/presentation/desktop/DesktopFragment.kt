@@ -3,6 +3,7 @@ package com.chekh.paysage.feature.main.presentation.desktop
 import android.app.Activity
 import android.graphics.RectF
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.view.WindowInsets
 import androidx.core.graphics.toRectF
@@ -22,6 +23,7 @@ import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_apps.*
 import kotlinx.android.synthetic.main.fragment_desktop.*
 import javax.inject.Inject
@@ -69,7 +71,8 @@ class DesktopFragment :
     }
 
     private fun setupViewModel() {
-        desktopViewModel.init(Unit)
+        val params = getParams<Params>()
+        desktopViewModel.init(params.pageId)
 
         desktopViewModel.desktopGridSizeLiveData.observe(viewLifecycleOwner) { (columns, rows) ->
             flWidgets.setSize(columns.toInt(), rows.toInt())
@@ -136,4 +139,7 @@ class DesktopFragment :
             }
         }
     }
+
+    @Parcelize
+    data class Params(val pageId: Long) : Parcelable
 }

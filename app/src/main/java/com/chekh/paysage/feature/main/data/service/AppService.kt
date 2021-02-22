@@ -36,7 +36,7 @@ class AppServiceImpl @Inject constructor(
 ) : AppService {
 
     override val installedApps: LiveData<List<AppModel>> = appDao.getAll()
-        .foreachMap { appMapper.map(it) }
+        .foreachMap(appMapper::map)
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
         launcherApps.registerCallback(callback)

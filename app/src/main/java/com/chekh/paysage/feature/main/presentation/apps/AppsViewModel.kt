@@ -8,10 +8,10 @@ import com.chekh.paysage.common.domain.model.AppSettingsModel
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
-import com.chekh.paysage.feature.main.domain.usecase.GetAppsGroupByCategoriesScenario
-import com.chekh.paysage.feature.main.domain.usecase.GetBoardAppSettingsUseCase
-import com.chekh.paysage.feature.main.domain.usecase.GetDockAppSettingsUseCase
-import com.chekh.paysage.feature.main.domain.usecase.GetDockAppsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.app.GetAppsGroupByCategoriesScenario
+import com.chekh.paysage.feature.main.domain.usecase.settings.GetBoardAppSettingsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.settings.GetDockAppSettingsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.app.GetDockAppsUseCase
 import com.chekh.paysage.feature.main.presentation.apps.mapper.AppGroupsModelMapper
 
 class AppsViewModel @ViewModelInject constructor(

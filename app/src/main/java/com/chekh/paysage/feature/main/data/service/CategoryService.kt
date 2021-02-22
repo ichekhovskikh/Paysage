@@ -17,5 +17,5 @@ class CategoryServiceImpl @Inject constructor(
 ) : CategoryService {
 
     override val categories = categoryDao.getAll()
-        .foreachMap { categoryMapper.map(it) }
+        .foreachMap(categoryMapper::map)
 }

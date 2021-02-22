@@ -49,4 +49,10 @@ abstract class ServiceModule {
     abstract fun bindWidgetService(
         widgetService: WidgetServiceImpl
     ): WidgetService
+
+    @Binds
+    @ActivityScoped
+    abstract fun bindDesktopPageService(
+        desktopPageService: DesktopPageServiceImpl
+    ): DesktopPageService
 }

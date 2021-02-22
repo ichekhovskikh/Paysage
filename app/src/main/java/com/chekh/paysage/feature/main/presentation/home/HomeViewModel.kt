@@ -5,7 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.provider.DispatcherProvider
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
-import com.chekh.paysage.feature.main.domain.usecase.*
+import com.chekh.paysage.feature.main.domain.usecase.app.PullBoardAppsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.app.StartObserveAppUpdatesUseCase
+import com.chekh.paysage.feature.main.domain.usecase.app.StopObserveAppUpdatesUseCase
+import com.chekh.paysage.feature.main.domain.usecase.widget.PullDesktopWidgetsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.widget.StartObserveWidgetEventsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.widget.StopObserveWidgetEventsUseCase
 import com.chekh.paysage.feature.main.tools.onAppsChanged
 import kotlinx.coroutines.launch
 

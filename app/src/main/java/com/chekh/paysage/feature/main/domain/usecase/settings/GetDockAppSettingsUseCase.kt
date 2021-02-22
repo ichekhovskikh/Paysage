@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.domain.usecase
+package com.chekh.paysage.feature.main.domain.usecase.settings
 
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.domain.model.AppSettingsModel

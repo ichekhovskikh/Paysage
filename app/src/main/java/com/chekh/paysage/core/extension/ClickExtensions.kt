@@ -28,6 +28,7 @@ fun View.onVibrateClick(
 
 @SuppressLint("ClickableViewAccessibility")
 fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
+    isLongClickable = true
     var hasDownBeforeCall = false
     var hasMoveBeforeCall = false
     var prevX = -1f
@@ -71,6 +72,6 @@ fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
         prevY = event.y
 
         longPressGestureDetector.onTouchEvent(event) || scaleGestureDetector.onTouchEvent(event)
-        return@setOnTouchListener false
+        return@setOnTouchListener true
     }
 }

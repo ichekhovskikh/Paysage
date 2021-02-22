@@ -24,8 +24,8 @@ import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.feature.main.presentation.MainActivity
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
-import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
 import com.chekh.paysage.feature.main.presentation.home.anim.OverlayHomeButtonsAnimationFacade
+import com.chekh.paysage.feature.main.presentation.pager.DesktopPagerFragment
 import com.chekh.paysage.feature.widget.presentation.widgetboard.WidgetBoardFragment
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -74,10 +74,11 @@ class HomeFragment :
     }
 
     private fun setupSlidingPanel() {
-        val desktopFragment = DesktopFragment()
+        if (childFragmentManager.backStackEntryCount > 0) return
+        val desktopPagerFragment = DesktopPagerFragment()
         val appsFragment = AppsFragment()
         childFragmentManager.commit {
-            replace(R.id.flDesktops, desktopFragment)
+            replace(R.id.flDesktops, desktopPagerFragment)
             replace(R.id.flApps, appsFragment)
         }
         bottomSheetBehavior.halfExpandedOffset = searchHeight
@@ -108,8 +109,8 @@ class HomeFragment :
             val fragment = WidgetBoardFragment()
             fragment.enterTransition = Fade()
             fragment.exitTransition = Fade()
-            childFragmentManager.commit {
-                replace(R.id.flContainer, fragment)
+            parentFragmentManager.commit {
+                add(R.id.flContainer, fragment)
                 addToBackStack(fragment::class.simpleName)
             }
         }
@@ -169,7 +170,8 @@ class HomeFragment :
     }
 
     override fun onBackPressed(): Boolean {
-        if (flContainer.childCount <= 0 && blBackgroundBlur.isVisible) {
+        val lastFragment = parentFragmentManager.fragments.lastOrNull()
+        if (this === lastFragment && blBackgroundBlur.isVisible) {
             setOverlayEnabledHomeButtons(false)
             return true
         }

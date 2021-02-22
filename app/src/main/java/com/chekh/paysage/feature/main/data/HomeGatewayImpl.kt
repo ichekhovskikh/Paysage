@@ -1,11 +1,9 @@
 package com.chekh.paysage.feature.main.data
 
 import com.chekh.paysage.common.data.service.SettingsService
-import com.chekh.paysage.feature.main.data.service.AppService
-import com.chekh.paysage.feature.main.data.service.CategoryService
-import com.chekh.paysage.feature.main.data.service.DesktopWidgetService
-import com.chekh.paysage.feature.main.data.service.DockAppService
+import com.chekh.paysage.feature.main.data.service.*
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.domain.model.DesktopPageModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
@@ -15,7 +13,8 @@ class HomeGatewayImpl @Inject constructor(
     private val settingsService: SettingsService,
     private val appService: AppService,
     private val dockAppService: DockAppService,
-    private val desktopWidgetService: DesktopWidgetService
+    private val desktopWidgetService: DesktopWidgetService,
+    private val desktopPageService: DesktopPageService
 ) : HomeGateway {
 
     override fun getDockApps() = dockAppService.dockApps
@@ -26,11 +25,13 @@ class HomeGatewayImpl @Inject constructor(
 
     override fun getBoardApps() = appService.installedApps
 
-    override fun getDesktopWidgets() = desktopWidgetService.desktopWidgets
-
     override fun getBoardAppSettings() = settingsService.boardAppSettings
 
     override fun getDesktopGridSize() = settingsService.desktopGridSize
+
+    override fun getDesktopPages() = desktopPageService.desktopPages
+
+    override fun getDesktopWidgets(pageId: Long) = desktopWidgetService.getDesktopWidgets(pageId)
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
         appService.startObserveAppUpdates(callback)
@@ -60,11 +61,22 @@ class HomeGatewayImpl @Inject constructor(
         desktopWidgetService.updateDesktopWidget(widget)
     }
 
-    override suspend fun updateAllDesktopWidgets(widgets: List<DesktopWidgetModel>?) {
-        desktopWidgetService.updateAllDesktopWidgets(widgets)
+    override suspend fun updateDesktopWidgetsByPage(
+        pageId: Long,
+        widgets: List<DesktopWidgetModel>?
+    ) {
+        desktopWidgetService.updateDesktopWidgetsByPage(pageId, widgets)
     }
 
     override suspend fun removeDesktopWidget(widgetId: String) {
         desktopWidgetService.removeDesktopWidget(widgetId)
+    }
+
+    override suspend fun removeDesktopPage(pageId: Long) {
+        desktopPageService.removeDesktopPage(pageId)
+    }
+
+    override suspend fun addDesktopPage(page: DesktopPageModel) {
+        desktopPageService.addDesktopPage(page)
     }
 }

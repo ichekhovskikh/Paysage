@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.domain.usecase
+package com.chekh.paysage.feature.main.domain.usecase.widget
 
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
@@ -9,6 +9,6 @@ class GetDesktopWidgetsUseCase @Inject constructor(
     private val gateway: HomeGateway
 ) {
 
-    operator fun invoke(): LiveData<List<DesktopWidgetModel>> =
-        gateway.getDesktopWidgets()
+    operator fun invoke(pageId: Long): LiveData<List<DesktopWidgetModel>> =
+        gateway.getDesktopWidgets(pageId)
 }

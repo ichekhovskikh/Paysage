@@ -11,6 +11,7 @@ interface DesktopWidgetModelFactory {
     fun create(
         desktopWidgetId: String?,
         widget: WidgetModel?,
+        pageId: Long,
         bounds: Rect,
         isDragging: Boolean = false
     ): DesktopWidgetModel
@@ -21,6 +22,7 @@ class DesktopWidgetModelFactoryImpl @Inject constructor() : DesktopWidgetModelFa
     override fun create(
         desktopWidgetId: String?,
         widget: WidgetModel?,
+        pageId: Long,
         bounds: Rect,
         isDragging: Boolean
     ) = DesktopWidgetModel(
@@ -30,7 +32,7 @@ class DesktopWidgetModelFactoryImpl @Inject constructor() : DesktopWidgetModelFa
         label = widget?.label.orEmpty(),
         type = DesktopWidgetType.WIDGET,
         bounds = bounds,
-        page = 0, // TODO make pager
+        pageId = pageId,
         minHeight = widget?.minHeight ?: 0,
         minWidth = widget?.minWidth ?: 0,
         isDragging = isDragging,

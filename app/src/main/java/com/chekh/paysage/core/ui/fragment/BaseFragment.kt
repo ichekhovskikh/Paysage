@@ -38,12 +38,14 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <Params : Parcelable> getParams(): Params? =
-        (params ?: arguments?.get(javaClass.simpleName)) as? Params
+    fun <Params : Parcelable> getParams(): Params {
+        params = params ?: arguments?.getParcelable(EXTRA_PARAMS)
+        return params as Params
+    }
 
     fun <Params : Parcelable> setParams(params: Params) {
         val args = arguments ?: Bundle()
-        arguments = args.apply { putParcelable(javaClass.simpleName, params) }
+        arguments = args.apply { putParcelable(EXTRA_PARAMS, params) }
     }
 
     protected fun registerActivityResultListener(
@@ -68,4 +70,8 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         val requestCode: Int,
         val listener: (resultCode: Int, data: Intent?) -> Unit
     )
+
+    private companion object {
+        const val EXTRA_PARAMS = "EXTRA_PARAMS"
+    }
 }

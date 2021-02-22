@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.domain.usecase
+package com.chekh.paysage.feature.main.domain.usecase.app
 
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.core.extension.map

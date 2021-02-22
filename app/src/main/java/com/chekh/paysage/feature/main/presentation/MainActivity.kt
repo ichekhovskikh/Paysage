@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.chekh.paysage.R
 import com.chekh.paysage.core.ui.activity.BaseActivity
@@ -29,8 +28,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
 
-    private var fragment: Fragment? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         statusBarDecorator.setTransparentStatusBar(this)
@@ -42,19 +39,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         viewModel.init(Unit)
     }
 
+    @Suppress("DEPRECATION")
     override fun onApplyWindowInsets(insets: WindowInsets) {
         super.onApplyWindowInsets(insets)
         setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
     }
 
     private fun addHomeFragmentIfNeed() {
-        fragment = supportFragmentManager.fragments.firstOrNull()
-        if (fragment == null) {
-            val homeFragment = HomeFragment()
-            supportFragmentManager.commit {
-                add(R.id.flContainer, homeFragment)
-            }
-            fragment = homeFragment
+        if (supportFragmentManager.backStackEntryCount > 0) return
+        val homeFragment = HomeFragment()
+        supportFragmentManager.commit {
+            add(R.id.flContainer, homeFragment)
         }
     }
 

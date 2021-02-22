@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.domain.usecase
+package com.chekh.paysage.feature.main.domain.usecase.widget
 
 import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
 import javax.inject.Inject
