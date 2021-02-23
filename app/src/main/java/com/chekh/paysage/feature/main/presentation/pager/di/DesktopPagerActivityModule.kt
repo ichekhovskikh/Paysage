@@ -10,7 +10,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class DesktopPagerModule {
+abstract class DesktopPagerActivityModule {
 
     @Binds
     @ActivityScoped

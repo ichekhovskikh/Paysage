@@ -12,14 +12,16 @@ import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.view.drag.ClipData
-import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
-import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.DesktopActivity
+import com.chekh.paysage.feature.main.presentation.DesktopDragViewModel
+import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.desktop.tools.getWidgetBounds
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
+import com.chekh.paysage.feature.main.presentation.home.data.DesktopDragEvent
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,9 +31,7 @@ import kotlinx.android.synthetic.main.fragment_desktop.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DesktopFragment :
-    BaseFragment(R.layout.fragment_desktop),
-    DragAndDropListener {
+class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
 
     private val desktopViewModel: DesktopViewModel by viewModels()
 
@@ -39,8 +39,19 @@ class DesktopFragment :
         ownerProducer = { requireActivity() }
     )
 
+    private val dragViewModel: DesktopDragViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
+
+    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
+
     @Inject
     lateinit var widgetHostManager: DesktopWidgetHostManager
+
+    @Inject
+    lateinit var params: Params
 
     private val adapter by lazy { FlowListAdapter() }
 
@@ -56,8 +67,6 @@ class DesktopFragment :
     }
 
     private fun setupListeners() {
-        val activity = activity as? MainActivity
-        activity?.addDragAndDropListener(this)
         flWidgets.setOnGestureScaleAndLongPress {
             homeViewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
         }
@@ -66,14 +75,14 @@ class DesktopFragment :
             draggingItem ?: return@setOnItemsCommittedListener
             val bounds = flWidgets.getItemBounds(draggingItem)
             bounds.offset(flWidgets.startMargin, flWidgets.topMargin)
-            activity?.setTargetDragViewBounds(bounds.toRectF())
+            (activity as? DesktopActivity)?.setTargetDragViewBounds(bounds.toRectF())
         }
     }
 
     private fun setupViewModel() {
-        val params = getParams<Params>()
         desktopViewModel.init(params.pageId)
 
+        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
         desktopViewModel.desktopGridSizeLiveData.observe(viewLifecycleOwner) { (columns, rows) ->
             flWidgets.setSize(columns.toInt(), rows.toInt())
         }
@@ -83,21 +92,31 @@ class DesktopFragment :
         desktopViewModel.dockAppSizeLiveData.observe(viewLifecycleOwner) { appSize ->
             flWidgets.applyPadding(bottom = appSize)
         }
+        dragViewModel.dragEventLiveData.observe(viewLifecycleOwner) { event ->
+            if (event.pageId != params.pageId) {
+                desktopViewModel.clearDraggingDesktopWidget()
+                return@observe
+            }
+            when (event) {
+                is DesktopDragEvent.Start -> onDragStart(event.location, event.data)
+                is DesktopDragEvent.Move -> onDragMove(event.location, event.data)
+                is DesktopDragEvent.End -> onDragEnd(event.location, event.data)
+            }
+        }
     }
 
     @Suppress("DEPRECATION")
-    override fun onApplyWindowInsets(insets: WindowInsets) {
-        super.onApplyWindowInsets(insets)
+    private fun onApplyWindowInsets(insets: WindowInsets) {
         val decoratedMargin = resources.getDimension(R.dimen.small).toInt()
         flWidgets.bottomMargin = insets.systemWindowInsetBottom + decoratedMargin
         flWidgets.topMargin = insets.systemWindowInsetTop + decoratedMargin
     }
 
-    override fun onDragStart(location: RectF, data: ClipData?) {
+    private fun onDragStart(location: RectF, data: ClipData?) {
         onDragMove(location, data)
     }
 
-    override fun onDragMove(location: RectF, data: ClipData?) {
+    private fun onDragMove(location: RectF, data: ClipData?) {
         when (data) {
             is WidgetClipData -> {
                 val widget = data.widget
@@ -109,7 +128,7 @@ class DesktopFragment :
         }
     }
 
-    override fun onDragEnd(location: RectF, data: ClipData?) {
+    private fun onDragEnd(location: RectF, data: ClipData?) {
         when (data) {
             is WidgetClipData -> {
                 addDesktopWidget(location, data.widget)

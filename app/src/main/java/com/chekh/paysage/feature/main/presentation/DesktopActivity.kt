@@ -4,7 +4,7 @@ import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import com.chekh.paysage.R
@@ -21,9 +21,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(R.layout.activity_main) {
+class DesktopActivity : BaseActivity(R.layout.activity_main) {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
+
+    private val insetsViewModel: DesktopInsetsViewModel by viewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -31,18 +33,22 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         statusBarDecorator.setTransparentStatusBar(this)
+        observeWindowInsets()
         addHomeFragmentIfNeed()
         setupViewModel()
     }
 
     private fun setupViewModel() {
-        viewModel.init(Unit)
+        homeViewModel.init(Unit)
     }
 
     @Suppress("DEPRECATION")
-    override fun onApplyWindowInsets(insets: WindowInsets) {
-        super.onApplyWindowInsets(insets)
-        setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
+    private fun observeWindowInsets() {
+        val content = findViewById<ViewGroup>(android.R.id.content)
+        content.setOnApplyWindowInsetsListener { _, insets ->
+            insetsViewModel.windowInsetsLiveData.postValue(insets)
+            insets.consumeSystemWindowInsets()
+        }
     }
 
     private fun addHomeFragmentIfNeed() {

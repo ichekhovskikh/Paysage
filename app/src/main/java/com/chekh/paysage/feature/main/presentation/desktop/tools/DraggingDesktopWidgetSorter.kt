@@ -33,6 +33,7 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
     }
 
     fun setDraggingWidget(draggingWidget: DesktopWidgetModel?) {
+        if (draggingWidget == null && this.draggingWidget == null) return
         val oldDraggingBounds = this.draggingWidget?.bounds
         val newDraggingBounds = draggingWidget?.bounds
         this.draggingWidget = draggingWidget

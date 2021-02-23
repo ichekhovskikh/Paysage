@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
+import com.chekh.paysage.core.extension.setParams
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.pager.PagerFragmentStateAdapter
 import com.chekh.paysage.core.ui.pager.setBouncing
@@ -12,8 +13,10 @@ import com.chekh.paysage.core.ui.pager.transformer.ZoomOutPageTransformer
 import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.feature.main.domain.model.DesktopPageModel
-import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.DesktopActivity
+import com.chekh.paysage.feature.main.presentation.DesktopDragViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
+import com.chekh.paysage.feature.main.presentation.home.data.DesktopDragEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_desktop_pager.*
 
@@ -23,6 +26,10 @@ class DesktopPagerFragment :
     DragAndDropListener {
 
     private val pagerViewModel: DesktopPagerViewModel by viewModels()
+
+    private val dragViewModel: DesktopDragViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
 
     private val adapter by lazy { PagerFragmentStateAdapter(this) }
 
@@ -34,7 +41,7 @@ class DesktopPagerFragment :
     }
 
     private fun setupListeners() {
-        val activity = activity as? MainActivity
+        val activity = activity as? DesktopActivity
         activity?.addDragAndDropListener(this)
     }
 
@@ -64,14 +71,23 @@ class DesktopPagerFragment :
     }
 
     override fun onDragStart(location: RectF, data: ClipData?) {
-        onDragMove(location, data)
+        // TODO add new last page
+        val pageId = adapter.getItemId(vpDesktops.currentItem)
+        val event = DesktopDragEvent.Start(pageId, location, data)
+        dragViewModel.dragEventLiveData.postValue(event)
     }
 
     override fun onDragMove(location: RectF, data: ClipData?) {
-        // TODO
+        // TODO switch between page
+        val pageId = adapter.getItemId(vpDesktops.currentItem)
+        val event = DesktopDragEvent.Move(pageId, location, data)
+        dragViewModel.dragEventLiveData.postValue(event)
     }
 
     override fun onDragEnd(location: RectF, data: ClipData?) {
-        // TODO
+        // TODO remove all empty pages
+        val pageId = adapter.getItemId(vpDesktops.currentItem)
+        val event = DesktopDragEvent.End(pageId, location, data)
+        dragViewModel.dragEventLiveData.postValue(event)
     }
 }

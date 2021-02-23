@@ -1,6 +1,5 @@
 package com.chekh.paysage.feature.main.presentation.desktop.adapter
 
-import android.widget.Toast
 import com.chekh.paysage.core.ui.view.recycler.diffable.ListItemAdapter
 import com.chekh.paysage.R
 import com.chekh.paysage.core.ui.tools.alphaColor
@@ -51,9 +50,6 @@ data class DesktopWidgetFlowListItem(
             desktopWidget.className
         )
         cvContent.addView(widgetView)
-        widgetView?.setOnClickListener {
-            Toast.makeText(it.context, "test", Toast.LENGTH_SHORT).show()
-        }
         setStyle(desktopWidget.style)
     }
 

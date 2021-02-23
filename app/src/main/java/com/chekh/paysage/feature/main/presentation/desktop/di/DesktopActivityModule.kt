@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class DesktopModule {
+abstract class DesktopActivityModule {
 
     @Binds
     @ActivityScoped

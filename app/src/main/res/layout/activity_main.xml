@@ -5,7 +5,7 @@
     android:id="@+id/dllContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.main.presentation.MainActivity">
+    tools:context=".feature.main.presentation.DesktopActivity">
 
     <FrameLayout
         android:id="@+id/flContainer"

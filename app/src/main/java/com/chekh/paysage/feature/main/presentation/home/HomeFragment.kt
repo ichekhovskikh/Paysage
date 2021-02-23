@@ -22,7 +22,8 @@ import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.tools.MetricsConverter
 import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
-import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.DesktopActivity
+import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.home.anim.OverlayHomeButtonsAnimationFacade
 import com.chekh.paysage.feature.main.presentation.pager.DesktopPagerFragment
@@ -39,7 +40,11 @@ class HomeFragment :
     BottomSheetCallback,
     DragAndDropListener {
 
-    private val viewModel: HomeViewModel by viewModels(
+    private val homeViewModel: HomeViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
+
+    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
         ownerProducer = { requireActivity() }
     )
 
@@ -97,7 +102,7 @@ class HomeFragment :
     }
 
     private fun setupListeners() {
-        val activity = activity as? MainActivity
+        val activity = activity as? DesktopActivity
         activity?.addDragAndDropListener(this)
         blBackgroundBlur.onClick {
             setOverlayEnabledHomeButtons(false)
@@ -120,7 +125,8 @@ class HomeFragment :
     }
 
     private fun setupViewModel() {
-        viewModel.isEnabledOverlayHomeButtonsLiveData.observe(viewLifecycleOwner) { isEnabled ->
+        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        homeViewModel.isEnabledOverlayHomeButtonsLiveData.observe(viewLifecycleOwner) { isEnabled ->
             setOverlayEnabledHomeButtons(isEnabled)
         }
     }
@@ -160,8 +166,7 @@ class HomeFragment :
     }
 
     @Suppress("DEPRECATION")
-    override fun onApplyWindowInsets(insets: WindowInsets) {
-        super.onApplyWindowInsets(insets)
+    private fun onApplyWindowInsets(insets: WindowInsets) {
         val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
         val insetTop = insets.systemWindowInsetTop
         val insetBottom = insets.systemWindowInsetBottom

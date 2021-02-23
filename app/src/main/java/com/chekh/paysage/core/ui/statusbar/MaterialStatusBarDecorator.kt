@@ -17,6 +17,7 @@ class MaterialStatusBarDecorator @Inject constructor() : StatusBarDecorator() {
         return true
     }
 
+    @Suppress("DEPRECATION")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun statusBarDarkModeVersionO(activity: Activity, isDark: Boolean) {
         statusBarDarkModeVersionM(activity, isDark)
@@ -27,6 +28,7 @@ class MaterialStatusBarDecorator @Inject constructor() : StatusBarDecorator() {
         }
     }
 
+    @Suppress("DEPRECATION")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun statusBarDarkModeVersionM(activity: Activity, isDark: Boolean) {
         if (isDark) {

@@ -1,10 +1,6 @@
 package com.chekh.paysage.core.ui.fragment
 
 import android.content.Intent
-import android.os.Bundle
-import android.os.Parcelable
-import android.view.WindowInsets
-import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.core.handler.backpressed.ContainerBackPressedHandler
@@ -20,32 +16,10 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     }
 
     private val activityResultListeners = mutableSetOf<ActivityResultListener>()
-    private var params: Any? = null
 
     override fun onStop() {
         super.onStop()
         view?.hideKeyboard()
-    }
-
-    @CallSuper
-    open fun onApplyWindowInsets(insets: WindowInsets) {
-        val fragments = childFragmentManager.fragments
-        fragments.forEach { fragment ->
-            if (fragment is BaseFragment) {
-                fragment.onApplyWindowInsets(insets)
-            }
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <Params : Parcelable> getParams(): Params {
-        params = params ?: arguments?.getParcelable(EXTRA_PARAMS)
-        return params as Params
-    }
-
-    fun <Params : Parcelable> setParams(params: Params) {
-        val args = arguments ?: Bundle()
-        arguments = args.apply { putParcelable(EXTRA_PARAMS, params) }
     }
 
     protected fun registerActivityResultListener(
@@ -70,8 +44,4 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         val requestCode: Int,
         val listener: (resultCode: Int, data: Intent?) -> Unit
     )
-
-    private companion object {
-        const val EXTRA_PARAMS = "EXTRA_PARAMS"
-    }
 }

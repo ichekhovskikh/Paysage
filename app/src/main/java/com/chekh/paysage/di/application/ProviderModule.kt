@@ -13,12 +13,6 @@ abstract class ProviderModule {
 
     @Singleton
     @Binds
-    abstract fun bindParamsProvider(
-        paramsProvider: ParamsProviderIml
-    ): ParamsProvider
-
-    @Singleton
-    @Binds
     abstract fun bindDispatcherProvider(
         dispatcherProvider: DispatcherProviderImpl
     ): DispatcherProvider

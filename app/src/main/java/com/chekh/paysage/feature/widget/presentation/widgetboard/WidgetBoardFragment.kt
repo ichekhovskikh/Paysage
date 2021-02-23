@@ -8,7 +8,8 @@ import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
-import com.chekh.paysage.feature.main.presentation.MainActivity
+import com.chekh.paysage.feature.main.presentation.DesktopActivity
+import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
@@ -19,6 +20,10 @@ import kotlinx.android.synthetic.main.fragment_widget_board.*
 class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), BottomSheetCallback {
 
     private val viewModel: WidgetBoardViewModel by viewModels()
+
+    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
 
     private val adapter: WidgetGroupAdapter by lazy {
         WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged, ::startDragAndDrop)
@@ -33,6 +38,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     private fun setupViewModel() {
         viewModel.init(Unit)
 
+        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
         viewModel.widgetGroupsLiveData.observe(viewLifecycleOwner) { widgetGroups ->
             val isAnimate = adapter.itemCount == 0
             adapter.setWidgetGroups(widgetGroups, isAnimate)
@@ -40,8 +46,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     }
 
     @Suppress("DEPRECATION")
-    override fun onApplyWindowInsets(insets: WindowInsets) {
-        super.onApplyWindowInsets(insets)
+    private fun onApplyWindowInsets(insets: WindowInsets) {
         bsrvWidgetPackages.topMargin = insets.systemWindowInsetTop
         bsrvWidgetPackages.bottomMargin = insets.systemWindowInsetBottom
     }
@@ -51,7 +56,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     }
 
     private fun startDragAndDrop(view: View, widget: WidgetModel) {
-        val activity = activity as? MainActivity ?: return
+        val activity = activity as? DesktopActivity ?: return
         activity.startDragAndDrop(view, data = WidgetClipData(widget))
         exit()
     }

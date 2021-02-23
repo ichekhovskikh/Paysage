@@ -48,10 +48,7 @@ class AppsViewModel @ViewModelInject constructor(
         .distinctUntilChanged()
 
     val dockAppsLiveData: LiveData<List<AppModel>> = dockAppSettingsLiveData
-        .switchMap {
-            val dockColumnCount = it?.appColumnCount ?: 1
-            getDockAppsUseCase(dockColumnCount)
-        }
+        .switchMap { getDockAppsUseCase(it.appColumnCount) }
         .distinctUntilChanged()
 
     fun onGroupScrollOffsetChanged(scrollOffset: Int, categoryId: String) {

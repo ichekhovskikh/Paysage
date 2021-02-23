@@ -16,6 +16,7 @@ import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
+import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.apps.adapter.AppGroupAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_apps.*
@@ -24,6 +25,10 @@ import kotlinx.android.synthetic.main.fragment_apps.*
 class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     private val viewModel: AppsViewModel by viewModels()
+
+    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
 
     private val adapter: AppGroupAdapter by lazy {
         AppGroupAdapter(viewModel::toggleCategory, viewModel::onGroupScrollOffsetChanged)
@@ -49,6 +54,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
     private fun setupViewModel() {
         viewModel.init(Unit)
 
+        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
         viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->
             srvCategories.smoothScrollToHeader(position)
         }
@@ -71,8 +77,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
     }
 
     @Suppress("DEPRECATION")
-    override fun onApplyWindowInsets(insets: WindowInsets) {
-        super.onApplyWindowInsets(insets)
+    private fun onApplyWindowInsets(insets: WindowInsets) {
         val smallDimen = resources.getDimension(R.dimen.small).toInt()
         val insetBottom = insets.systemWindowInsetBottom
         val insetTop = insets.systemWindowInsetTop
