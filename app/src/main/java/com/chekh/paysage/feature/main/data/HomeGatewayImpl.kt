@@ -31,7 +31,9 @@ class HomeGatewayImpl @Inject constructor(
 
     override fun getDesktopPages() = desktopPageService.desktopPages
 
-    override fun getDesktopWidgets(pageId: Long) = desktopWidgetService.getDesktopWidgets(pageId)
+    override fun getDesktopWidgets() = desktopWidgetService.desktopWidgets
+
+    override fun getDesktopWidgetsByPage(pageId: Long) = desktopWidgetService.getDesktopWidgetsByPage(pageId)
 
     override suspend fun startObserveAppUpdates(callback: AppsChangedCallback) {
         appService.startObserveAppUpdates(callback)
@@ -72,8 +74,8 @@ class HomeGatewayImpl @Inject constructor(
         desktopWidgetService.removeDesktopWidget(widgetId)
     }
 
-    override suspend fun removeDesktopPage(pageId: Long) {
-        desktopPageService.removeDesktopPage(pageId)
+    override suspend fun removeEmptyDesktopPages() {
+        desktopPageService.removeEmptyDesktopPages()
     }
 
     override suspend fun addDesktopPage(page: DesktopPageModel) {

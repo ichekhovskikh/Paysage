@@ -10,7 +10,7 @@ import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.domain.usecase.settings.GetDesktopGridSizeUseCase
 import com.chekh.paysage.feature.main.domain.usecase.settings.GetDockAppSizeScenario
-import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsUseCase
+import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsByPageUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.RemoveDesktopWidgetUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.UpdateDesktopWidgetsByPageUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.UpdateDesktopWidgetUseCase
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class DesktopViewModel @ViewModelInject constructor(
     private val dispatcherProvider: DispatcherProvider,
-    private val getDesktopWidgetsUseCase: GetDesktopWidgetsUseCase,
+    private val getDesktopWidgetsByPageUseCase: GetDesktopWidgetsByPageUseCase,
     private val updateDesktopWidgetUseCase: UpdateDesktopWidgetUseCase,
     private val updateDesktopWidgetsByPageUseCase: UpdateDesktopWidgetsByPageUseCase,
     private val removeDesktopWidgetUseCase: RemoveDesktopWidgetUseCase,
@@ -45,7 +45,7 @@ class DesktopViewModel @ViewModelInject constructor(
         .distinctUntilChanged()
 
     val desktopWidgetsLiveData = trigger
-        .switchMap { getDesktopWidgetsUseCase(it) }
+        .switchMap { getDesktopWidgetsByPageUseCase(it) }
         .doNext { desktopWidgets = it }
         .after(draggingTrigger, isRepeat = true)
         .map(draggingWidgetSorter::getSorted)

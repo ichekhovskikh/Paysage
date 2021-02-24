@@ -54,6 +54,9 @@ class DesktopPagerFragment :
     private fun setupViewModel() {
         pagerViewModel.init(Unit)
         pagerViewModel.pagesLiveData.observe(viewLifecycleOwner, ::setPages)
+        pagerViewModel.desktopWidgetsUpdatesLiveData.observe(viewLifecycleOwner) {
+            pagerViewModel.removeEmptyDesktopPages()
+        }
     }
 
     private fun setPages(pages: List<DesktopPageModel>) {
@@ -71,7 +74,7 @@ class DesktopPagerFragment :
     }
 
     override fun onDragStart(location: RectF, data: ClipData?) {
-        // TODO add new last page
+        pagerViewModel.addDesktopPage(position = adapter.itemCount)
         val pageId = adapter.getItemId(vpDesktops.currentItem)
         val event = DesktopDragEvent.Start(pageId, location, data)
         dragViewModel.dragEventLiveData.postValue(event)
@@ -85,7 +88,6 @@ class DesktopPagerFragment :
     }
 
     override fun onDragEnd(location: RectF, data: ClipData?) {
-        // TODO remove all empty pages
         val pageId = adapter.getItemId(vpDesktops.currentItem)
         val event = DesktopDragEvent.End(pageId, location, data)
         dragViewModel.dragEventLiveData.postValue(event)

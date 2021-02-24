@@ -19,14 +19,15 @@ interface HomeGateway {
     suspend fun updateDesktopWidget(widget: DesktopWidgetModel)
     suspend fun updateDesktopWidgetsByPage(pageId: Long, widgets: List<DesktopWidgetModel>?)
     suspend fun removeDesktopWidget(widgetId: String)
-    suspend fun removeDesktopPage(pageId: Long)
+    suspend fun removeEmptyDesktopPages()
     suspend fun addDesktopPage(page: DesktopPageModel)
     fun getDockApps(): LiveData<List<AppModel>>
     fun getDockAppSettings(): LiveData<AppSettingsModel>
     fun getAppCategories(): LiveData<List<CategoryModel>>
     fun getBoardApps(): LiveData<List<AppModel>>
-    fun getDesktopWidgets(pageId: Long): LiveData<List<DesktopWidgetModel>>
+    fun getDesktopWidgetsByPage(pageId: Long): LiveData<List<DesktopWidgetModel>>
     fun getBoardAppSettings(): LiveData<AppSettingsModel>
     fun getDesktopGridSize(): LiveData<Size>
     fun getDesktopPages(): LiveData<List<DesktopPageModel>>
+    fun getDesktopWidgets(): LiveData<List<DesktopWidgetModel>>
 }

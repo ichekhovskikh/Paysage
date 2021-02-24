@@ -13,7 +13,7 @@ interface DesktopPageService {
 
     suspend fun addDesktopPage(page: DesktopPageModel)
 
-    suspend fun removeDesktopPage(pageId: Long)
+    suspend fun removeEmptyDesktopPages()
 }
 
 class DesktopPageServiceImpl @Inject constructor(
@@ -28,7 +28,7 @@ class DesktopPageServiceImpl @Inject constructor(
         desktopPageDao.add(desktopPageMapper.unmap(page))
     }
 
-    override suspend fun removeDesktopPage(pageId: Long) {
-        desktopPageDao.removeById(pageId)
+    override suspend fun removeEmptyDesktopPages() {
+        desktopPageDao.removeEmptyPages()
     }
 }

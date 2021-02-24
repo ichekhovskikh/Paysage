@@ -5,14 +5,28 @@ import androidx.room.*
 import com.chekh.paysage.common.data.model.DesktopPageEntity
 
 @Dao
-interface DesktopPageDao {
+abstract class DesktopPageDao {
 
     @Query("SELECT * FROM desktop_page")
-    fun getAll(): LiveData<List<DesktopPageEntity>>
+    abstract fun getAll(): LiveData<List<DesktopPageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun add(page: DesktopPageEntity)
+    abstract suspend fun add(page: DesktopPageEntity)
 
-    @Query("DELETE FROM desktop_page WHERE id = :id")
-    suspend fun removeById(id: Long)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun add(pages: List<DesktopPageEntity>)
+
+    @Query("DELETE FROM desktop_page")
+    abstract suspend fun removeAll()
+
+    @Query("SELECT * FROM desktop_page WHERE desktop_page.id IN (SELECT pageId FROM desktop_widget)")
+    abstract suspend fun getAsyncNotEmptyPages(): List<DesktopPageEntity>
+
+    suspend fun removeEmptyPages() {
+        val pages = getAsyncNotEmptyPages().mapIndexed { index, page ->
+            page.apply { position = index }
+        }
+        removeAll()
+        add(pages)
+    }
 }

@@ -43,6 +43,23 @@ fun <X> LiveData<X>.doNext(body: (X?) -> Unit): LiveData<X> {
     return result
 }
 
+fun <X> LiveData<X>.ignoreValue(): LiveData<Unit> {
+    return Transformations.map(this) { }
+}
+
+fun <X> LiveData<X>.ignoreFirst(): LiveData<X> {
+    var wasFirst = false
+    val result = MediatorLiveData<X>()
+    result.addSource(this) { x ->
+        if (wasFirst) {
+            result.value = x
+        } else {
+            wasFirst = true
+        }
+    }
+    return result
+}
+
 fun <X, Y> LiveData<X>.map(body: (X?) -> Y?): LiveData<Y> {
     return Transformations.map(this, body)
 }

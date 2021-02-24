@@ -16,7 +16,9 @@ import javax.inject.Inject
 
 interface DesktopWidgetService {
 
-    fun getDesktopWidgets(pageId: Long): LiveData<List<DesktopWidgetModel>>
+    val desktopWidgets: LiveData<List<DesktopWidgetModel>>
+
+    fun getDesktopWidgetsByPage(pageId: Long): LiveData<List<DesktopWidgetModel>>
 
     suspend fun startObserveWidgetEvents()
 
@@ -40,7 +42,11 @@ class DesktopWidgetServiceImpl @Inject constructor(
     private val desktopWidgetMapper: DesktopWidgetModelMapper
 ) : DesktopWidgetService {
 
-    override fun getDesktopWidgets(pageId: Long) = desktopWidgetDao.getByPage(pageId)
+    override val desktopWidgets = desktopWidgetDao.getAll()
+        .map { it?.filterInstalled() }
+        .foreachMap(desktopWidgetMapper::map)
+
+    override fun getDesktopWidgetsByPage(pageId: Long) = desktopWidgetDao.getByPage(pageId)
         .map { it?.filterInstalled() }
         .foreachMap(desktopWidgetMapper::map)
 

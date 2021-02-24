@@ -5,10 +5,10 @@ import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import javax.inject.Inject
 
-class GetDesktopWidgetsUseCase @Inject constructor(
+class GetDesktopWidgetsByPageUseCase @Inject constructor(
     private val gateway: HomeGateway
 ) {
 
     operator fun invoke(pageId: Long): LiveData<List<DesktopWidgetModel>> =
-        gateway.getDesktopWidgets(pageId)
+        gateway.getDesktopWidgetsByPage(pageId)
 }
