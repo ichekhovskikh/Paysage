@@ -22,6 +22,8 @@ class PagerFragmentStateAdapter(fragment: Fragment) : FragmentStateAdapter(fragm
         recyclerView.itemAnimator = DefaultItemAnimator()
     }
 
+    fun getFragment(id: Long) = items.find { it.id == id }?.fragment
+
     fun setFragments(fragments: List<Pair<Long, Fragment>>) {
         this.items = fragments
             .map { (id, fragment) -> FragmentItem(id, fragment) }

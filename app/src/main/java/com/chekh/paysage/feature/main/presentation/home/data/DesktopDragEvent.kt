@@ -22,4 +22,10 @@ sealed class DesktopDragEvent(open val pageId: Long) {
         val location: RectF,
         val data: ClipData?
     ) : DesktopDragEvent(pageId)
+
+    fun copyEvent(pageId: Long = this.pageId): DesktopDragEvent = when(this) {
+        is Start -> copy(pageId)
+        is Move -> copy(pageId)
+        is End -> copy(pageId)
+    }
 }

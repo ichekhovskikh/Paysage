@@ -1,6 +1,10 @@
 package com.chekh.paysage.feature.main.presentation.pager
 
+import android.graphics.PointF
+import android.graphics.Rect
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.extension.distinctUntilChanged
 import com.chekh.paysage.core.extension.ignoreFirst
@@ -12,6 +16,7 @@ import com.chekh.paysage.feature.main.domain.usecase.page.GetDesktopPagesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.page.RemoveEmptyDesktopPagesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsUpdatesUseCase
 import com.chekh.paysage.feature.main.presentation.pager.factory.DesktopPageModelFactory
+import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerDragTouchHandler
 import kotlinx.coroutines.launch
 
 class DesktopPagerViewModel @ViewModelInject constructor(
@@ -20,7 +25,8 @@ class DesktopPagerViewModel @ViewModelInject constructor(
     private val addDesktopPageUseCase: AddDesktopPageUseCase,
     private val removeEmptyDesktopPagesUseCase: RemoveEmptyDesktopPagesUseCase,
     private val getDesktopWidgetsUpdatesUseCase: GetDesktopWidgetsUpdatesUseCase,
-    private val pageModelFactory: DesktopPageModelFactory
+    private val pageModelFactory: DesktopPageModelFactory,
+    private val dragTouchHandler: DesktopPagerDragTouchHandler
 ) : BaseViewModel<Unit>() {
 
     val desktopWidgetsUpdatesLiveData = trigger
@@ -31,9 +37,30 @@ class DesktopPagerViewModel @ViewModelInject constructor(
         .switchMap { getDesktopPagesUseCase() }
         .distinctUntilChanged()
 
-    fun addDesktopPage(position: Int) {
+    private val touchPageMutableLiveData = MutableLiveData<Int>()
+    val touchPageLiveData: LiveData<Int> = touchPageMutableLiveData
+
+    private val lastAvailablePosition: Int
+        get() = pagesLiveData.value
+            ?.maxByOrNull { it.position }
+            ?.position
+            ?.let { it + 1 }
+            ?: 0
+
+    override fun init(trigger: Unit) {
+        super.init(trigger)
+        dragTouchHandler.setOnTouchPageChanged {
+            touchPageMutableLiveData.postValue(it)
+        }
+    }
+
+    fun onGridBoundsChanged(gridBounds: Rect) {
+        dragTouchHandler.init(gridBounds)
+    }
+
+    fun addLastDesktopPage() {
         viewModelScope.launch(dispatcherProvider.back) {
-            addDesktopPageUseCase(pageModelFactory.create(position))
+            addDesktopPageUseCase(pageModelFactory.create(lastAvailablePosition))
         }
     }
 
@@ -41,5 +68,13 @@ class DesktopPagerViewModel @ViewModelInject constructor(
         viewModelScope.launch(dispatcherProvider.back) {
             removeEmptyDesktopPagesUseCase()
         }
+    }
+
+    fun handleDragTouch(touch: PointF, page: Int) {
+        dragTouchHandler.handleDragTouch(touch, page)
+    }
+
+    fun stopHandleDragTouch() {
+        dragTouchHandler.stopHandleDragTouch()
     }
 }

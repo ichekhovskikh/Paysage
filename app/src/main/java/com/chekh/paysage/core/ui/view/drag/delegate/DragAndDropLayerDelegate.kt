@@ -105,13 +105,14 @@ class DragAndDropLayerDelegate(dragLayer: View) {
                 return true
             }
             ACTION_MOVE -> {
-                val touchLocation = touchLocation ?: PointF(event.x, event.y)
-                val dx = event.x - touchLocation.x
-                val dy = event.y - touchLocation.y
-                this.touchLocation = PointF(event.x, event.y)
+                val newTouchLocation = PointF(event.x, event.y)
+                val oldTouchLocation = touchLocation ?: newTouchLocation
+                val dx = newTouchLocation.x - oldTouchLocation.x
+                val dy = newTouchLocation.y - oldTouchLocation.y
+                this.touchLocation = newTouchLocation
                 viewRect?.offset(dx, dy)
                 val rect = viewRect ?: return false
-                listeners.forEach { it.onDragMove(rect.copy(), data) }
+                listeners.forEach { it.onDragMove(newTouchLocation, rect.copy(), data) }
                 return true
             }
             ACTION_CANCEL, ACTION_UP -> {

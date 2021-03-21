@@ -9,4 +9,9 @@ class DesktopDragViewModel @ViewModelInject constructor() : BaseViewModel<Unit>(
 
     val dragEventLiveData = MutableLiveData<DesktopDragEvent>()
 
+    fun onPageChanged(pageId: Long) {
+        val lastValue = dragEventLiveData.value ?: return
+        dragEventLiveData.postValue(lastValue.copyEvent(pageId))
+    }
+
 }

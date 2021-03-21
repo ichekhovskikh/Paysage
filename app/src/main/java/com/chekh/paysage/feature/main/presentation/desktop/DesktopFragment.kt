@@ -15,6 +15,7 @@ import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopDragViewModel
+import com.chekh.paysage.feature.main.presentation.DesktopGridBoundsViewModel
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
@@ -47,6 +48,10 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
         ownerProducer = { requireActivity() }
     )
 
+    private val gridBoundsViewModel: DesktopGridBoundsViewModel by viewModels(
+        ownerProducer = { requireActivity() }
+    )
+
     @Inject
     lateinit var widgetHostManager: DesktopWidgetHostManager
 
@@ -76,6 +81,9 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop) {
             val bounds = flWidgets.getItemBounds(draggingItem)
             bounds.offset(flWidgets.startMargin, flWidgets.topMargin)
             (activity as? DesktopActivity)?.setTargetDragViewBounds(bounds.toRectF())
+        }
+        flWidgets.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            gridBoundsViewModel.gridBoundsLiveData.postValue(flWidgets.bounds)
         }
     }
 

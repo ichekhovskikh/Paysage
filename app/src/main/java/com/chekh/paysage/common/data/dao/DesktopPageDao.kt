@@ -10,23 +10,23 @@ abstract class DesktopPageDao {
     @Query("SELECT * FROM desktop_page")
     abstract fun getAll(): LiveData<List<DesktopPageEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun add(page: DesktopPageEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun add(pages: List<DesktopPageEntity>)
-
     @Query("DELETE FROM desktop_page")
     abstract suspend fun removeAll()
 
-    @Query("SELECT * FROM desktop_page WHERE desktop_page.id IN (SELECT pageId FROM desktop_widget)")
-    abstract suspend fun getAsyncNotEmptyPages(): List<DesktopPageEntity>
+    @Query("DELETE FROM desktop_page WHERE desktop_page.id NOT IN (SELECT pageId FROM desktop_widget)")
+    abstract suspend fun removeEmptyPages()
 
-    suspend fun removeEmptyPages() {
-        val pages = getAsyncNotEmptyPages().mapIndexed { index, page ->
-            page.apply { position = index }
-        }
-        removeAll()
-        add(pages)
+    @Transaction
+    open suspend fun add(page: DesktopPageEntity) {
+        removeEmptyPages()
+        val pages = getAsyncEqualsOrGreaterPages(page.position)
+        pages.forEach { it.position++ }
+        add(pages + page)
     }
+
+    @Query("SELECT * FROM desktop_page WHERE desktop_page.position >= :position")
+    protected abstract suspend fun getAsyncEqualsOrGreaterPages(position: Int): List<DesktopPageEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun add(pages: List<DesktopPageEntity>)
 }

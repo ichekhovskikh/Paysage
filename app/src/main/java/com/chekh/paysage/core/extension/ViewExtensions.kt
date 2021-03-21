@@ -1,5 +1,6 @@
 package com.chekh.paysage.core.extension
 
+import android.graphics.Rect
 import android.view.*
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
@@ -45,6 +46,14 @@ inline val View.availableHeight: Int
 
 inline val View.availableWidth: Int
     get() = measuredWidth - paddingStart - paddingEnd
+
+inline val View.bounds: Rect
+    get() = Rect(
+        x.toInt() + paddingStart,
+        y.toInt() + paddingTop,
+        x.toInt() + measuredWidth - paddingEnd,
+        y.toInt() + measuredHeight - paddingBottom
+    )
 
 fun View.applyPadding(
     left: Int = paddingLeft,
