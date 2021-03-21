@@ -14,6 +14,7 @@ import com.chekh.paysage.core.ui.view.flow.items.FlowListItem
 import com.chekh.paysage.core.ui.view.recycler.diffable.ListItemAdapter
 import kotlinx.android.parcel.Parcelize
 import java.lang.ref.WeakReference
+import java.util.concurrent.Flow
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -33,12 +34,16 @@ class FlowLayout @JvmOverloads constructor(
 
     var adapter: FlowListAdapter? = null
         set(value) {
-            val previousList = field?.currentList ?: emptyList()
+            val previousList = field?.currentList
             val currentList = value?.currentList ?: emptyList()
             field?.unregisterAdapterObserver(this)
             value?.registerAdapterObserver(this)
             field = value
-            onCurrentListChanged(previousList, currentList)
+            if (previousList == null) {
+                onCurrentListChangedWithoutAnimation(currentList)
+            } else {
+                onCurrentListChanged(previousList, currentList)
+            }
         }
 
     private val columnWidth: Int
@@ -68,6 +73,20 @@ class FlowLayout @JvmOverloads constructor(
             rowCount = attributes.getInteger(R.styleable.FlowLayout_rowCount, ROW_COUNt_DEFAULT)
         }
         attributes.recycle()
+    }
+
+    private fun onCurrentListChangedWithoutAnimation(currentList: List<FlowListItem>) {
+        children.clear()
+        animators.clear()
+        removeAllViews()
+        post {
+            mutableListOf<FlowChange>()
+                .apply { addAddedChanges(currentList) }
+                .forEach {
+                    val change = it as? FlowChange.Added ?: return@forEach
+                    addViewInternalIfNeed(change.id, change.view, change.bounds)
+                }
+        }
     }
 
     override fun onCurrentListChanged(
@@ -210,7 +229,7 @@ class FlowLayout @JvmOverloads constructor(
         for ((_, changeGroup) in changeGroups) {
             val change = changeGroup.minByOrNull { it.priority } ?: continue
             if (change is FlowChange.Added) {
-                addViewInternalIfNeed(change)
+                addAnimatingViewInternalIfNeed(change)
             }
             val view = change.view
             val animator = animators[change.id]
@@ -277,19 +296,24 @@ class FlowLayout @JvmOverloads constructor(
         }
     }
 
-    private fun addViewInternalIfNeed(change: FlowChange.Added) {
+    private fun addAnimatingViewInternalIfNeed(change: FlowChange.Added) {
         if (children.containsKey(change.id)) return
-        children[change.id] = WeakReference(change.view)
         animators[change.id] = ValueAnimator
             .ofFloat(0f, 1f)
             .setDuration(ANIMATION_DURATION)
         change.view.alpha = 1 - change.toAlpha
-        addView(change.view)
-        change.view.translationX = change.bounds.left.toFloat()
-        change.view.translationY = change.bounds.top.toFloat()
-        change.view.layoutParams = change.view.layoutParams.apply {
-            height = change.bounds.height()
-            width = change.bounds.width()
+        addViewInternalIfNeed(change.id, change.view, change.bounds)
+    }
+
+    private fun addViewInternalIfNeed(viewId: String, view: View, bounds: Rect) {
+        if (children.containsKey(viewId)) return
+        children[viewId] = WeakReference(view)
+        addView(view)
+        view.translationX = bounds.left.toFloat()
+        view.translationY = bounds.top.toFloat()
+        view.layoutParams = view.layoutParams.apply {
+            height = bounds.height()
+            width = bounds.width()
         }
     }
 
@@ -305,7 +329,13 @@ class FlowLayout @JvmOverloads constructor(
             return
         }
         super.onRestoreInstanceState(state.superState)
-        setSize(state.columnCount, state.rowCount)
+        this.columnCount = state.columnCount
+        this.rowCount = state.rowCount
+
+        val currentList = adapter?.currentList
+        if (!currentList.isNullOrEmpty()) {
+            onCurrentListChangedWithoutAnimation(currentList)
+        }
     }
 
     @Parcelize
