@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.view.View
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.core.view.updateLayoutParams
 
 class TransformAnimation(
     val view: View
@@ -15,17 +16,14 @@ class TransformAnimation(
     fun transform(from: Int, to: Int, duration: Long = ANIMATION_DURATION_DEFAULT) {
         val anim = ValueAnimator.ofInt(from, to)
         anim.addUpdateListener { valueAnimator ->
-            val animatedValue = valueAnimator.animatedValue as Int
-            val layoutParams = view.layoutParams
-            layoutParams.height = animatedValue
-            view.layoutParams = layoutParams
+            view.updateLayoutParams {
+                height = valueAnimator.animatedValue as Int
+            }
         }
         anim.addListener(
             object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
-                    val layoutParams = view.layoutParams
-                    layoutParams.height = WRAP_CONTENT
-                    view.layoutParams = layoutParams
+                    view.updateLayoutParams { height = WRAP_CONTENT }
                     onAnimationCancelListener?.invoke()
                 }
             }

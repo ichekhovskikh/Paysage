@@ -8,27 +8,27 @@ import androidx.core.view.marginTop
 inline var View.topMargin: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.topMargin ?: 0
     set(value) {
-        val params = layoutParams as? ViewGroup.MarginLayoutParams
-        if (params?.topMargin == value) return
-        params?.topMargin = value
+        val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
+        if (params.topMargin == value) return
+        params.topMargin = value
         layoutParams = params
     }
 
 inline var View.bottomMargin: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
     set(value) {
-        val params = layoutParams as? ViewGroup.MarginLayoutParams
-        if (params?.bottomMargin == value) return
-        params?.bottomMargin = value
+        val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
+        if (params.bottomMargin == value) return
+        params.bottomMargin = value
         layoutParams = params
     }
 
 inline var View.startMargin: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.leftMargin ?: 0
     set(value) {
-        val params = layoutParams as? ViewGroup.MarginLayoutParams
-        if (params?.leftMargin == value) return
-        params?.leftMargin = value
+        val params = layoutParams as? ViewGroup.MarginLayoutParams ?: return
+        if (params.leftMargin == value) return
+        params.leftMargin = value
         layoutParams = params
     }
 
@@ -54,12 +54,3 @@ inline val View.bounds: Rect
         x.toInt() + measuredWidth - paddingEnd,
         y.toInt() + measuredHeight - paddingBottom
     )
-
-fun View.applyPadding(
-    left: Int = paddingLeft,
-    top: Int = paddingTop,
-    right: Int = paddingRight,
-    bottom: Int = paddingBottom
-) {
-    setPadding(left, top, right, bottom)
-}

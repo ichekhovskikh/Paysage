@@ -3,6 +3,7 @@ package com.chekh.paysage.feature.widget.presentation.widgetboard
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
@@ -20,10 +21,7 @@ import kotlinx.android.synthetic.main.fragment_widget_board.*
 class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), BottomSheetCallback {
 
     private val viewModel: WidgetBoardViewModel by viewModels()
-
-    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
-        ownerProducer = { requireActivity() }
-    )
+    private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     private val adapter: WidgetGroupAdapter by lazy {
         WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged, ::startDragAndDrop)

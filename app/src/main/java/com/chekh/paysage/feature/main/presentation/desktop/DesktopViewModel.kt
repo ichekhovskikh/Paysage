@@ -31,46 +31,47 @@ class DesktopViewModel @ViewModelInject constructor(
     private val desktopWidgetModelFactory: DesktopWidgetModelFactory,
     private val draggingWidgetSorter: DraggingDesktopWidgetSorter,
     private val flowListItemMapper: DesktopWidgetFlowListItemMapper
-) : BaseViewModel<Long>() {
+) : BaseViewModel<Unit>() {
 
-    private var desktopWidgets: List<DesktopWidgetModel>? = null
+    private var cachedDesktopWidgets: MutableMap<Long, List<DesktopWidgetModel>?> = mutableMapOf()
 
-    private val draggingTrigger = MutableLiveData<Unit>()
+    private val draggingDesktopWidgetLiveData = MutableLiveData<DesktopWidgetModel?>()
 
-    private val pageId get() = trigger.value
-
-    val desktopGridSizeLiveData = trigger
-        .switchMap { getDesktopGridSizeUseCase() }
-        .doNext { it?.let { draggingWidgetSorter.setDesktopGridSize(it) } }
+    val desktopGridSizeLiveData = getDesktopGridSizeUseCase()
         .distinctUntilChanged()
 
-    val desktopWidgetsLiveData = trigger
-        .switchMap { getDesktopWidgetsByPageUseCase(it) }
-        .doNext { desktopWidgets = it }
-        .after(draggingTrigger, isRepeat = true)
-        .map(draggingWidgetSorter::getSorted)
-        .foreachMap(flowListItemMapper::map)
+    val dockAppSizeLiveData = getDockAppSizeScenario()
         .distinctUntilChanged()
 
-    val dockAppSizeLiveData = trigger
-        .switchMap { getDockAppSizeScenario() }
-        .distinctUntilChanged()
-
-    override fun init(trigger: Long) {
-        super.init(trigger)
-        draggingWidgetSorter.setOnSortOrderChangedListener {
-            draggingTrigger.postValue(Unit)
-        }
-    }
-
-    fun addDesktopWidget(desktopWidgetId: Int, widget: WidgetModel, bounds: Rect) {
-        val pageId = pageId ?: return
-        viewModelScope.launch(dispatcherProvider.back) {
-            draggingWidgetSorter.setDraggingWidget(
-                desktopWidgetModelFactory.create(desktopWidgetId.toString(), widget, pageId, bounds)
+    fun getDesktopWidgetsLiveData(pageId: Long) = getDesktopWidgetsByPageUseCase(pageId)
+        .doNext { cachedDesktopWidgets[pageId] = it }
+        .after(desktopGridSizeLiveData, isRepeat = true)
+        .repeat(draggingDesktopWidgetLiveData)
+        .map {
+            draggingWidgetSorter.getSorted(
+                pageId = pageId,
+                desktopSize = desktopGridSizeLiveData.value,
+                draggingWidget = draggingDesktopWidgetLiveData.value,
+                unsortedWidgets = it
             )
-            val sortedDesktopWidgets = draggingWidgetSorter.getSorted(desktopWidgets)
-            draggingWidgetSorter.setDraggingWidget(null)
+        }
+        .distinctUntilChanged()
+        .foreachMap(flowListItemMapper::map)
+
+    fun addDesktopWidget(pageId: Long, desktopWidgetId: Int, widget: WidgetModel, bounds: Rect) {
+        viewModelScope.launch(dispatcherProvider.back) {
+            val sortedDesktopWidgets = draggingWidgetSorter.getSorted(
+                pageId = pageId,
+                desktopSize = desktopGridSizeLiveData.value,
+                draggingWidget = desktopWidgetModelFactory.create(
+                    desktopWidgetId.toString(),
+                    widget,
+                    pageId,
+                    bounds
+                ),
+                unsortedWidgets = cachedDesktopWidgets[pageId]
+            )
+            clearDraggingDesktopWidget()
             updateDesktopWidgetsByPageUseCase(pageId, sortedDesktopWidgets)
         }
     }
@@ -81,9 +82,13 @@ class DesktopViewModel @ViewModelInject constructor(
         }
     }
 
-    fun setDraggingDesktopWidget(desktopWidgetId: String?, widget: WidgetModel?, bounds: Rect) {
-        val pageId = pageId ?: return
-        draggingWidgetSorter.setDraggingWidget(
+    fun setDraggingDesktopWidget(
+        pageId: Long,
+        desktopWidgetId: String?,
+        widget: WidgetModel?,
+        bounds: Rect
+    ) {
+        draggingDesktopWidgetLiveData.postValue(
             desktopWidgetModelFactory.create(
                 desktopWidgetId,
                 widget,
@@ -95,6 +100,13 @@ class DesktopViewModel @ViewModelInject constructor(
     }
 
     fun clearDraggingDesktopWidget() {
-        draggingWidgetSorter.setDraggingWidget(null)
+        draggingDesktopWidgetLiveData.postValue(null)
+    }
+
+    fun onPageChanged(pageId: Long) {
+        draggingDesktopWidgetLiveData.value ?: return
+        draggingDesktopWidgetLiveData.postValue(
+            draggingDesktopWidgetLiveData.value?.copy(pageId = pageId)
+        )
     }
 }

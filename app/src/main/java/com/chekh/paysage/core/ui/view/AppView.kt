@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
 import com.chekh.paysage.R
 import kotlinx.android.synthetic.main.view_app.view.*
 
@@ -21,9 +22,9 @@ class AppView @JvmOverloads constructor(
         }
 
     var iconSize: Int
-        get() = (layoutParams as MarginLayoutParams).height
+        get() = ivIcon.layoutParams.height
         set(value) {
-            ivIcon.layoutParams = (layoutParams as MarginLayoutParams).apply {
+            ivIcon.updateLayoutParams {
                 height = value
                 width = value
             }

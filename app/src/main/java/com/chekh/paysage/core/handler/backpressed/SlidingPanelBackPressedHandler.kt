@@ -16,11 +16,8 @@ class SlidingPanelBackPressedHandler(
 
     override fun onBackPressed() = when {
         containerBackPressedHandler.onBackPressed() -> true
-        scrollableView?.computeVerticalScrollOffset() != 0 -> {
-            scrollableView?.smoothScrollToPosition(0)
-            true
-        }
         bottomSheetBehavior?.isOpened == true -> {
+            scrollableView?.scrollToPosition(0)
             bottomSheetBehavior.state = CustomBottomSheetBehavior.STATE_COLLAPSED
             true
         }

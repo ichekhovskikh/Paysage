@@ -5,30 +5,24 @@ import android.graphics.Rect
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-interface DesktopPagerDragTouchHandler {
+interface DesktopPagerSwitcherDragHandler {
 
-    fun init(bounds: Rect)
     fun setOnTouchPageChanged(listener: (Int) -> Unit)
-    fun handleDragTouch(touch: PointF, page: Int)
+    fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect)
     fun stopHandleDragTouch()
 }
 
-class DesktopPagerDragTouchHandlerImpl @Inject constructor() : DesktopPagerDragTouchHandler {
+class DesktopPagerSwitcherDragHandlerImpl @Inject constructor() : DesktopPagerSwitcherDragHandler {
 
-    private var bounds: Rect? = null
     private var delayedJob: Job? = null
     private var onTouchPageChangedListener: ((Int) -> Unit)? = null
-
-    override fun init(bounds: Rect) {
-        this.bounds = bounds
-    }
 
     override fun setOnTouchPageChanged(listener: (Int) -> Unit) {
         onTouchPageChangedListener = listener
     }
 
-    override fun handleDragTouch(touch: PointF, page: Int) {
-        val pageIncrement = calculatePageIncrement(touch)
+    override fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect) {
+        val pageIncrement = calculatePageIncrement(touch, pageBounds)
         if (pageIncrement == 0) {
             stopHandleDragTouch()
             return
@@ -49,17 +43,14 @@ class DesktopPagerDragTouchHandlerImpl @Inject constructor() : DesktopPagerDragT
         delayedJob?.cancel()
     }
 
-    private fun calculatePageIncrement(touch: PointF): Int {
-        val bounds = bounds ?: return 0
-        return when {
-            touch.y < bounds.top + SWITCH_INTERVAL -> -1
-            touch.y > bounds.bottom - SWITCH_INTERVAL -> 1
-            else -> 0
-        }
+    private fun calculatePageIncrement(touch: PointF, bounds: Rect) = when {
+        touch.y < bounds.top + SWITCH_INTERVAL -> -1
+        touch.y > bounds.bottom - SWITCH_INTERVAL -> 1
+        else -> 0
     }
 
     private companion object {
-        const val TOUCH_PAGE_CHANGED_DELAY = 1000L
+        const val TOUCH_PAGE_CHANGED_DELAY = 800L
         const val SWITCH_INTERVAL = 30
     }
 }

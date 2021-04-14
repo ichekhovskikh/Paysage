@@ -2,8 +2,8 @@ package com.chekh.paysage.feature.main.presentation.pager.di
 
 import com.chekh.paysage.feature.main.presentation.pager.factory.DesktopPageModelFactory
 import com.chekh.paysage.feature.main.presentation.pager.factory.DesktopPageModelFactoryImpl
-import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerDragTouchHandler
-import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerDragTouchHandlerImpl
+import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerSwitcherDragHandler
+import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerSwitcherDragHandlerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ abstract class DesktopPagerActivityModule {
     @Binds
     @ActivityScoped
     abstract fun bindDesktopPagerDragTouchHandler(
-        desktopPagerDragTouchHandler: DesktopPagerDragTouchHandlerImpl
-    ): DesktopPagerDragTouchHandler
+        desktopPagerSwitcherDragHandler: DesktopPagerSwitcherDragHandlerImpl
+    ): DesktopPagerSwitcherDragHandler
 }

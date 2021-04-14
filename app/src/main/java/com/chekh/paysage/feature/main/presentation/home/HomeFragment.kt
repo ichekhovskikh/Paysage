@@ -1,6 +1,5 @@
 package com.chekh.paysage.feature.main.presentation.home
 
-import android.graphics.PointF
 import android.graphics.RectF
 import android.os.Bundle
 import android.transition.*
@@ -10,8 +9,8 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.WindowInsets
 import androidx.core.view.isVisible
 import androidx.core.view.marginTop
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
@@ -41,13 +40,8 @@ class HomeFragment :
     BottomSheetCallback,
     DragAndDropListener {
 
-    private val homeViewModel: HomeViewModel by viewModels(
-        ownerProducer = { requireActivity() }
-    )
-
-    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
-        ownerProducer = { requireActivity() }
-    )
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator

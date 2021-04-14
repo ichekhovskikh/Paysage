@@ -5,6 +5,8 @@ import android.view.View
 import android.view.WindowInsets
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
+import androidx.core.view.updatePadding
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
@@ -25,10 +27,7 @@ import kotlinx.android.synthetic.main.fragment_apps.*
 class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     private val viewModel: AppsViewModel by viewModels()
-
-    private val insetsViewModel: DesktopInsetsViewModel by viewModels(
-        ownerProducer = { requireActivity() }
-    )
+    private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     private val adapter: AppGroupAdapter by lazy {
         AppGroupAdapter(viewModel::toggleCategory, viewModel::onGroupScrollOffsetChanged)
@@ -81,7 +80,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         val smallDimen = resources.getDimension(R.dimen.small).toInt()
         val insetBottom = insets.systemWindowInsetBottom
         val insetTop = insets.systemWindowInsetTop
-        srvCategories.applyPadding(bottom = smallDimen + insetBottom)
+        srvCategories.updatePadding(bottom = smallDimen + insetBottom)
         appsBoardSlideHandler.setExpandedMarginTop(insetTop)
         if (bottomSheetBehavior?.isOpened == false) {
             dbvApps.bottomMargin = smallDimen + insetBottom

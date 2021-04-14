@@ -13,37 +13,17 @@ import kotlin.math.sign
 
 class DraggingDesktopWidgetSorter @Inject constructor() {
 
-    private var columnCount: Int = 1
-    private var rowCount: Int = 1
-    private var draggingWidget: DesktopWidgetModel? = null
-    private var onSortOrderChanged: (() -> Unit)? = null
-
-    fun setOnSortOrderChangedListener(listener: (() -> Unit)? = null) {
-        onSortOrderChanged = listener
-    }
-
-    fun setDesktopGridSize(size: Size) {
-        val oldColumnCount = this.columnCount
-        val oldRowCount = this.rowCount
-        this.columnCount = size.width.toInt()
-        this.rowCount = size.height.toInt()
-        if (oldColumnCount != columnCount || oldRowCount != rowCount) {
-            onSortOrderChanged?.invoke()
+    fun getSorted(
+        pageId: Long,
+        desktopSize: Size?,
+        draggingWidget: DesktopWidgetModel?,
+        unsortedWidgets: List<DesktopWidgetModel>?
+    ): List<DesktopWidgetModel>? {
+        if (desktopSize == null || draggingWidget == null || draggingWidget.pageId != pageId) {
+            return unsortedWidgets
         }
-    }
-
-    fun setDraggingWidget(draggingWidget: DesktopWidgetModel?) {
-        if (draggingWidget == null && this.draggingWidget == null) return
-        val oldDraggingBounds = this.draggingWidget?.bounds
-        val newDraggingBounds = draggingWidget?.bounds
-        this.draggingWidget = draggingWidget
-        if (oldDraggingBounds != newDraggingBounds) {
-            onSortOrderChanged?.invoke()
-        }
-    }
-
-    fun getSorted(unsortedWidgets: List<DesktopWidgetModel>?): List<DesktopWidgetModel>? {
-        val draggingWidget = draggingWidget ?: return unsortedWidgets
+        val columnCount = desktopSize.width.toInt()
+        val rowCount = desktopSize.height.toInt()
 
         val desktopWidgets = unsortedWidgets?.filter { it.id != draggingWidget.id } ?: return null
         val (insideDesktopWidget, outsideDesktopWidget) = desktopWidgets
@@ -54,11 +34,11 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         if (!isOccupiedSpace(draggingWidget, insideDesktopWidget)) {
             return allInsideWidgets + outsideDesktopWidget
         }
-        val sortedHorizontalWidgets = sortHorizontal(draggingWidget, allInsideWidgets)
+        val sortedHorizontalWidgets = sortHorizontal(columnCount, draggingWidget, allInsideWidgets)
         if (sortedHorizontalWidgets != null) {
             return sortedHorizontalWidgets + outsideDesktopWidget
         }
-        val sortedVerticalWidgets = sortVertical(draggingWidget, allInsideWidgets)
+        val sortedVerticalWidgets = sortVertical(rowCount, draggingWidget, allInsideWidgets)
         if (sortedVerticalWidgets != null) {
             return sortedVerticalWidgets + outsideDesktopWidget
         }
@@ -96,14 +76,16 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
     ): Boolean = widgets.any { it.bounds.isIntersect(draggingWidget.bounds) }
 
     private fun sortHorizontal(
+        columnCount: Int,
         draggingWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
     ): List<DesktopWidgetModel>? {
-        val moves = moveHorizontal(draggingWidget, widgets)
+        val moves = moveHorizontal(columnCount, draggingWidget, widgets)
         return moves?.let { applyMoves(widgets, moves) }
     }
 
     private fun moveHorizontal(
+        columnCount: Int,
         moveWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
         preMoves: List<Move> = emptyList(),
@@ -137,9 +119,9 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
                 steps > 0 -> rightSteps
                 else -> leftSteps
             }
-            var newMoves = moveHorizontal(widget, widgets, currentMoves, newSteps)
+            var newMoves = moveHorizontal(columnCount, widget, widgets, currentMoves, newSteps)
             if (newMoves == null && steps == 0) {
-                newMoves = moveHorizontal(widget, widgets, currentMoves, maxSteps)
+                newMoves = moveHorizontal(columnCount, widget, widgets, currentMoves, maxSteps)
             }
             currentMoves = newMoves ?: return null
         }
@@ -147,14 +129,16 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
     }
 
     private fun sortVertical(
+        rowCount: Int,
         draggingWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
     ): List<DesktopWidgetModel>? {
-        val moves = moveVertical(draggingWidget, widgets)
+        val moves = moveVertical(rowCount, draggingWidget, widgets)
         return moves?.let { applyMoves(widgets, moves) }
     }
 
     private fun moveVertical(
+        rowCount: Int,
         moveWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
         preMoves: List<Move> = emptyList(),
@@ -189,9 +173,9 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
                 steps > 0 -> bottomSteps
                 else -> topSteps
             }
-            var newMoves = moveVertical(widget, widgets, currentMoves, newSteps)
+            var newMoves = moveVertical(rowCount, widget, widgets, currentMoves, newSteps)
             if (newMoves == null && steps == 0) {
-                newMoves = moveVertical(widget, widgets, currentMoves, maxSteps)
+                newMoves = moveVertical(rowCount, widget, widgets, currentMoves, maxSteps)
             }
             currentMoves = newMoves ?: return null
         }

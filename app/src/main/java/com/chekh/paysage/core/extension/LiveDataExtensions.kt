@@ -82,7 +82,7 @@ fun <X, Y> LiveData<X>.repeat(trigger: LiveData<Y>): LiveData<X> {
 }
 
 fun <X, Y> LiveData<X>.after(trigger: LiveData<Y>, isRepeat: Boolean = false): LiveData<X> {
-    if (trigger.value != null) return this
+    if (trigger.value != null && !isRepeat) return this
     val mergeLiveData = MediatorLiveData<X>()
     mergeLiveData.addSource(trigger) {
         if (it != null) {

@@ -9,12 +9,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.animation.doOnEnd
+import androidx.core.view.updateLayoutParams
 import com.chekh.paysage.R
 import com.chekh.paysage.core.ui.view.flow.items.FlowListItem
 import com.chekh.paysage.core.ui.view.recycler.diffable.ListItemAdapter
 import kotlinx.android.parcel.Parcelize
 import java.lang.ref.WeakReference
-import java.util.concurrent.Flow
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
@@ -82,10 +82,7 @@ class FlowLayout @JvmOverloads constructor(
         post {
             mutableListOf<FlowChange>()
                 .apply { addAddedChanges(currentList) }
-                .forEach {
-                    val change = it as? FlowChange.Added ?: return@forEach
-                    addViewInternalIfNeed(change.id, change.view, change.bounds)
-                }
+                .forEach { addViewInternalIfNeed(it as FlowChange.Added) }
         }
     }
 
@@ -95,7 +92,7 @@ class FlowLayout @JvmOverloads constructor(
     ) {
         if (previousList == currentList) return
         val addedItems = currentList.filter { currentItem ->
-            children[currentItem.id] == null && previousList.all { previousItem ->
+            children[currentItem.id]?.get() == null && previousList.all { previousItem ->
                 !previousItem.isSameAs(currentItem)
             }
         }
@@ -103,7 +100,7 @@ class FlowLayout @JvmOverloads constructor(
             currentList.all { currentItem -> !currentItem.isSameAs(previousItem) }
         }
         val movedItems = currentList.filter { currentItem ->
-            children[currentItem.id] != null || previousList.any { previousItem ->
+            children[currentItem.id]?.get() != null || previousList.any { previousItem ->
                 currentItem.isSameAs(previousItem) &&
                     getItemBounds(currentItem) != getItemBounds(previousItem)
             }
@@ -229,21 +226,16 @@ class FlowLayout @JvmOverloads constructor(
         for ((_, changeGroup) in changeGroups) {
             val change = changeGroup.minByOrNull { it.priority } ?: continue
             if (change is FlowChange.Added) {
-                addAnimatingViewInternalIfNeed(change)
+                change.view.alpha = 1 - change.toAlpha
+                addViewInternalIfNeed(change)
             }
-            val view = change.view
-            val animator = animators[change.id]
-            startChangeAnimator(view, animator, change)
+            startChangeAnimator(change)
         }
     }
 
-    private fun startChangeAnimator(
-        view: View,
-        animator: ValueAnimator?,
-        change: FlowChange
-    ) {
-        animator ?: return
-        animator.pause()
+    private fun startChangeAnimator(change: FlowChange) {
+        val animator = getChangeAnimator(change).apply { pause() }
+        val view = change.view
         val fromAlpha = view.alpha
         val fromLeft = view.translationX
         val fromTop = view.translationY
@@ -274,7 +266,7 @@ class FlowLayout @JvmOverloads constructor(
                         val dTop = (change.toBounds.top - fromTop) * animatedValue
                         view.translationX = fromLeft + dLeft
                         view.translationY = fromTop + dTop
-                        view.layoutParams = view.layoutParams.apply {
+                        view.updateLayoutParams {
                             val dHeight = (change.toBounds.height() - fromHeight) * animatedValue
                             val dWidth = (change.toBounds.width() - fromWidth) * animatedValue
                             height = fromHeight + dHeight.toInt()
@@ -296,26 +288,23 @@ class FlowLayout @JvmOverloads constructor(
         }
     }
 
-    private fun addAnimatingViewInternalIfNeed(change: FlowChange.Added) {
+    private fun addViewInternalIfNeed(change: FlowChange.Added) {
         if (children.containsKey(change.id)) return
-        animators[change.id] = ValueAnimator
-            .ofFloat(0f, 1f)
-            .setDuration(ANIMATION_DURATION)
-        change.view.alpha = 1 - change.toAlpha
-        addViewInternalIfNeed(change.id, change.view, change.bounds)
-    }
-
-    private fun addViewInternalIfNeed(viewId: String, view: View, bounds: Rect) {
-        if (children.containsKey(viewId)) return
-        children[viewId] = WeakReference(view)
-        addView(view)
-        view.translationX = bounds.left.toFloat()
-        view.translationY = bounds.top.toFloat()
-        view.layoutParams = view.layoutParams.apply {
-            height = bounds.height()
-            width = bounds.width()
+        children[change.id] = WeakReference(change.view)
+        addView(change.view)
+        change.view.translationX = change.bounds.left.toFloat()
+        change.view.translationY = change.bounds.top.toFloat()
+        change.view.updateLayoutParams {
+            height = change.bounds.height()
+            width = change.bounds.width()
         }
     }
+
+    private fun getChangeAnimator(change: FlowChange): ValueAnimator =
+        animators[change.id] ?: ValueAnimator
+            .ofFloat(0f, 1f)
+            .setDuration(ANIMATION_DURATION)
+            .apply { animators[change.id] = this }
 
     override fun onSaveInstanceState() = SavedState(
         super.onSaveInstanceState(),

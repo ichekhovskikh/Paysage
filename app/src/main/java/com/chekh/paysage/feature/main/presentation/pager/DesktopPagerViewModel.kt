@@ -16,7 +16,7 @@ import com.chekh.paysage.feature.main.domain.usecase.page.GetDesktopPagesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.page.RemoveEmptyDesktopPagesUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsUpdatesUseCase
 import com.chekh.paysage.feature.main.presentation.pager.factory.DesktopPageModelFactory
-import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerDragTouchHandler
+import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerSwitcherDragHandler
 import kotlinx.coroutines.launch
 
 class DesktopPagerViewModel @ViewModelInject constructor(
@@ -26,7 +26,7 @@ class DesktopPagerViewModel @ViewModelInject constructor(
     private val removeEmptyDesktopPagesUseCase: RemoveEmptyDesktopPagesUseCase,
     private val getDesktopWidgetsUpdatesUseCase: GetDesktopWidgetsUpdatesUseCase,
     private val pageModelFactory: DesktopPageModelFactory,
-    private val dragTouchHandler: DesktopPagerDragTouchHandler
+    private val switcherDragHandler: DesktopPagerSwitcherDragHandler
 ) : BaseViewModel<Unit>() {
 
     val desktopWidgetsUpdatesLiveData = trigger
@@ -49,13 +49,9 @@ class DesktopPagerViewModel @ViewModelInject constructor(
 
     override fun init(trigger: Unit) {
         super.init(trigger)
-        dragTouchHandler.setOnTouchPageChanged {
+        switcherDragHandler.setOnTouchPageChanged {
             touchPageMutableLiveData.postValue(it)
         }
-    }
-
-    fun onGridBoundsChanged(gridBounds: Rect) {
-        dragTouchHandler.init(gridBounds)
     }
 
     fun addLastDesktopPage() {
@@ -70,11 +66,11 @@ class DesktopPagerViewModel @ViewModelInject constructor(
         }
     }
 
-    fun handleDragTouch(touch: PointF, page: Int) {
-        dragTouchHandler.handleDragTouch(touch, page)
+    fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect) {
+        switcherDragHandler.handleDragTouch(touch, page, pageBounds)
     }
 
     fun stopHandleDragTouch() {
-        dragTouchHandler.stopHandleDragTouch()
+        switcherDragHandler.stopHandleDragTouch()
     }
 }

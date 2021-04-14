@@ -29,3 +29,13 @@ fun Rect.copyOffset(
     right + horizontalOffset,
     bottom + verticalOffset
 )
+
+fun RectF.copyOffset(
+    horizontalOffset: Float = 0f,
+    verticalOffset: Float = 0f
+) = copy(
+    left + horizontalOffset,
+    top + verticalOffset,
+    right + horizontalOffset,
+    bottom + verticalOffset
+)

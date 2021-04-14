@@ -24,7 +24,6 @@ import javax.inject.Inject
 class DesktopActivity : BaseActivity(R.layout.activity_main) {
 
     private val homeViewModel: HomeViewModel by viewModels()
-
     private val insetsViewModel: DesktopInsetsViewModel by viewModels()
 
     @Inject
@@ -46,6 +45,7 @@ class DesktopActivity : BaseActivity(R.layout.activity_main) {
     private fun observeWindowInsets() {
         val content = findViewById<ViewGroup>(android.R.id.content)
         content.setOnApplyWindowInsetsListener { _, insets ->
+            setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
             insetsViewModel.windowInsetsLiveData.postValue(insets)
             insets.consumeSystemWindowInsets()
         }

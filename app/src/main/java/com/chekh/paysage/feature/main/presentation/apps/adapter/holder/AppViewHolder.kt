@@ -2,6 +2,7 @@ package com.chekh.paysage.feature.main.presentation.apps.adapter.holder
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.onClick
@@ -32,11 +33,11 @@ class AppViewHolder(
     }
 
     fun setAppSize(appSize: Int) {
-        val layoutParams = appView.layoutParams as ViewGroup.MarginLayoutParams
-        if (layoutParams.width != appSize && layoutParams.height != appSize) {
-            layoutParams.width = appSize
-            layoutParams.height = appSize
-            appView.layoutParams = layoutParams
+        if (appView.layoutParams.width != appSize && appView.layoutParams.height != appSize) {
+            appView.updateLayoutParams {
+                width = appSize
+                height = appSize
+            }
         }
     }
 }
