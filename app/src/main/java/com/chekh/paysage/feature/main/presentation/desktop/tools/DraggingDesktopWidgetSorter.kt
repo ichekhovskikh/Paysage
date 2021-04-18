@@ -80,7 +80,21 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         draggingWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
     ): List<DesktopWidgetModel>? {
-        val moves = moveHorizontal(columnCount, draggingWidget, widgets)
+        var moves = moveHorizontal(columnCount, draggingWidget, widgets)
+        if (moves == null) {
+            val (min, max) = getMinMaxIntersectedDistance(
+                widgets,
+                draggingWidget,
+                columnCount,
+                isVertical = false
+            )
+            val minPreMoves = listOf(Move(draggingWidget.id, horizontal = min))
+            moves = moveHorizontal(columnCount, draggingWidget, widgets, minPreMoves)
+            if (moves == null) {
+                val maxPreMoves = listOf(Move(draggingWidget.id, horizontal = max))
+                moves = moveHorizontal(columnCount, draggingWidget, widgets, maxPreMoves)
+            }
+        }
         return moves?.let { applyMoves(widgets, moves) }
     }
 
@@ -91,7 +105,6 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         preMoves: List<Move> = emptyList(),
         steps: Int = 0
     ): List<Move>? {
-        if (moveWidget.isDragging && preMoves.isNotEmpty()) return null
         val preStepMove = preMoves.find { it.widgetId == moveWidget.id }
         if (hasNotSameDirection(steps, preStepMove?.horizontal)) return null
         val stepMove = when (preStepMove) {
@@ -104,7 +117,7 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         if (movedBounds.left < 0 || movedBounds.right > columnCount) return null
 
         for (widget in widgets) {
-            if (widget.id == moveWidget.id) continue
+            if (widget.isDragging || widget.id == moveWidget.id) continue
             val widgetMove = currentMoves.find { it.widgetId == widget.id }
             val widgetBounds = widget.getMovedBounds(widgetMove)
             if (!widgetBounds.isIntersect(movedBounds)) continue
@@ -133,7 +146,21 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         draggingWidget: DesktopWidgetModel,
         widgets: List<DesktopWidgetModel>,
     ): List<DesktopWidgetModel>? {
-        val moves = moveVertical(rowCount, draggingWidget, widgets)
+        var moves = moveVertical(rowCount, draggingWidget, widgets)
+        if (moves == null) {
+            val (min, max) = getMinMaxIntersectedDistance(
+                widgets,
+                draggingWidget,
+                rowCount,
+                isVertical = true
+            )
+            val minPreMoves = listOf(Move(draggingWidget.id, vertical = min))
+            moves = moveVertical(rowCount, draggingWidget, widgets, minPreMoves)
+            if (moves == null) {
+                val maxPreMoves = listOf(Move(draggingWidget.id, vertical = max))
+                moves = moveVertical(rowCount, draggingWidget, widgets, maxPreMoves)
+            }
+        }
         return moves?.let { applyMoves(widgets, moves) }
     }
 
@@ -144,7 +171,6 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         preMoves: List<Move> = emptyList(),
         steps: Int = 0
     ): List<Move>? {
-        if (moveWidget.isDragging && preMoves.isNotEmpty()) return null
         val preStepMove = preMoves.find { it.widgetId == moveWidget.id }
         if (hasNotSameDirection(steps, preStepMove?.vertical)) return null
         val stepMove = when (preStepMove) {
@@ -157,7 +183,7 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         if (movedBounds.top < 0 || movedBounds.bottom > rowCount) return null
 
         for (widget in widgets) {
-            if (widget.id == moveWidget.id) continue
+            if (widget.isDragging || widget.id == moveWidget.id) continue
             val widgetMove = currentMoves.find { it.widgetId == widget.id }
             val widgetBounds = widget.getMovedBounds(widgetMove)
             if (!widgetBounds.isIntersect(movedBounds)) continue
@@ -198,10 +224,62 @@ class DraggingDesktopWidgetSorter @Inject constructor() {
         }
     }
 
-    private fun hasNotSameDirection(first: Int?, second: Int?): Boolean {
-        if (first == null || first == 0) return false
-        if (second == null || second == 0) return false
-        return first.sign != second.sign
+    private fun hasNotSameDirection(first: Int?, second: Int?) = when {
+        first == null || first == 0 -> false
+        second == null || second == 0 -> false
+        else -> first.sign != second.sign
+    }
+
+    private fun getMinMaxIntersectedDistance(
+        widgets: List<DesktopWidgetModel>,
+        widget: DesktopWidgetModel,
+        availableCount: Int,
+        isVertical: Boolean
+    ): Pair<Int, Int> {
+        var min = 0
+        var max = 0
+        widgets.forEach {
+            if (it.bounds.isIntersect(widget.bounds)) {
+                val bottomDiff = when (isVertical) {
+                    true -> it.bounds.top - widget.bounds.bottom
+                    false -> it.bounds.left - widget.bounds.right
+                }
+                val topDiff = when (isVertical) {
+                    true -> it.bounds.bottom - widget.bounds.top
+                    false -> it.bounds.right - widget.bounds.left
+                }
+                val minLocal = if (abs(bottomDiff) <= abs(topDiff)) bottomDiff else topDiff
+                val maxLocal = if (abs(bottomDiff) >= abs(topDiff)) bottomDiff else topDiff
+
+                min = if (min == 0 || abs(minLocal) < abs(min)) minLocal else min
+                max = if (max == 0 || abs(maxLocal) > abs(max)) maxLocal else max
+            }
+        }
+
+        if (isVertical && widget.bounds.top + min < 0) {
+            min = -widget.bounds.top
+        } else if (!isVertical && widget.bounds.left + min < 0) {
+            min = -widget.bounds.left
+        }
+
+        if (isVertical && widget.bounds.top + max < 0) {
+            max = -widget.bounds.top
+        } else if (!isVertical && widget.bounds.left + max < 0) {
+            max = -widget.bounds.left
+        }
+
+        if (isVertical && widget.bounds.bottom + min > availableCount) {
+            min = availableCount - widget.bounds.bottom
+        } else if (!isVertical && widget.bounds.right + min > availableCount) {
+            min = availableCount - widget.bounds.right
+        }
+
+        if (isVertical && widget.bounds.bottom + max > availableCount) {
+            max = availableCount - widget.bounds.bottom
+        } else if (!isVertical && widget.bounds.right + max > availableCount) {
+            max = availableCount - widget.bounds.right
+        }
+        return min to max
     }
 
     private data class Move(
