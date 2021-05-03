@@ -3,7 +3,8 @@ package com.chekh.paysage.feature.main.presentation.home
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.chekh.paysage.core.provider.DispatcherProvider
+import com.chekh.paysage.core.provider.back
+import com.chekh.paysage.core.provider.ui
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.usecase.app.PullBoardAppsUseCase
 import com.chekh.paysage.feature.main.domain.usecase.app.StartObserveAppUpdatesUseCase
@@ -15,7 +16,6 @@ import com.chekh.paysage.feature.main.tools.onAppsChanged
 import kotlinx.coroutines.launch
 
 class HomeViewModel @ViewModelInject constructor(
-    private val dispatcherProvider: DispatcherProvider,
     private val startObserveAppUpdatesUseCase: StartObserveAppUpdatesUseCase,
     private val stopObserveAppUpdatesUseCase: StopObserveAppUpdatesUseCase,
     private val startObserveWidgetEventsUseCase: StartObserveWidgetEventsUseCase,
@@ -35,21 +35,21 @@ class HomeViewModel @ViewModelInject constructor(
     }
 
     private fun pullAll(packageName: String? = null) {
-        viewModelScope.launch(dispatcherProvider.back) {
+        viewModelScope.launch(back) {
             pullBoardAppsUseCase(packageName)
             pullDesktopWidgetsUseCase()
         }
     }
 
     private fun startObserveUpdates() {
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch(ui) {
             startObserveAppUpdatesUseCase(appsChangedCallback)
             startObserveWidgetEventsUseCase()
         }
     }
 
     private fun stopObserveUpdates() {
-        viewModelScope.launch(dispatcherProvider.main) {
+        viewModelScope.launch(ui) {
             stopObserveAppUpdatesUseCase(appsChangedCallback)
             stopObserveWidgetEventsUseCase()
         }

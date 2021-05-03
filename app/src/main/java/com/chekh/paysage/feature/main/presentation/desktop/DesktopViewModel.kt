@@ -5,7 +5,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.extension.*
-import com.chekh.paysage.core.provider.DispatcherProvider
+import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.domain.usecase.settings.GetDesktopGridSizeUseCase
@@ -21,7 +21,6 @@ import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import kotlinx.coroutines.launch
 
 class DesktopViewModel @ViewModelInject constructor(
-    private val dispatcherProvider: DispatcherProvider,
     private val getDesktopWidgetsByPageUseCase: GetDesktopWidgetsByPageUseCase,
     private val updateDesktopWidgetUseCase: UpdateDesktopWidgetUseCase,
     private val updateDesktopWidgetsByPageUseCase: UpdateDesktopWidgetsByPageUseCase,
@@ -59,7 +58,7 @@ class DesktopViewModel @ViewModelInject constructor(
         .foreachMap(flowListItemMapper::map)
 
     fun addDesktopWidget(pageId: Long, desktopWidgetId: Int, widget: WidgetModel, bounds: Rect) {
-        viewModelScope.launch(dispatcherProvider.back) {
+        viewModelScope.launch(back) {
             val sortedDesktopWidgets = draggingWidgetSorter.getSorted(
                 pageId = pageId,
                 desktopSize = desktopGridSizeLiveData.value,
@@ -77,7 +76,7 @@ class DesktopViewModel @ViewModelInject constructor(
     }
 
     fun removeDesktopWidget(desktopWidgetId: String) {
-        viewModelScope.launch(dispatcherProvider.back) {
+        viewModelScope.launch(back) {
             removeDesktopWidgetUseCase(desktopWidgetId)
         }
     }

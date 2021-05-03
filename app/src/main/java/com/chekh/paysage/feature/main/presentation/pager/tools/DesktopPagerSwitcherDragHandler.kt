@@ -2,6 +2,8 @@ package com.chekh.paysage.feature.main.presentation.pager.tools
 
 import android.graphics.PointF
 import android.graphics.Rect
+import com.chekh.paysage.core.provider.back
+import com.chekh.paysage.core.ui.tools.ActionDelay
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -14,7 +16,7 @@ interface DesktopPagerSwitcherDragHandler {
 
 class DesktopPagerSwitcherDragHandlerImpl @Inject constructor() : DesktopPagerSwitcherDragHandler {
 
-    private var delayedJob: Job? = null
+    private var delay = ActionDelay()
     private var onTouchPageChangedListener: ((Int) -> Unit)? = null
 
     override fun setOnTouchPageChanged(listener: (Int) -> Unit) {
@@ -27,20 +29,17 @@ class DesktopPagerSwitcherDragHandlerImpl @Inject constructor() : DesktopPagerSw
             stopHandleDragTouch()
             return
         }
-        if (delayedJob == null || delayedJob?.isCompleted == true) {
-            delayedJob = GlobalScope.launch {
-                var nextPage = page + pageIncrement
-                while (isActive) {
-                    delay(TOUCH_PAGE_CHANGED_DELAY)
-                    onTouchPageChangedListener?.invoke(nextPage)
-                    nextPage += pageIncrement
-                }
+        delay.start(back, TOUCH_PAGE_CHANGED_DELAY) {
+            var nextPage = page + pageIncrement
+            while (isActive) {
+                onTouchPageChangedListener?.invoke(nextPage)
+                nextPage += pageIncrement
             }
         }
     }
 
     override fun stopHandleDragTouch() {
-        delayedJob?.cancel()
+        delay.cancel()
     }
 
     private fun calculatePageIncrement(touch: PointF, bounds: Rect) = when {

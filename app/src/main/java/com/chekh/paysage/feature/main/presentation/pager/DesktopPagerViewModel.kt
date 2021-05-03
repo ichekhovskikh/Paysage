@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.extension.distinctUntilChanged
 import com.chekh.paysage.core.extension.ignoreFirst
 import com.chekh.paysage.core.extension.switchMap
-import com.chekh.paysage.core.provider.DispatcherProvider
+import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.usecase.page.AddDesktopPageUseCase
 import com.chekh.paysage.feature.main.domain.usecase.page.GetDesktopPagesUseCase
@@ -20,7 +20,6 @@ import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerSwitc
 import kotlinx.coroutines.launch
 
 class DesktopPagerViewModel @ViewModelInject constructor(
-    private val dispatcherProvider: DispatcherProvider,
     private val getDesktopPagesUseCase: GetDesktopPagesUseCase,
     private val addDesktopPageUseCase: AddDesktopPageUseCase,
     private val removeEmptyDesktopPagesUseCase: RemoveEmptyDesktopPagesUseCase,
@@ -55,13 +54,13 @@ class DesktopPagerViewModel @ViewModelInject constructor(
     }
 
     fun addLastDesktopPage() {
-        viewModelScope.launch(dispatcherProvider.back) {
+        viewModelScope.launch(back) {
             addDesktopPageUseCase(pageModelFactory.create(lastAvailablePosition))
         }
     }
 
     fun removeEmptyDesktopPages() {
-        viewModelScope.launch(dispatcherProvider.back) {
+        viewModelScope.launch(back) {
             removeEmptyDesktopPagesUseCase()
         }
     }

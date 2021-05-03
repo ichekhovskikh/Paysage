@@ -1,5 +1,6 @@
 package com.chekh.paysage.feature.main.presentation.desktop.adapter
 
+import androidx.cardview.widget.CardView
 import com.chekh.paysage.core.ui.view.recycler.diffable.ListItemAdapter
 import com.chekh.paysage.R
 import com.chekh.paysage.core.ui.tools.alphaColor
@@ -36,7 +37,7 @@ data class DesktopWidgetFlowListItem(
         val widgetId = desktopWidget.id.toIntOrNull()
         when {
             payload is DesktopWidgetBoundsChanged -> return@with
-            payload is DesktopWidgetStyleChanged -> setStyle(payload.style)
+            payload is DesktopWidgetStyleChanged -> cvContent.setStyle(payload.style)
             widgetId == null || desktopWidget.isDragging -> bindStub()
             else -> bindWidget(widgetId)
         }
@@ -44,25 +45,27 @@ data class DesktopWidgetFlowListItem(
 
     private fun ListItemAdapter.ListViewHolder.bindWidget(widgetId: Int) {
         cvContent.removeAllViews()
-        val widgetView = widgetHostManager.attach(
+        widgetHostManager.attach(
             widgetId,
             desktopWidget.packageName,
             desktopWidget.className
-        )
-        cvContent.addView(widgetView)
-        setStyle(desktopWidget.style)
+        )?.let { widgetView ->
+            widgetView.isLongClickable = true
+            cvContent.addView(widgetView)
+        }
+        cvContent.setStyle(desktopWidget.style)
     }
 
     private fun ListItemAdapter.ListViewHolder.bindStub() {
         cvContent.removeAllViews()
-        setStyle(desktopWidget.style)
+        cvContent.setStyle(desktopWidget.style)
     }
 
-    private fun ListItemAdapter.ListViewHolder.setStyle(style: DesktopWidgetStyleModel) {
+    private fun CardView.setStyle(style: DesktopWidgetStyleModel) {
         val contentAlpha = if (desktopWidget.isDragging) DRAGGING_ALPHA else style.alpha
-        cvContent.setCardBackgroundColor(alphaColor(style.color, contentAlpha))
-        cvContent.cardElevation = style.elevation.toFloat()
-        cvContent.radius = style.corner.toFloat()
+        setCardBackgroundColor(alphaColor(style.color, contentAlpha))
+        cardElevation = style.elevation.toFloat()
+        radius = style.corner.toFloat()
     }
 
     override fun hasSameContentsAs(another: ListItem) =

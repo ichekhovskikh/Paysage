@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.provider
+package com.chekh.paysage.core.provider.database
 
 import com.chekh.paysage.common.data.model.AppCategory
 import com.chekh.paysage.common.data.model.CategorySettingsEntity

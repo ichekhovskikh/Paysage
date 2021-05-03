@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.chekh.paysage.core.ui.view.LongClickableCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/micro"
-    app:cardBackgroundColor="@color/colorAccent" />
+    tools:cardBackgroundColor="@color/colorAccent" />

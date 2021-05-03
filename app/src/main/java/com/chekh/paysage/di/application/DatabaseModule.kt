@@ -8,9 +8,8 @@ import com.chekh.paysage.common.data.dao.*
 import com.chekh.paysage.common.data.db.ApplicationDatabase
 import com.chekh.paysage.common.data.db.Migrations
 import com.chekh.paysage.common.data.db.PrepopulateDatabaseCallback
-import com.chekh.paysage.core.provider.CategoriesProvider
-import com.chekh.paysage.core.provider.DispatcherProvider
-import com.chekh.paysage.core.provider.PackagesProvider
+import com.chekh.paysage.core.provider.database.CategoriesProvider
+import com.chekh.paysage.core.provider.database.PackagesProvider
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -30,13 +29,11 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideRoomDatabaseCallback(
-        dispatcherProvider: DispatcherProvider,
         categoryDao: Lazy<CategoryDao>,
         packageDao: Lazy<PackageDao>,
         packagesProvider: PackagesProvider,
         categoriesProvider: CategoriesProvider
     ): RoomDatabase.Callback = PrepopulateDatabaseCallback(
-        dispatcherProvider,
         categoryDao,
         packageDao,
         packagesProvider,

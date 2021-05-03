@@ -4,15 +4,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chekh.paysage.common.data.dao.CategoryDao
 import com.chekh.paysage.common.data.dao.PackageDao
-import com.chekh.paysage.core.provider.CategoriesProvider
-import com.chekh.paysage.core.provider.DispatcherProvider
-import com.chekh.paysage.core.provider.PackagesProvider
+import com.chekh.paysage.core.provider.database.CategoriesProvider
+import com.chekh.paysage.core.provider.database.PackagesProvider
+import com.chekh.paysage.core.provider.io
 import dagger.Lazy
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class PrepopulateDatabaseCallback(
-    private val dispatcherProvider: DispatcherProvider,
     private val categoryDao: Lazy<CategoryDao>,
     private val packageDao: Lazy<PackageDao>,
     private val packagesProvider: PackagesProvider,
@@ -22,7 +21,7 @@ class PrepopulateDatabaseCallback(
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
         db.enableWriteAheadLogging()
-        CoroutineScope(dispatcherProvider.io).launch {
+        GlobalScope.launch(io) {
             prepopulateCategories()
             prepopulatePackages()
         }

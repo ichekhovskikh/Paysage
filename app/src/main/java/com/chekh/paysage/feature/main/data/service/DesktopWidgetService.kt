@@ -8,7 +8,7 @@ import com.chekh.paysage.common.data.dao.DesktopWidgetDao
 import com.chekh.paysage.common.data.model.DesktopWidgetSettingsEntity
 import com.chekh.paysage.core.extension.foreachMap
 import com.chekh.paysage.core.extension.map
-import com.chekh.paysage.core.provider.DispatcherProvider
+import com.chekh.paysage.core.provider.ui
 import com.chekh.paysage.feature.main.data.mapper.DesktopWidgetModelMapper
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import kotlinx.coroutines.withContext
@@ -37,7 +37,6 @@ class DesktopWidgetServiceImpl @Inject constructor(
     private val widgetManager: AppWidgetManager,
     private val userManager: UserManager,
     private val widgetHost: AppWidgetHost,
-    private val dispatcherProvider: DispatcherProvider,
     private val desktopWidgetDao: DesktopWidgetDao,
     private val desktopWidgetMapper: DesktopWidgetModelMapper
 ) : DesktopWidgetService {
@@ -80,7 +79,7 @@ class DesktopWidgetServiceImpl @Inject constructor(
 
     override suspend fun pullWidgets() {
         val desktopWidgets = desktopWidgetDao.getAsyncAll()
-        val installedDesktopWidgets = withContext(dispatcherProvider.main) {
+        val installedDesktopWidgets = withContext(ui) {
             desktopWidgets.filterInstalled()
         }
         desktopWidgetDao.updateAll(installedDesktopWidgets)

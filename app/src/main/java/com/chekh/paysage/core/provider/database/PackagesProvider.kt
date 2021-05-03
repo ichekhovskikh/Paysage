@@ -1,4 +1,4 @@
-package com.chekh.paysage.core.provider
+package com.chekh.paysage.core.provider.database
 
 import android.content.Context
 import com.chekh.paysage.common.data.model.PackageSettingsEntity
