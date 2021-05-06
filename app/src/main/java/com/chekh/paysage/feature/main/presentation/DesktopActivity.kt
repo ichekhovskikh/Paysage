@@ -89,7 +89,7 @@ class DesktopActivity : BaseActivity(R.layout.activity_main) {
         dllContent.stopDragResize()
     }
 
-    fun setTargetDragViewBounds(bounds: RectF) {
+    fun setTargetDragViewBounds(bounds: RectF?) {
         dllContent.setTargetDragViewBounds(bounds)
     }
 

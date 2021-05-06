@@ -6,7 +6,6 @@ import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import androidx.cardview.widget.CardView
 import com.chekh.paysage.core.provider.ui
-import com.chekh.paysage.core.ui.tools.ActionDelay
 import kotlinx.coroutines.*
 
 class LongClickableCardView @JvmOverloads constructor(
@@ -16,7 +15,7 @@ class LongClickableCardView @JvmOverloads constructor(
 ) : CardView(context, attrs, defStyle) {
 
     private var onLongClickListener: OnLongClickListener? = null
-    private var delay = ActionDelay()
+    private var delayedJob: Job? = null
 
     init {
         isLongClickable = true
@@ -36,15 +35,18 @@ class LongClickableCardView @JvmOverloads constructor(
         }
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                delay.start(ui, CLICK_DURATION) {
-                    onLongClickListener?.let {
-                        performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                        it.onLongClick(this@LongClickableCardView)
+                if (delayedJob == null || delayedJob?.isCompleted == true) {
+                    delayedJob = GlobalScope.launch(ui) {
+                        delay(CLICK_DURATION)
+                        onLongClickListener?.let {
+                            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                            it.onLongClick(this@LongClickableCardView)
+                        }
                     }
                 }
             }
             MotionEvent.ACTION_MOVE -> Unit
-            else -> delay.cancel()
+            else -> delayedJob?.cancel()
         }
         return false
     }

@@ -53,10 +53,9 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), DesktopGridProv
         }
         adapter.setOnItemsCommittedListener { items ->
             val draggingItem = items.find { it is DesktopWidgetFlowListItem && it.isDragging }
-            draggingItem ?: return@setOnItemsCommittedListener
-            val bounds = flWidgets.getItemBounds(draggingItem)
-            bounds.offset(flWidgets.startMargin, flWidgets.topMargin)
-            (activity as? DesktopActivity)?.setTargetDragViewBounds(bounds.toRectF())
+            val bounds = draggingItem?.let { flWidgets.getItemBounds(it) }
+            bounds?.offset(flWidgets.startMargin, flWidgets.topMargin)
+            (activity as? DesktopActivity)?.setTargetDragViewBounds(bounds?.toRectF())
         }
     }
 

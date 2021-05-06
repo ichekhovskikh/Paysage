@@ -123,9 +123,9 @@ class DragResizeLayerDelegate(dragLayer: View) {
         dragLayerRef.get()?.invalidate()
     }
 
-    fun setTargetDragViewBounds(bounds: RectF) {
+    fun setTargetDragViewBounds(bounds: RectF?) {
         if (!isDragResizeStarted) return
-        targetViewRect = bounds.copy()
+        targetViewRect = bounds?.copy()
     }
 
     fun onInterceptTouchEvent() = isDragResizeStarted

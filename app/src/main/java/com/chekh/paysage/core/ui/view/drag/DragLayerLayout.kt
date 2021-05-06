@@ -60,7 +60,7 @@ class DragLayerLayout @JvmOverloads constructor(
         dragResizeLayerDelegate.stopDragResize()
     }
 
-    fun setTargetDragViewBounds(bounds: RectF) {
+    fun setTargetDragViewBounds(bounds: RectF?) {
         dragAndDropLayerDelegate.setTargetDragViewBounds(bounds)
         dragResizeLayerDelegate.setTargetDragViewBounds(bounds)
     }
