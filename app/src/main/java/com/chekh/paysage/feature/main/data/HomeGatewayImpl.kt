@@ -74,11 +74,11 @@ class HomeGatewayImpl @Inject constructor(
         desktopWidgetService.removeDesktopWidget(widgetId)
     }
 
-    override suspend fun removeEmptyDesktopPages() {
-        desktopPageService.removeEmptyDesktopPages()
-    }
-
     override suspend fun addDesktopPage(page: DesktopPageModel) {
         desktopPageService.addDesktopPage(page)
+    }
+
+    override suspend fun removeDesktopPageByPosition(position: Int) {
+        desktopPageService.removeDesktopPageByPosition(position)
     }
 }

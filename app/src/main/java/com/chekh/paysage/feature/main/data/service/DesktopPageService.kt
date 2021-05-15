@@ -12,8 +12,7 @@ interface DesktopPageService {
     val desktopPages: LiveData<List<DesktopPageModel>>
 
     suspend fun addDesktopPage(page: DesktopPageModel)
-
-    suspend fun removeEmptyDesktopPages()
+    suspend fun removeDesktopPageByPosition(position: Int)
 }
 
 class DesktopPageServiceImpl @Inject constructor(
@@ -28,7 +27,7 @@ class DesktopPageServiceImpl @Inject constructor(
         desktopPageDao.add(desktopPageMapper.unmap(page))
     }
 
-    override suspend fun removeEmptyDesktopPages() {
-        desktopPageDao.removeEmptyPages()
+    override suspend fun removeDesktopPageByPosition(position: Int) {
+        desktopPageDao.removeByPositionWithShift(position)
     }
 }

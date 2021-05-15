@@ -3,7 +3,7 @@ package com.chekh.paysage.feature.main.presentation.desktop.tools
 import android.graphics.Rect
 import android.graphics.RectF
 
-interface DesktopGridProvider {
+interface PageLocationProvider {
     fun getOccupiedCells(bounds: RectF): Rect
-    fun getGridBounds(): Rect
+    fun getPageBounds(): Rect
 }

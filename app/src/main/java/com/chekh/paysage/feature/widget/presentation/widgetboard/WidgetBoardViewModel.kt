@@ -27,7 +27,7 @@ class WidgetBoardViewModel @ViewModelInject constructor(
 
     fun onGroupScrollOffsetChanged(scrollOffset: Int, widgetAppId: String) {
         groupScrollOffsets[widgetAppId] = scrollOffset
-        scrollTrigger.postValue(Unit)
+        scrollTrigger.value = Unit
     }
 
     private fun scrollOffset(data: WidgetsGroupByAppModel?): Int {

@@ -16,16 +16,15 @@ import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
-import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopGridProvider
+import com.chekh.paysage.feature.main.presentation.desktop.tools.PageLocationProvider
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_apps.*
 import kotlinx.android.synthetic.main.fragment_desktop.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DesktopFragment : BaseFragment(R.layout.fragment_desktop), DesktopGridProvider {
+class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationProvider {
 
     private val desktopViewModel: DesktopViewModel by activityViewModels()
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -49,11 +48,11 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), DesktopGridProv
 
     private fun setupListeners() {
         flWidgets.setOnGestureScaleAndLongPress {
-            homeViewModel.isEnabledOverlayHomeButtonsLiveData.postValue(true)
+            homeViewModel.isEnabledOverlayHomeButtonsLiveData.value = true
         }
         adapter.setOnItemsCommittedListener { items ->
-            val draggingItem = items.find { it is DesktopWidgetFlowListItem && it.isDragging }
-            val bounds = draggingItem?.let { flWidgets.getItemBounds(it) }
+            val dragItem = items.find { it is DesktopWidgetFlowListItem && it.isDragging }
+            val bounds = dragItem?.let { flWidgets.getItemBounds(it) }
             bounds?.offset(flWidgets.startMargin, flWidgets.topMargin)
             (activity as? DesktopActivity)?.setTargetDragViewBounds(bounds?.toRectF())
         }
@@ -89,7 +88,7 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), DesktopGridProv
         return flWidgets.getOccupiedCells(offsetBounds)
     }
 
-    override fun getGridBounds() = flWidgets?.bounds ?: Rect()
+    override fun getPageBounds() = flWidgets?.bounds ?: Rect()
 
     @Parcelize
     data class Params(val pageId: Long) : Parcelable

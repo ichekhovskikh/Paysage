@@ -42,11 +42,11 @@ class DesktopWidgetServiceImpl @Inject constructor(
 ) : DesktopWidgetService {
 
     override val desktopWidgets = desktopWidgetDao.getAll()
-        .map { it?.filterInstalled() }
+        .map { it?.filterIsInstalled() }
         .foreachMap(desktopWidgetMapper::map)
 
     override fun getDesktopWidgetsByPage(pageId: Long) = desktopWidgetDao.getByPage(pageId)
-        .map { it?.filterInstalled() }
+        .map { it?.filterIsInstalled() }
         .foreachMap(desktopWidgetMapper::map)
 
     override suspend fun startObserveWidgetEvents() {
@@ -58,7 +58,7 @@ class DesktopWidgetServiceImpl @Inject constructor(
     }
 
     override suspend fun updateDesktopWidget(widget: DesktopWidgetModel) {
-        desktopWidgetDao.update(desktopWidgetMapper.unmap(widget))
+        desktopWidgetDao.updateCascade(desktopWidgetMapper.unmap(widget))
     }
 
     override suspend fun updateDesktopWidgetsByPage(
@@ -70,22 +70,22 @@ class DesktopWidgetServiceImpl @Inject constructor(
             return
         }
         val newWidgets = widgets.map(desktopWidgetMapper::unmap)
-        desktopWidgetDao.updateByPage(pageId, newWidgets)
+        desktopWidgetDao.updateByPageCascade(pageId, newWidgets)
     }
 
     override suspend fun removeDesktopWidget(widgetId: String) {
-        desktopWidgetDao.removeById(widgetId)
+        desktopWidgetDao.removeByIdCascade(widgetId)
     }
 
     override suspend fun pullWidgets() {
         val desktopWidgets = desktopWidgetDao.getAsyncAll()
         val installedDesktopWidgets = withContext(ui) {
-            desktopWidgets.filterInstalled()
+            desktopWidgets.filterIsInstalled()
         }
-        desktopWidgetDao.updateAll(installedDesktopWidgets)
+        desktopWidgetDao.updateAllCascade(installedDesktopWidgets)
     }
 
-    private fun List<DesktopWidgetSettingsEntity>.filterInstalled(): List<DesktopWidgetSettingsEntity> {
+    private fun List<DesktopWidgetSettingsEntity>.filterIsInstalled(): List<DesktopWidgetSettingsEntity> {
         val installedWidgets = userManager.userProfiles.flatMap {
             widgetManager.getInstalledProvidersForProfile(it)
         }

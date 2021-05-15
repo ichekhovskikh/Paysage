@@ -34,15 +34,32 @@ abstract class DesktopWidgetDao {
     @Query("DELETE FROM desktop_widget WHERE desktop_widget.pageId = :pageId")
     abstract suspend fun removeByPage(pageId: Long)
 
+    @Query("DELETE FROM desktop_page WHERE desktop_page.id NOT IN (SELECT pageId FROM desktop_widget)")
+    abstract suspend fun removeEmptyPages()
+
     @Transaction
-    open suspend fun updateAll(widgets: List<DesktopWidgetSettingsEntity>) {
-        removeAll()
-        add(widgets)
+    open suspend fun removeByIdCascade(id: String) {
+        removeById(id)
+        removeEmptyPages()
     }
 
     @Transaction
-    open suspend fun updateByPage(pageId: Long, widgets: List<DesktopWidgetSettingsEntity>) {
+    open suspend fun updateCascade(widget: DesktopWidgetSettingsEntity) {
+        update(widget)
+        removeEmptyPages()
+    }
+
+    @Transaction
+    open suspend fun updateAllCascade(widgets: List<DesktopWidgetSettingsEntity>) {
+        removeAll()
+        add(widgets)
+        removeEmptyPages()
+    }
+
+    @Transaction
+    open suspend fun updateByPageCascade(pageId: Long, widgets: List<DesktopWidgetSettingsEntity>) {
         removeByPage(pageId)
         add(widgets)
+        removeEmptyPages()
     }
 }

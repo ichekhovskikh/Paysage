@@ -7,14 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.extension.distinctUntilChanged
-import com.chekh.paysage.core.extension.ignoreFirst
 import com.chekh.paysage.core.extension.switchMap
 import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.usecase.page.AddDesktopPageUseCase
 import com.chekh.paysage.feature.main.domain.usecase.page.GetDesktopPagesUseCase
-import com.chekh.paysage.feature.main.domain.usecase.page.RemoveEmptyDesktopPagesUseCase
-import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsUpdatesUseCase
+import com.chekh.paysage.feature.main.domain.usecase.page.RemoveDesktopPageByPositionUseCase
 import com.chekh.paysage.feature.main.presentation.pager.factory.DesktopPageModelFactory
 import com.chekh.paysage.feature.main.presentation.pager.tools.DesktopPagerSwitcherDragHandler
 import kotlinx.coroutines.launch
@@ -22,15 +20,10 @@ import kotlinx.coroutines.launch
 class DesktopPagerViewModel @ViewModelInject constructor(
     private val getDesktopPagesUseCase: GetDesktopPagesUseCase,
     private val addDesktopPageUseCase: AddDesktopPageUseCase,
-    private val removeEmptyDesktopPagesUseCase: RemoveEmptyDesktopPagesUseCase,
-    private val getDesktopWidgetsUpdatesUseCase: GetDesktopWidgetsUpdatesUseCase,
+    private val removeDesktopPageByPositionUseCase: RemoveDesktopPageByPositionUseCase,
     private val pageModelFactory: DesktopPageModelFactory,
     private val switcherDragHandler: DesktopPagerSwitcherDragHandler
 ) : BaseViewModel<Unit>() {
-
-    val desktopWidgetsUpdatesLiveData = trigger
-        .switchMap { getDesktopWidgetsUpdatesUseCase() }
-        .ignoreFirst()
 
     val pagesLiveData = trigger
         .switchMap { getDesktopPagesUseCase() }
@@ -39,11 +32,10 @@ class DesktopPagerViewModel @ViewModelInject constructor(
     private val touchPageMutableLiveData = MutableLiveData<Int>()
     val touchPageLiveData: LiveData<Int> = touchPageMutableLiveData
 
-    private val lastAvailablePosition: Int
+    private val lastPagePosition: Int
         get() = pagesLiveData.value
             ?.maxByOrNull { it.position }
             ?.position
-            ?.let { it + 1 }
             ?: 0
 
     override fun init(trigger: Unit) {
@@ -55,21 +47,21 @@ class DesktopPagerViewModel @ViewModelInject constructor(
 
     fun addLastDesktopPage() {
         viewModelScope.launch(back) {
-            addDesktopPageUseCase(pageModelFactory.create(lastAvailablePosition))
+            addDesktopPageUseCase(pageModelFactory.create(lastPagePosition + 1))
         }
     }
 
-    fun removeEmptyDesktopPages() {
+    fun removeLastDesktopPage() {
         viewModelScope.launch(back) {
-            removeEmptyDesktopPagesUseCase()
+            removeDesktopPageByPositionUseCase(lastPagePosition)
         }
     }
 
-    fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect) {
+    fun handlePageDragTouch(touch: PointF?, page: Int, pageBounds: Rect) {
         switcherDragHandler.handleDragTouch(touch, page, pageBounds)
     }
 
-    fun stopHandleDragTouch() {
+    fun stopHandlePageDragTouch() {
         switcherDragHandler.stopHandleDragTouch()
     }
 }

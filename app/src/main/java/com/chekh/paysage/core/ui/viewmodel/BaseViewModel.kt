@@ -7,7 +7,7 @@ import com.chekh.paysage.core.extension.recharge
 
 abstract class BaseViewModel<TriggerType> : ViewModel() {
 
-    val trigger = MutableLiveData<TriggerType>()
+    protected val trigger = MutableLiveData<TriggerType>()
 
     @CallSuper
     open fun init(trigger: TriggerType) {

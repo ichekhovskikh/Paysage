@@ -13,7 +13,7 @@ import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
-import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
+import com.chekh.paysage.feature.widget.presentation.widgetboard.data.toClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_widget_board.*
 
@@ -55,7 +55,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
 
     private fun startDragAndDrop(view: View, widget: WidgetModel) {
         val activity = activity as? DesktopActivity ?: return
-        activity.startDragAndDrop(view, data = WidgetClipData(widget))
+        activity.startDragAndDrop(view, data = widget.toClipData())
         exit()
     }
 }

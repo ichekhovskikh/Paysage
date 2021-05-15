@@ -21,11 +21,10 @@ import com.chekh.paysage.feature.main.domain.model.DesktopPageModel
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopViewModel
-import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopGridProvider
+import com.chekh.paysage.feature.main.presentation.desktop.tools.PageLocationProvider
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.desktop.tools.getWidgetBounds
-import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_desktop_pager.*
@@ -70,16 +69,17 @@ class DesktopPagerFragment :
 
     private fun setupViewModel() {
         pagerViewModel.init(Unit)
+        desktopViewModel.init(Unit)
         pagerViewModel.pagesLiveData.observe(viewLifecycleOwner, ::setPages)
-        pagerViewModel.desktopWidgetsUpdatesLiveData.observe(viewLifecycleOwner) {
-            pagerViewModel.removeEmptyDesktopPages()
-        }
         pagerViewModel.touchPageLiveData.observe(viewLifecycleOwner) { page ->
             if (page >= 0 && page < adapter.itemCount) {
                 vpDesktops.currentItem = page
             } else {
-                pagerViewModel.stopHandleDragTouch()
+                pagerViewModel.stopHandlePageDragTouch()
             }
+        }
+        desktopViewModel.onFailApplyChangesLiveData.observe(viewLifecycleOwner) {
+            pagerViewModel.removeLastDesktopPage()
         }
     }
 
@@ -100,68 +100,73 @@ class DesktopPagerFragment :
 
     override fun onDragStart(location: RectF, data: ClipData?) {
         pagerViewModel.addLastDesktopPage()
-        val pageId = adapter.getItemId(vpDesktops.currentItem)
-        afterPageStart(pageId) {
-            onDraggingShadow(pageId, location, data)
-        }
+        onDragMove(null, location, data)
     }
 
-    override fun onDragMove(touch: PointF, location: RectF, data: ClipData?) {
+    override fun onDragMove(touch: PointF?, location: RectF, data: ClipData?) {
         val pageId = adapter.getItemId(vpDesktops.currentItem)
-        val gridProvider = adapter.getFragment(pageId) as? DesktopGridProvider ?: return
+        val pageLocationProvider = adapter.getFragment(pageId) as? PageLocationProvider ?: return
         afterPageStart(pageId) {
-            pagerViewModel.handleDragTouch(
+            pagerViewModel.handlePageDragTouch(
                 touch,
                 vpDesktops.currentItem,
-                gridProvider.getGridBounds()
+                pageLocationProvider.getPageBounds()
             )
-            onDraggingShadow(pageId, location, data)
-        }
-    }
-
-    override fun onDragEnd(location: RectF, data: ClipData?) {
-        pagerViewModel.stopHandleDragTouch()
-        val pageId = adapter.getItemId(vpDesktops.currentItem)
-        afterPageStart(pageId) {
             when (data) {
                 is WidgetClipData -> {
-                    addDesktopWidget(pageId, location, data.widget)
+                    val bounds = getWidgetBounds(location, data.width, data.height)
+                    val cells = pageLocationProvider.getOccupiedCells(bounds)
+                    desktopViewModel.onDragMove(pageId, data, cells)
                 }
             }
         }
     }
 
-    private fun onDraggingShadow(pageId: Long, location: RectF, data: ClipData?) {
-        val gridProvider = adapter.getFragment(pageId) as? DesktopGridProvider ?: return
-        when (data) {
-            is WidgetClipData -> {
-                val widget = data.widget
-                val bounds = widget.getWidgetBounds(location)
-                val cells = gridProvider.getOccupiedCells(bounds)
-                desktopViewModel.setDraggingDesktopWidget(pageId, null, widget, cells)
+    override fun onDragEnd(location: RectF, data: ClipData?) {
+        pagerViewModel.stopHandlePageDragTouch()
+        val pageId = adapter.getItemId(vpDesktops.currentItem)
+        afterPageStart(pageId) {
+            when (data) {
+                is WidgetClipData -> {
+                    if (data.id.isNullOrBlank()) {
+                        requestWidgetAttachPermissions(
+                            packageName = data.packageName,
+                            className = data.className,
+                            onDenied = { desktopViewModel.onDragCancel() },
+                            onAccess = { widgetId ->
+                                desktopViewModel.attachIdentifierToDragWidget(widgetId)
+                                desktopViewModel.onApplyDragChanges()
+                            }
+                        )
+                    } else {
+                        desktopViewModel.onApplyDragChanges()
+                    }
+                }
             }
         }
     }
 
-    private fun addDesktopWidget(pageId: Long, location: RectF, widget: WidgetModel) {
-        val gridProvider = adapter.getFragment(pageId) as? DesktopGridProvider ?: return
+    private fun requestWidgetAttachPermissions(
+        packageName: String,
+        className: String,
+        onAccess: (widgetId: Int) -> Unit,
+        onDenied: () -> Unit
+    ) {
         val widgetId = widgetHostManager.allocateDesktopWidgetId()
         val hasWidgetAttachPermissions = widgetHostManager.requestWidgetAttachPermissionsIfNeed(
             this,
             widgetId,
-            widget.packageName,
-            widget.className
+            packageName,
+            className
         )
-        val bounds = widget.getWidgetBounds(location)
-        val cells = gridProvider.getOccupiedCells(bounds)
         if (hasWidgetAttachPermissions) {
-            desktopViewModel.addDesktopWidget(pageId, widgetId, widget, cells)
+            onAccess(widgetId)
             return
         }
         registerActivityResultListener(WIDGET_ATTACH_REQUEST_CODE) { resultCode, _ ->
             when (resultCode) {
-                RESULT_OK -> desktopViewModel.addDesktopWidget(pageId, widgetId, widget, cells)
-                else -> desktopViewModel.clearDraggingDesktopWidget()
+                RESULT_OK -> onAccess(widgetId)
+                else -> onDenied()
             }
         }
     }

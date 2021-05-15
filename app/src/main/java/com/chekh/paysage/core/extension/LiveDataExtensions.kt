@@ -108,6 +108,10 @@ fun <X> LiveData<X>.filter(condition: (X?) -> Boolean): LiveData<X> {
     return result
 }
 
+fun <X> LiveData<X>.filterNotNull(): LiveData<X> {
+    return filter { it != null }
+}
+
 fun <X> LiveData<X>.distinctUntilChanged(): LiveData<X> {
     return Transformations.distinctUntilChanged(this)
 }
@@ -186,4 +190,9 @@ fun <X, Y> LiveData<List<LiveData<X>>>.collect(body: (X) -> Y): LiveData<List<Y>
         }
     }
     return collectLiveData
+}
+
+fun <X> MutableLiveData<X>.change(body: (X) -> X) {
+    val value = value ?: return
+    this.value = body(value)
 }

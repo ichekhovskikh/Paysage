@@ -5,6 +5,6 @@ import android.graphics.RectF
 
 interface DragAndDropListener {
     fun onDragStart(location: RectF, data: ClipData?) {}
-    fun onDragMove(touch: PointF, location: RectF, data: ClipData?) {}
+    fun onDragMove(touch: PointF?, location: RectF, data: ClipData?) {}
     fun onDragEnd(location: RectF, data: ClipData?) {}
 }

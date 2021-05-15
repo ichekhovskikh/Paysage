@@ -9,7 +9,7 @@ import javax.inject.Inject
 interface DesktopPagerSwitcherDragHandler {
 
     fun setOnTouchPageChanged(listener: (Int) -> Unit)
-    fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect)
+    fun handleDragTouch(touch: PointF?, page: Int, pageBounds: Rect)
     fun stopHandleDragTouch()
 }
 
@@ -22,7 +22,8 @@ class DesktopPagerSwitcherDragHandlerImpl @Inject constructor() : DesktopPagerSw
         onTouchPageChangedListener = listener
     }
 
-    override fun handleDragTouch(touch: PointF, page: Int, pageBounds: Rect) {
+    override fun handleDragTouch(touch: PointF?, page: Int, pageBounds: Rect) {
+        if (touch == null) return
         val pageIncrement = calculatePageIncrement(touch, pageBounds)
         if (pageIncrement == 0) {
             stopHandleDragTouch()

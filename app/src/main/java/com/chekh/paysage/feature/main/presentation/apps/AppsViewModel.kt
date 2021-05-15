@@ -53,21 +53,21 @@ class AppsViewModel @ViewModelInject constructor(
 
     fun onGroupScrollOffsetChanged(scrollOffset: Int, categoryId: String) {
         groupScrollOffsets[categoryId] = scrollOffset
-        expandTrigger.postValue(Unit)
+        expandTrigger.value = Unit
     }
 
     fun toggleCategory(position: Int, categoryId: String) {
-        scrollPositionMutableLiveData.postValue(position)
+        scrollPositionMutableLiveData.value = position
         expandedCategoryIds.toggle(categoryId)
         groupScrollOffsets.remove(categoryId)
-        expandTrigger.postValue(Unit)
+        expandTrigger.value = Unit
     }
 
     fun collapseAll() {
-        scrollPositionMutableLiveData.postValue(0)
+        scrollPositionMutableLiveData.value = 0
         expandedCategoryIds.clear()
         groupScrollOffsets.clear()
-        expandTrigger.postValue(Unit)
+        expandTrigger.value = Unit
     }
 
     private fun isExpanded(data: AppsGroupByCategoryModel?): Boolean {
