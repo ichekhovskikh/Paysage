@@ -9,6 +9,7 @@ import android.view.WindowInsets
 import androidx.core.graphics.toRectF
 import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.commit
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
@@ -17,7 +18,7 @@ import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
 import com.chekh.paysage.feature.main.presentation.desktop.tools.PageLocationProvider
-import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
+import com.chekh.paysage.feature.main.presentation.options.DesktopOptionsFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_desktop.*
@@ -27,7 +28,6 @@ import javax.inject.Inject
 class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationProvider {
 
     private val desktopViewModel: DesktopViewModel by activityViewModels()
-    private val homeViewModel: HomeViewModel by activityViewModels()
     private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     @Inject
@@ -48,7 +48,10 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationPro
 
     private fun setupListeners() {
         flWidgets.setOnGestureScaleAndLongPress {
-            homeViewModel.isEnabledOverlayHomeButtonsLiveData.value = true
+            flWidgets.clearParentScroll()
+            activity?.supportFragmentManager?.commit {
+                addWithBackStack(R.id.flContainer, DesktopOptionsFragment())
+            }
         }
         adapter.setOnItemsCommittedListener { items ->
             val dragItem = items.find { it is DesktopWidgetFlowListItem && it.isDragging }

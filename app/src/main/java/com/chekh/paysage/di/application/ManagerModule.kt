@@ -1,6 +1,7 @@
 package com.chekh.paysage.di.application
 
 import android.app.UiModeManager
+import android.app.WallpaperManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.pm.LauncherApps
@@ -30,6 +31,13 @@ class ManagerModule {
         @ApplicationContext
         context: Context
     ): UserManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+
+    @Singleton
+    @Provides
+    fun provideWallpaperManager(
+        @ApplicationContext
+        context: Context
+    ): WallpaperManager = WallpaperManager.getInstance(context)
 
     @Singleton
     @Provides

@@ -29,11 +29,35 @@ fun createBitmap(base64: String): Bitmap {
     return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
 }
 
-fun View.makeBitmapDrawableScreenshot(): BitmapDrawable {
-    val bitmap = makeBitmapScreenshot()
-    val drawable = BitmapDrawable(resources, bitmap)
-    drawable.bounds = Rect(left, top, left + width, top + height)
-    return drawable
+fun View.makeBitmapDrawableScreenshot(): BitmapDrawable =
+    BitmapDrawable(resources, makeBitmapScreenshot()).also {
+        it.bounds = Rect(left, top, left + width, top + height)
+    }
+
+fun View.setBackgroundBitmap(bitmap: Bitmap) {
+    background = BitmapDrawable(resources, bitmap).also {
+        it.bounds = Rect(left, top, left + width, top + height)
+    }
+}
+
+fun List<Bitmap>.combine(): Bitmap {
+    val fistBitmap = firstOrNull() ?: throw IllegalArgumentException("Required bitmap")
+    return fistBitmap.copy(fistBitmap.config, true).also { comboBitmap ->
+        val canvas = Canvas(comboBitmap)
+        for (index in 1 until size) {
+            canvas.drawBitmap(this[index], 0f, 0f, null)
+        }
+    }
+}
+
+fun Bitmap.darken(): Bitmap {
+    val darkenBitmap = copy(config, true)
+    val canvas = Canvas(darkenBitmap)
+    val darkenPaint = Paint().apply {
+        colorFilter = LightingColorFilter(-0x808081, 0x00000000)
+    }
+    canvas.drawBitmap(this, 0f, 0f, darkenPaint)
+    return darkenBitmap
 }
 
 fun View.makeBitmapBorder(@ColorRes colorRes: Int): Bitmap {
@@ -70,8 +94,13 @@ fun View.makeBitmapScreenshot(scaleFactor: Float): Bitmap {
     return bitmap
 }
 
-fun Bitmap.blur(context: Context, radius: Float): Bitmap {
-    val blurBitmap = copy(config, true)
+fun Bitmap.blur(context: Context, scale: Float, radius: Float): Bitmap {
+    val blurBitmap = Bitmap.createScaledBitmap(
+        this,
+        (width / scale).toInt(),
+        (height / scale).toInt(),
+        false
+    )
     val renderScript = RenderScript.create(context)
     val input = Allocation.createFromBitmap(renderScript, blurBitmap)
     val output = Allocation.createTyped(renderScript, input.type)

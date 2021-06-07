@@ -30,7 +30,7 @@ fun View.onVibrateClick(
 fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
     isLongClickable = true
     var hasDownBeforeCall = false
-    var hasMoveBeforeCall = false
+    var hasMoveBeforeCall = true
     var prevX = -1f
     var prevY = -1f
     val longPressGestureDetector = GestureDetector(
@@ -68,8 +68,6 @@ fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
         ) {
             hasMoveBeforeCall = true
         }
-        prevX = event.x
-        prevY = event.y
 
         longPressGestureDetector.onTouchEvent(event) || scaleGestureDetector.onTouchEvent(event)
         return@setOnTouchListener true

@@ -10,7 +10,8 @@ class ContainerBackPressedHandler(
 
     override fun onBackPressed(): Boolean {
         val fragments = childFragmentManager.fragments
-        fragments.forEach { fragment ->
+        for (index in fragments.size - 1 downTo 0) {
+            val fragment = fragments[index]
             if (fragment is BaseFragment && fragment.onBackPressed()) {
                 return true
             }

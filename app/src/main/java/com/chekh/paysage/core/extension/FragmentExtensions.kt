@@ -6,8 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import java.lang.IllegalArgumentException
 
-fun Fragment.exit() {
+fun Fragment.exit() = try {
     parentFragmentManager.popBackStack(this::class.simpleName, POP_BACK_STACK_INCLUSIVE)
+} catch (ignored: IllegalStateException) {
 }
 
 inline fun <reified Params : Parcelable> Fragment.getParams(): Params {

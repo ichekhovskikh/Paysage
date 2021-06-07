@@ -1,7 +1,6 @@
 package com.chekh.paysage.feature.main.presentation.home
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.provider.ui
@@ -23,8 +22,6 @@ class HomeViewModel @ViewModelInject constructor(
     private val pullBoardAppsUseCase: PullBoardAppsUseCase,
     private val pullDesktopWidgetsUseCase: PullDesktopWidgetsUseCase
 ) : BaseViewModel<Unit>() {
-
-    val isEnabledOverlayHomeButtonsLiveData = MutableLiveData<Boolean>()
 
     private val appsChangedCallback = onAppsChanged { packageName, _ -> pullAll(packageName) }
 

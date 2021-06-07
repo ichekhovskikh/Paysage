@@ -1,9 +1,12 @@
 package com.chekh.paysage.core.extension
 
 import android.graphics.Rect
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewParent
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
+import androidx.recyclerview.widget.RecyclerView
 
 inline var View.topMargin: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.topMargin ?: 0
@@ -54,3 +57,15 @@ inline val View.bounds: Rect
         x.toInt() + measuredWidth - paddingEnd,
         y.toInt() + measuredHeight - paddingBottom
     )
+
+fun View.clearParentScroll(maxParent: Int = 2) {
+    var parent: ViewParent? = null
+    for (parentIndex in 0 until maxParent) {
+        parent = parent?.parent ?: this.parent
+        if (parent is RecyclerView) {
+            parent.suppressLayout(true)
+            parent.suppressLayout(false)
+            return
+        }
+    }
+}
