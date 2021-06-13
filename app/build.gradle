@@ -62,6 +62,7 @@ dependencies {
     implementation libraries.picasso
     implementation libraries.lifecycleViewModel
     implementation libraries.lifecycleExtensions
+    implementation libraries.dexter
     implementation libraries.overscrollBouncy
     implementation libraries.overscrollDecor
     implementation libraries.blurView

@@ -12,7 +12,7 @@ import com.chekh.paysage.R
 import com.chekh.paysage.common.data.model.DesktopWidgetType
 import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.slide.SearchBarSlideHandler
-import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.BottomSheetCallback
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.from
 import com.chekh.paysage.core.ui.fragment.BaseFragment
@@ -21,6 +21,7 @@ import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
+import com.chekh.paysage.feature.main.presentation.apps.AppDockViewModel
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.pager.DesktopPagerFragment
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
@@ -34,14 +35,15 @@ class HomeFragment :
     BottomSheetCallback,
     DragAndDropListener {
 
+    private val appDockViewModel: AppDockViewModel by activityViewModels()
     private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
 
-    private val bottomSheetBehavior by lazy { from(svBottomSheet) }
+    private val bottomSheetBehavior by lazyUnsafe { from(svBottomSheet) }
 
-    private val searchBarSlideHandler by lazy {
+    private val searchBarSlideHandler by lazyUnsafe {
         SearchBarSlideHandler(msbSearch)
     }
 
@@ -76,27 +78,32 @@ class HomeFragment :
     }
 
     private fun setupViewModel() {
-        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        appDockViewModel.isAppDockVisible.observe(viewLifecycleOwner, ::setAppDockVisible)
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
         val activity = activity ?: return
         val isDark = slideOffset >= bottomSheetBehavior.halfExpandedRatio - 0.1
         statusBarDecorator.statusBarDarkMode(activity, isDark)
-        flDesktops.alpha = 1 - slideOffset
 
+        if (flDesktops.foreground == null) {
+            flDesktops.setForegroundColorResource(colorRes = R.color.white, alpha = 0)
+        }
+        if (slideOffset >= 0) {
+            flDesktops.foreground.alpha = slideOffset.toAlpha()
+        }
         val anchor = bottomSheetBehavior.halfExpandedRatio
         searchBarSlideHandler.slideToTop(slideOffset, anchor)
     }
 
     override fun onDragStart(location: RectF, data: ClipData?) {
         val type = (data as? WidgetClipData)?.type
-        bottomSheetBehavior.isHideable = type == DesktopWidgetType.WIDGET
+        setAppDockVisible(type != DesktopWidgetType.WIDGET)
     }
 
     override fun onDragEnd(location: RectF, data: ClipData?) {
-        bottomSheetBehavior.state = CustomBottomSheetBehavior.STATE_COLLAPSED
-        bottomSheetBehavior.isHideable = false
+        setAppDockVisible(true)
     }
 
     @Suppress("DEPRECATION")
@@ -104,5 +111,9 @@ class HomeFragment :
         val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
         val insetTop = insets.systemWindowInsetTop
         msbSearch.topMargin = searchMarginTop + insetTop
+    }
+
+    private fun setAppDockVisible(isVisible: Boolean) {
+        bottomSheetBehavior.isHideable = !isVisible
     }
 }

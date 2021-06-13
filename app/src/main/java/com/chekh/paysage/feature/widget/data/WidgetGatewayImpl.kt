@@ -1,20 +1,20 @@
 package com.chekh.paysage.feature.widget.data
 
-import com.chekh.paysage.common.data.service.SettingsService
-import com.chekh.paysage.feature.widget.data.service.WidgetService
+import com.chekh.paysage.common.data.datasource.SettingsDataSource
+import com.chekh.paysage.feature.widget.data.datasource.WidgetDataSource
 import com.chekh.paysage.feature.widget.domain.gateway.WidgetGateway
 import javax.inject.Inject
 
 class WidgetGatewayImpl @Inject constructor(
-    private val settingsService: SettingsService,
-    private val widgetService: WidgetService
+    private val settingsDataSource: SettingsDataSource,
+    private val widgetDataSource: WidgetDataSource
 ) : WidgetGateway {
 
-    override fun getBoardWidgets() = widgetService.installedWidgets
+    override fun getBoardWidgets() = widgetDataSource.installedWidgets
 
     override fun getFirstAppForWidgetPackage(packageName: String) =
-        widgetService.getFirstAppForWidgetPackage(packageName)
+        widgetDataSource.getFirstAppForWidgetPackage(packageName)
 
-    override fun getDesktopGridSize() = settingsService.desktopGridSize
+    override fun getDesktopGridSize() = settingsDataSource.desktopGridSize
 
 }

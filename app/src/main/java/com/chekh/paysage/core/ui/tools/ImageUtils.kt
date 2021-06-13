@@ -50,16 +50,6 @@ fun List<Bitmap>.combine(): Bitmap {
     }
 }
 
-fun Bitmap.darken(): Bitmap {
-    val darkenBitmap = copy(config, true)
-    val canvas = Canvas(darkenBitmap)
-    val darkenPaint = Paint().apply {
-        colorFilter = LightingColorFilter(-0x808081, 0x00000000)
-    }
-    canvas.drawBitmap(this, 0f, 0f, darkenPaint)
-    return darkenBitmap
-}
-
 fun View.makeBitmapBorder(@ColorRes colorRes: Int): Bitmap {
     val bitmap = makeBitmapScreenshot()
     val rect = Rect(0, 0, bitmap.width, bitmap.height)

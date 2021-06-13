@@ -4,11 +4,12 @@ import android.content.Intent
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.chekh.paysage.core.handler.backpressed.ContainerBackPressedHandler
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.tools.hideKeyboard
 
 abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
 
-    private val backPressedHandler by lazy {
+    private val backPressedHandler by lazyUnsafe {
         ContainerBackPressedHandler(
             childFragmentManager,
             parentFragmentManager
@@ -22,11 +23,13 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         view?.hideKeyboard()
     }
 
-    protected fun registerActivityResultListener(
-        requestCode: Int,
+    protected fun startActivityForResult(
+        intent: Intent,
         listener: (resultCode: Int, data: Intent?) -> Unit
     ) {
+        val requestCode = intent.hashCode()
         activityResultListeners.add(ActivityResultListener(requestCode, listener))
+        startActivityForResult(intent, requestCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

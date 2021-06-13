@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.data.service
+package com.chekh.paysage.feature.main.data.datasource
 
 import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetManager
@@ -14,7 +14,7 @@ import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-interface DesktopWidgetService {
+interface DesktopWidgetDataSource {
 
     val desktopWidgets: LiveData<List<DesktopWidgetModel>>
 
@@ -33,13 +33,13 @@ interface DesktopWidgetService {
     suspend fun pullWidgets()
 }
 
-class DesktopWidgetServiceImpl @Inject constructor(
+class DesktopWidgetDataSourceImpl @Inject constructor(
     private val widgetManager: AppWidgetManager,
     private val userManager: UserManager,
     private val widgetHost: AppWidgetHost,
     private val desktopWidgetDao: DesktopWidgetDao,
     private val desktopWidgetMapper: DesktopWidgetModelMapper
-) : DesktopWidgetService {
+) : DesktopWidgetDataSource {
 
     override val desktopWidgets = desktopWidgetDao.getAll()
         .map { it?.filterIsInstalled() }

@@ -7,6 +7,6 @@ import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 
 class DesktopInsetsViewModel @ViewModelInject constructor() : BaseViewModel<Unit>() {
 
-    val windowInsetsLiveData = MutableLiveData<WindowInsets>()
+    val windowInsets = MutableLiveData<WindowInsets>()
 
 }

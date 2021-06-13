@@ -1,5 +1,7 @@
 package com.chekh.paysage.feature.main.presentation.desktop
 
+import android.Manifest
+import android.app.WallpaperManager
 import android.graphics.Rect
 import android.graphics.RectF
 import android.os.Bundle
@@ -12,10 +14,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.view.flow.FlowListAdapter
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
 import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
+import com.chekh.paysage.feature.main.presentation.apps.AppDockViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.adapter.DesktopWidgetFlowListItem
 import com.chekh.paysage.feature.main.presentation.desktop.tools.PageLocationProvider
 import com.chekh.paysage.feature.main.presentation.options.DesktopOptionsFragment
@@ -28,27 +32,39 @@ import javax.inject.Inject
 class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationProvider {
 
     private val desktopViewModel: DesktopViewModel by activityViewModels()
+    private val appDockViewModel: AppDockViewModel by activityViewModels()
     private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     @Inject
     lateinit var params: Params
 
-    private val adapter by lazy { FlowListAdapter() }
+    @Inject
+    lateinit var wallpaperManager: WallpaperManager
+
+    private val adapter by lazyUnsafe { FlowListAdapter() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListView()
+        setupViews(view)
         setupListeners()
         setupViewModel()
     }
 
-    private fun setupListView() {
+    private fun setupViews(view: View) {
         flWidgets.adapter = adapter
+
+        context?.checkPermissions(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            onAccess = {
+                view.post { ravRipple.animationColor = wallpaperManager.fastColor }
+            }
+        )
     }
 
     private fun setupListeners() {
-        flWidgets.setOnGestureScaleAndLongPress {
+        flWidgets.setOnGestureScaleAndLongPress { event ->
             flWidgets.clearParentScroll()
+            event?.let { ravRipple.animateRipple(it.x, it.y) }
             activity?.supportFragmentManager?.commit {
                 addWithBackStack(R.id.flContainer, DesktopOptionsFragment())
             }
@@ -62,15 +78,15 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationPro
     }
 
     private fun setupViewModel() {
-        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
-        desktopViewModel.desktopGridSizeLiveData.observe(viewLifecycleOwner) { (columns, rows) ->
+        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        desktopViewModel.desktopGridSize.observe(viewLifecycleOwner) { (columns, rows) ->
             flWidgets.setSize(columns.toInt(), rows.toInt())
         }
-        desktopViewModel.getDesktopWidgetsLiveData(params.pageId)
+        desktopViewModel.getDesktopWidgets(params.pageId)
             .observe(viewLifecycleOwner) { items ->
                 adapter.items = items
             }
-        desktopViewModel.dockAppSizeLiveData.observe(viewLifecycleOwner) { appSize ->
+        appDockViewModel.appDockSize.observe(viewLifecycleOwner) { appSize ->
             flWidgets.updatePadding(bottom = appSize)
         }
     }

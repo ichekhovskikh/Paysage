@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.*
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
@@ -23,7 +24,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     private val viewModel: WidgetBoardViewModel by viewModels()
     private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
-    private val adapter: WidgetGroupAdapter by lazy {
+    private val adapter: WidgetGroupAdapter by lazyUnsafe {
         WidgetGroupAdapter(viewModel::onGroupScrollOffsetChanged, ::startDragAndDrop)
     }
 
@@ -36,8 +37,8 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     private fun setupViewModel() {
         viewModel.init(Unit)
 
-        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
-        viewModel.widgetGroupsLiveData.observe(viewLifecycleOwner) { widgetGroups ->
+        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        viewModel.widgetGroups.observe(viewLifecycleOwner) { widgetGroups ->
             val isAnimate = adapter.itemCount == 0
             adapter.setWidgetGroups(widgetGroups, isAnimate)
         }

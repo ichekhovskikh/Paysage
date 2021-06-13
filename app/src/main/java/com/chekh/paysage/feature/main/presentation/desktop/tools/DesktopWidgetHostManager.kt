@@ -7,8 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.UserManager
-import androidx.fragment.app.Fragment
-import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -16,12 +14,11 @@ interface DesktopWidgetHostManager {
 
     fun allocateDesktopWidgetId(): Int
 
-    fun requestWidgetAttachPermissionsIfNeed(
-        fragment: Fragment,
+    fun getWidgetAttachPermissionsIntent(
         widgetId: Int,
         packageName: String,
         className: String
-    ): Boolean
+    ): Intent?
 
     fun attach(
         widgetId: Int,
@@ -30,10 +27,6 @@ interface DesktopWidgetHostManager {
     ): AppWidgetHostView?
 
     fun detach(widgetView: AppWidgetHostView)
-
-    companion object {
-        const val WIDGET_ATTACH_REQUEST_CODE = 1
-    }
 }
 
 class DesktopWidgetHostManagerImpl @Inject constructor(
@@ -46,25 +39,19 @@ class DesktopWidgetHostManagerImpl @Inject constructor(
 
     override fun allocateDesktopWidgetId() = widgetHost.allocateAppWidgetId()
 
-    /**
-     * @return has widget attach permissions
-     */
-    override fun requestWidgetAttachPermissionsIfNeed(
-        fragment: Fragment,
+    override fun getWidgetAttachPermissionsIntent(
         widgetId: Int,
         packageName: String,
         className: String
-    ): Boolean {
-        val widgetInfo = findWidget(packageName, className) ?: return false
+    ): Intent? {
+        val widgetInfo = findWidget(packageName, className) ?: return null
         if (!widgetManager.bindAppWidgetIdIfAllowed(widgetId, widgetInfo.provider)) {
-            val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
+            return Intent(AppWidgetManager.ACTION_APPWIDGET_BIND).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, widgetInfo.provider)
             }
-            fragment.startActivityForResult(intent, WIDGET_ATTACH_REQUEST_CODE)
-            return false
         }
-        return true
+        return null
     }
 
     override fun attach(

@@ -23,7 +23,7 @@ class AppViewHolder(
     }
 
     fun bind(app: AppModel) {
-        // TODO make SettingsService for iconSize
+        // TODO make SettingsDataSource for iconSize
         // TODO make BadgerDrawable
         appView.setIcon(app.icon)
         appView.label = app.title

@@ -46,7 +46,7 @@ class DesktopActivity : BaseActivity(R.layout.activity_main) {
         val content = findViewById<ViewGroup>(android.R.id.content)
         content.setOnApplyWindowInsetsListener { _, insets ->
             setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
-            insetsViewModel.windowInsetsLiveData.value = insets
+            insetsViewModel.windowInsets.value = insets
             insets.consumeSystemWindowInsets()
         }
     }

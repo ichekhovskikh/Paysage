@@ -27,7 +27,7 @@ fun View.onVibrateClick(
 }
 
 @SuppressLint("ClickableViewAccessibility")
-fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
+fun View.setOnGestureScaleAndLongPress(listener: (MotionEvent?) -> Unit) {
     isLongClickable = true
     var hasDownBeforeCall = false
     var hasMoveBeforeCall = true
@@ -39,7 +39,7 @@ fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
             override fun onLongPress(e: MotionEvent?) {
                 if (!hasMoveBeforeCall) {
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                    listener()
+                    listener(e)
                 }
             }
         }
@@ -50,7 +50,7 @@ fun View.setOnGestureScaleAndLongPress(listener: () -> Unit) {
             override fun onScaleEnd(detector: ScaleGestureDetector) {
                 if (hasDownBeforeCall) {
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                    listener()
+                    listener(null)
                     hasDownBeforeCall = false
                 }
             }

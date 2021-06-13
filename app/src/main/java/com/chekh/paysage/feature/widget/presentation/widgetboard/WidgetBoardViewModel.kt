@@ -17,7 +17,7 @@ class WidgetBoardViewModel @ViewModelInject constructor(
 
     private val scrollTrigger = MutableLiveData<Unit>()
 
-    val widgetGroupsLiveData = trigger
+    val widgetGroups = trigger
         .switchMap { getSortedWidgetsGroupByAppScenario() }
         .repeat(scrollTrigger)
         .foreachMap {

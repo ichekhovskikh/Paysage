@@ -1,9 +1,14 @@
 package com.chekh.paysage.core.extension
 
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
+import android.widget.FrameLayout
+import androidx.annotation.ColorRes
+import androidx.annotation.IntRange
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +62,14 @@ inline val View.bounds: Rect
         x.toInt() + measuredWidth - paddingEnd,
         y.toInt() + measuredHeight - paddingBottom
     )
+
+fun FrameLayout.setForegroundColorResource(
+    @ColorRes colorRes: Int,
+    @IntRange(from = 0, to = 255) alpha: Int
+) {
+    foreground = ColorDrawable(ResourcesCompat.getColor(resources, colorRes, null))
+        .apply { this.alpha = alpha }
+}
 
 fun View.clearParentScroll(maxParent: Int = 2) {
     var parent: ViewParent? = null

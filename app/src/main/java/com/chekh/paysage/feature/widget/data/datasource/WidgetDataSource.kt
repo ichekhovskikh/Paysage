@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.widget.data.service
+package com.chekh.paysage.feature.widget.data.datasource
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
@@ -15,21 +15,21 @@ import com.chekh.paysage.feature.widget.domain.model.AppForWidgetModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import javax.inject.Inject
 
-interface WidgetService {
+interface WidgetDataSource {
 
     val installedWidgets: LiveData<List<WidgetModel>>
 
     fun getFirstAppForWidgetPackage(packageName: String): LiveData<AppForWidgetModel>
 }
 
-class WidgetServiceImpl @Inject constructor(
+class WidgetDataSourceImpl @Inject constructor(
     launcherApps: LauncherApps,
     widgetManager: AppWidgetManager,
     userManager: UserManager,
     private val appDao: AppDao,
     private val widgetMapper: WidgetModelMapper,
     private val appForWidgetMapper: AppForWidgetModelMapper
-) : WidgetService {
+) : WidgetDataSource {
 
     override val installedWidgets =
         WidgetProvidersLiveData(launcherApps, widgetManager, userManager)

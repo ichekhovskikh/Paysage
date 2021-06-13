@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.addOnPageChangedListener
 import com.chekh.paysage.core.extension.setParams
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.pager.PagerFragmentStateAdapter
 import com.chekh.paysage.core.ui.pager.setBouncing
@@ -23,7 +24,6 @@ import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopViewModel
 import com.chekh.paysage.feature.main.presentation.desktop.tools.PageLocationProvider
 import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager
-import com.chekh.paysage.feature.main.presentation.desktop.tools.DesktopWidgetHostManager.Companion.WIDGET_ATTACH_REQUEST_CODE
 import com.chekh.paysage.feature.main.presentation.desktop.tools.getWidgetBounds
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,7 +41,7 @@ class DesktopPagerFragment :
     @Inject
     lateinit var widgetHostManager: DesktopWidgetHostManager
 
-    private val adapter by lazy { PagerFragmentStateAdapter(this) }
+    private val adapter by lazyUnsafe { PagerFragmentStateAdapter(this) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,15 +70,15 @@ class DesktopPagerFragment :
     private fun setupViewModel() {
         pagerViewModel.init(Unit)
         desktopViewModel.init(Unit)
-        pagerViewModel.pagesLiveData.observe(viewLifecycleOwner, ::setPages)
-        pagerViewModel.touchPageLiveData.observe(viewLifecycleOwner) { page ->
+        pagerViewModel.pages.observe(viewLifecycleOwner, ::setPages)
+        pagerViewModel.touchPage.observe(viewLifecycleOwner) { page ->
             if (page >= 0 && page < adapter.itemCount) {
                 vpDesktops.currentItem = page
             } else {
                 pagerViewModel.stopHandlePageDragTouch()
             }
         }
-        desktopViewModel.onFailApplyChangesLiveData.observe(viewLifecycleOwner) {
+        desktopViewModel.onFailApplyChanges.observe(viewLifecycleOwner) {
             pagerViewModel.removeLastDesktopPage()
         }
     }
@@ -153,17 +153,14 @@ class DesktopPagerFragment :
         onDenied: () -> Unit
     ) {
         val widgetId = widgetHostManager.allocateDesktopWidgetId()
-        val hasWidgetAttachPermissions = widgetHostManager.requestWidgetAttachPermissionsIfNeed(
-            this,
-            widgetId,
-            packageName,
-            className
-        )
-        if (hasWidgetAttachPermissions) {
+        val attachPermissionsIntent = widgetHostManager
+            .getWidgetAttachPermissionsIntent(widgetId, packageName, className)
+
+        if (attachPermissionsIntent == null) {
             onAccess(widgetId)
             return
         }
-        registerActivityResultListener(WIDGET_ATTACH_REQUEST_CODE) { resultCode, _ ->
+        startActivityForResult(attachPermissionsIntent) { resultCode, _ ->
             when (resultCode) {
                 RESULT_OK -> onAccess(widgetId)
                 else -> onDenied()

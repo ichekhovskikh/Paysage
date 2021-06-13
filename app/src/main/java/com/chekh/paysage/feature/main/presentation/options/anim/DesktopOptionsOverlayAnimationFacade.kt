@@ -26,7 +26,9 @@ class DesktopOptionsOverlayAnimationFacade(
                 add(ObjectAnimator.ofPropertyValuesHolder(it, scaleY, scaleX, alpha))
             }
         }
-        animators.firstOrNull()?.doOnEnd { actionEnd?.invoke(isReverse) }
+        animators.firstOrNull()?.doOnEnd {
+            actionEnd?.invoke(isReverse)
+        }
     }
 
     fun start(isReverse: Boolean = false) {

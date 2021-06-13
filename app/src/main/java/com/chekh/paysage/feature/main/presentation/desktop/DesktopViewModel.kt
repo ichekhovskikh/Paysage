@@ -10,7 +10,6 @@ import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.domain.model.DesktopWidgetModel
 import com.chekh.paysage.feature.main.domain.usecase.settings.GetDesktopGridSizeUseCase
-import com.chekh.paysage.feature.main.domain.usecase.settings.GetDockAppSizeScenario
 import com.chekh.paysage.feature.main.domain.usecase.widget.GetDesktopWidgetsByPageUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.RemoveDesktopWidgetUseCase
 import com.chekh.paysage.feature.main.domain.usecase.widget.UpdateDesktopWidgetsByPageUseCase
@@ -22,7 +21,6 @@ import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClip
 import kotlinx.coroutines.launch
 
 class DesktopViewModel @ViewModelInject constructor(
-    getDockAppSizeScenario: GetDockAppSizeScenario,
     getDesktopGridSizeUseCase: GetDesktopGridSizeUseCase,
     private val getDesktopWidgetsByPageUseCase: GetDesktopWidgetsByPageUseCase,
     private val updateDesktopWidgetUseCase: UpdateDesktopWidgetUseCase,
@@ -34,25 +32,22 @@ class DesktopViewModel @ViewModelInject constructor(
 
     private var sortedDesktopWidgetsCache = mutableMapOf<Long, List<DesktopWidgetModel>?>()
 
-    private val dragDesktopWidgetLiveData = MutableLiveData<DesktopWidgetModel?>()
+    private val dragDesktopWidget = MutableLiveData<DesktopWidgetModel?>()
 
-    val desktopGridSizeLiveData = getDesktopGridSizeUseCase()
+    val desktopGridSize = getDesktopGridSizeUseCase()
         .distinctUntilChanged()
 
-    val dockAppSizeLiveData = getDockAppSizeScenario()
-        .distinctUntilChanged()
+    private val onFailApplyChangesMutable = MutableLiveData<Unit>()
+    val onFailApplyChanges: LiveData<Unit> = onFailApplyChangesMutable
 
-    private val onFailApplyChangesMutableLiveData = MutableLiveData<Unit>()
-    val onFailApplyChangesLiveData: LiveData<Unit> = onFailApplyChangesMutableLiveData
-
-    fun getDesktopWidgetsLiveData(pageId: Long) = getDesktopWidgetsByPageUseCase(pageId)
-        .after(desktopGridSizeLiveData, isRepeat = true)
-        .repeat(dragDesktopWidgetLiveData)
+    fun getDesktopWidgets(pageId: Long) = getDesktopWidgetsByPageUseCase(pageId)
+        .after(desktopGridSize, isRepeat = true)
+        .repeat(dragDesktopWidget)
         .map {
             it?.sorted(
                 pageId = pageId,
-                desktopSize = desktopGridSizeLiveData.value,
-                dragWidget = dragDesktopWidgetLiveData.value
+                desktopSize = desktopGridSize.value,
+                dragWidget = dragDesktopWidget.value
             )
         }
         .doNext { sortedDesktopWidgetsCache[pageId] = it }
@@ -62,15 +57,15 @@ class DesktopViewModel @ViewModelInject constructor(
 
     fun onApplyDragChanges() {
         viewModelScope.launch(back) {
-            val pageId = dragDesktopWidgetLiveData.value?.pageId
+            val pageId = dragDesktopWidget.value?.pageId
             if (pageId == null) {
-                onFailApplyChangesMutableLiveData.postValue(Unit)
+                onFailApplyChangesMutable.postValue(Unit)
                 return@launch
             }
             val sortedDesktopWidgets = sortedDesktopWidgetsCache[pageId]
-            dragDesktopWidgetLiveData.postValue(null)
+            dragDesktopWidget.postValue(null)
             if (sortedDesktopWidgets == null) {
-                onFailApplyChangesMutableLiveData.postValue(Unit)
+                onFailApplyChangesMutable.postValue(Unit)
                 return@launch
             }
             updateDesktopWidgetsByPageUseCase(pageId, sortedDesktopWidgets)
@@ -84,21 +79,21 @@ class DesktopViewModel @ViewModelInject constructor(
     }
 
     fun onDragMove(pageId: Long, widget: WidgetClipData, bounds: Rect) {
-        dragDesktopWidgetLiveData.value = desktopWidgetModelFactory
+        dragDesktopWidget.value = desktopWidgetModelFactory
             .create(widget, pageId, bounds)
     }
 
     fun onDragCancel() {
-        dragDesktopWidgetLiveData.value = null
+        dragDesktopWidget.value = null
     }
 
     fun onPageChanged(pageId: Long) {
-        dragDesktopWidgetLiveData
+        dragDesktopWidget
             .change { it?.copy(pageId = pageId) }
     }
 
     fun attachIdentifierToDragWidget(widgetId: Int) {
-        dragDesktopWidgetLiveData
+        dragDesktopWidget
             .change { it?.copy(id = widgetId.toString()) }
     }
 }

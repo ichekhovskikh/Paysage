@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chekh.paysage.core.ui.view.flow.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.chekh.paysage.core.ui.view.RevealAnimationView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/flWidgets"
+    android:id="@+id/ravRipple"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:columnCount="4"
-    app:rowCount="5" />
+    android:layout_height="match_parent">
+
+    <com.chekh.paysage.core.ui.view.flow.FlowLayout
+        android:id="@+id/flWidgets"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:columnCount="4"
+        app:rowCount="5" />
+
+</com.chekh.paysage.core.ui.view.RevealAnimationView>
+

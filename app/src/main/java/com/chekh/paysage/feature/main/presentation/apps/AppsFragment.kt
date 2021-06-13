@@ -14,6 +14,7 @@ import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.core.handler.backpressed.SlidingPanelBackPressedHandler
 import com.chekh.paysage.core.handler.slide.AppsBoardSlideHandler
+import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
@@ -26,20 +27,21 @@ import kotlinx.android.synthetic.main.fragment_apps.*
 @AndroidEntryPoint
 class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
-    private val viewModel: AppsViewModel by viewModels()
+    private val appsViewModel: AppsViewModel by viewModels()
+    private val appDockViewModel: AppDockViewModel by activityViewModels()
     private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
-    private val adapter: AppGroupAdapter by lazy {
-        AppGroupAdapter(viewModel::toggleCategory, viewModel::onGroupScrollOffsetChanged)
+    private val adapter: AppGroupAdapter by lazyUnsafe {
+        AppGroupAdapter(appsViewModel::toggleCategory, appsViewModel::onGroupScrollOffsetChanged)
     }
 
     private var bottomSheetBehavior: CustomBottomSheetBehavior<View>? = null
 
-    private val backPressedHandler: BackPressedHandler by lazy {
+    private val backPressedHandler: BackPressedHandler by lazyUnsafe {
         SlidingPanelBackPressedHandler(bottomSheetBehavior, srvCategories, childFragmentManager)
     }
 
-    private val appsBoardSlideHandler by lazy {
+    private val appsBoardSlideHandler by lazyUnsafe {
         AppsBoardSlideHandler(dbvApps, oclPanel)
     }
 
@@ -51,26 +53,28 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
     }
 
     private fun setupViewModel() {
-        viewModel.init(Unit)
+        appsViewModel.init(Unit)
+        appDockViewModel.init(Unit)
 
-        insetsViewModel.windowInsetsLiveData.observe(viewLifecycleOwner, ::onApplyWindowInsets)
-        viewModel.scrollPositionLiveData.observe(viewLifecycleOwner) { position ->
+        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
+        appsViewModel.scrollPosition.observe(viewLifecycleOwner) { position ->
             srvCategories.smoothScrollToHeader(position)
         }
-        viewModel.boardAppSettingsLiveData.observe(viewLifecycleOwner) { appSettings ->
+        appsViewModel.boardAppSettings.observe(viewLifecycleOwner) { appSettings ->
             adapter.setAppSettings(appSettings)
         }
-        viewModel.appGroupsLiveData.observe(viewLifecycleOwner) { categories ->
+        appsViewModel.appGroups.observe(viewLifecycleOwner) { categories ->
             adapter.setAppGroups(categories)
         }
-        viewModel.dockAppSettingsLiveData.observe(viewLifecycleOwner) { appSettings ->
+        appDockViewModel.dockAppSettings.observe(viewLifecycleOwner) { appSettings ->
             dbvApps.setAppSettings(appSettings)
             if (dbvApps.layoutHeight != appSettings.appSize) {
                 dbvApps.layoutHeight = appSettings.appSize
+                appDockViewModel.appDockSize.value = dbvApps.layoutHeight
                 recalculatePeekBottomSheet()
             }
         }
-        viewModel.dockAppsLiveData.observe(viewLifecycleOwner) { dockApps ->
+        appDockViewModel.dockApps.observe(viewLifecycleOwner) { dockApps ->
             dbvApps.setApps(dockApps)
         }
     }
@@ -121,7 +125,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
     override fun onStateChanged(bottomSheet: View, newState: Int) {
         view?.hideKeyboard()
         if (newState in listOf(STATE_HIDDEN, STATE_COLLAPSED)) {
-            viewModel.collapseAll()
+            appsViewModel.collapseAll()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.chekh.paysage.common.data.service
+package com.chekh.paysage.common.data.datasource
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
@@ -11,7 +11,7 @@ import com.chekh.paysage.core.ui.tools.Size
 import com.chekh.paysage.core.ui.tools.on
 import javax.inject.Inject
 
-interface SettingsService {
+interface SettingsDataSource {
     val boardAppsSize: LiveData<Int>
     suspend fun setBoardAppsSize(value: Int)
 
@@ -34,10 +34,10 @@ interface SettingsService {
     suspend fun setDesktopGridSize(value: Size)
 }
 
-class SettingsServiceImpl @Inject constructor(
+class SettingsDataSourceImpl @Inject constructor(
     private val preferences: SharedPreferences,
     private val appSettingsModelMapper: AppSettingsModelMapper
-) : SettingsService {
+) : SettingsDataSource {
 
     override val boardAppsSize: LiveData<Int> =
         SharedPreferenceLiveData(preferences, BOARD_APP_SIZE, DEFAULT_BOARD_APP_SIZE)

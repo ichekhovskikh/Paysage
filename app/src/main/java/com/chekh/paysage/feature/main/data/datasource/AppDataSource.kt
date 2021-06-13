@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.data.service
+package com.chekh.paysage.feature.main.data.datasource
 
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
@@ -15,7 +15,7 @@ import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.tools.AppsChangedCallback
 import javax.inject.Inject
 
-interface AppService {
+interface AppDataSource {
 
     val installedApps: LiveData<List<AppModel>>
 
@@ -26,14 +26,14 @@ interface AppService {
     suspend fun stopObserveAppUpdates(callback: AppsChangedCallback)
 }
 
-class AppServiceImpl @Inject constructor(
+class AppDataSourceImpl @Inject constructor(
     private val launcherApps: LauncherApps,
     private val userManager: UserManager,
     private val appDao: AppDao,
     private val packageDao: PackageDao,
     private val appSettingsFactory: AppSettingsFactory,
     private val appMapper: AppModelMapper
-) : AppService {
+) : AppDataSource {
 
     override val installedApps: LiveData<List<AppModel>> = appDao.getAll()
         .foreachMap(appMapper::map)

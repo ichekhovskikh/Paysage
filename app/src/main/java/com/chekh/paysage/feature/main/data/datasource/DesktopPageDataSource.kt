@@ -1,4 +1,4 @@
-package com.chekh.paysage.feature.main.data.service
+package com.chekh.paysage.feature.main.data.datasource
 
 import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.data.dao.DesktopPageDao
@@ -7,7 +7,7 @@ import com.chekh.paysage.feature.main.data.mapper.DesktopPageModelMapper
 import com.chekh.paysage.feature.main.domain.model.DesktopPageModel
 import javax.inject.Inject
 
-interface DesktopPageService {
+interface DesktopPageDataSource {
 
     val desktopPages: LiveData<List<DesktopPageModel>>
 
@@ -15,10 +15,10 @@ interface DesktopPageService {
     suspend fun removeDesktopPageByPosition(position: Int)
 }
 
-class DesktopPageServiceImpl @Inject constructor(
+class DesktopPageDataSourceImpl @Inject constructor(
     private val desktopPageDao: DesktopPageDao,
     private val desktopPageMapper: DesktopPageModelMapper
-) : DesktopPageService {
+) : DesktopPageDataSource {
 
     override val desktopPages: LiveData<List<DesktopPageModel>> = desktopPageDao.getAll()
         .foreachMap(desktopPageMapper::map)

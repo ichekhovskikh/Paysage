@@ -25,24 +25,22 @@ class DesktopPagerViewModel @ViewModelInject constructor(
     private val switcherDragHandler: DesktopPagerSwitcherDragHandler
 ) : BaseViewModel<Unit>() {
 
-    val pagesLiveData = trigger
+    val pages = trigger
         .switchMap { getDesktopPagesUseCase() }
         .distinctUntilChanged()
 
-    private val touchPageMutableLiveData = MutableLiveData<Int>()
-    val touchPageLiveData: LiveData<Int> = touchPageMutableLiveData
+    private val touchPageMutable = MutableLiveData<Int>()
+    val touchPage: LiveData<Int> = touchPageMutable
 
     private val lastPagePosition: Int
-        get() = pagesLiveData.value
+        get() = pages.value
             ?.maxByOrNull { it.position }
             ?.position
             ?: 0
 
     override fun init(trigger: Unit) {
         super.init(trigger)
-        switcherDragHandler.setOnTouchPageChanged {
-            touchPageMutableLiveData.postValue(it)
-        }
+        switcherDragHandler.setOnTouchPageChanged(touchPageMutable::postValue)
     }
 
     fun addLastDesktopPage() {

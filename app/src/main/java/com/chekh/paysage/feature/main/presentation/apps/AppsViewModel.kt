@@ -4,21 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.core.extension.*
 import androidx.hilt.lifecycle.ViewModelInject
-import com.chekh.paysage.common.domain.model.AppSettingsModel
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
-import com.chekh.paysage.feature.main.domain.model.AppModel
 import com.chekh.paysage.feature.main.domain.model.AppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.domain.usecase.app.GetAppsGroupByCategoriesScenario
 import com.chekh.paysage.feature.main.domain.usecase.settings.GetBoardAppSettingsUseCase
-import com.chekh.paysage.feature.main.domain.usecase.settings.GetDockAppSettingsUseCase
-import com.chekh.paysage.feature.main.domain.usecase.app.GetDockAppsUseCase
 import com.chekh.paysage.feature.main.presentation.apps.mapper.AppGroupsModelMapper
 
 class AppsViewModel @ViewModelInject constructor(
     private val getAppsGroupByCategoriesScenario: GetAppsGroupByCategoriesScenario,
     private val getBoardAppSettingsUseCase: GetBoardAppSettingsUseCase,
-    private val getDockAppsUseCase: GetDockAppsUseCase,
-    private val getDockAppSettingsUseCase: GetDockAppSettingsUseCase,
     private val appGroupsMapper: AppGroupsModelMapper
 ) : BaseViewModel<Unit>() {
 
@@ -27,29 +21,21 @@ class AppsViewModel @ViewModelInject constructor(
 
     private val expandTrigger = MutableLiveData<Unit>()
 
-    val boardAppSettingsLiveData = trigger
+    val boardAppSettings = trigger
         .switchMap { getBoardAppSettingsUseCase() }
         .distinctUntilChanged()
 
-    val appGroupsLiveData = trigger
+    val appGroups = trigger
         .switchMap { getAppsGroupByCategoriesScenario() }
         .repeat(expandTrigger)
         .foreachMap {
             appGroupsMapper.map(it, isExpanded(it), scrollOffset(it))
         }
-        .after(boardAppSettingsLiveData)
+        .after(boardAppSettings)
         .distinctUntilChanged()
 
-    private val scrollPositionMutableLiveData = MutableLiveData<Int>()
-    val scrollPositionLiveData: LiveData<Int> = scrollPositionMutableLiveData
-
-    val dockAppSettingsLiveData: LiveData<AppSettingsModel> = trigger
-        .switchMap { getDockAppSettingsUseCase() }
-        .distinctUntilChanged()
-
-    val dockAppsLiveData: LiveData<List<AppModel>> = dockAppSettingsLiveData
-        .switchMap { getDockAppsUseCase(it.appColumnCount) }
-        .distinctUntilChanged()
+    private val scrollPositionMutable = MutableLiveData<Int>()
+    val scrollPosition: LiveData<Int> = scrollPositionMutable
 
     fun onGroupScrollOffsetChanged(scrollOffset: Int, categoryId: String) {
         groupScrollOffsets[categoryId] = scrollOffset
@@ -57,14 +43,14 @@ class AppsViewModel @ViewModelInject constructor(
     }
 
     fun toggleCategory(position: Int, categoryId: String) {
-        scrollPositionMutableLiveData.value = position
+        scrollPositionMutable.value = position
         expandedCategoryIds.toggle(categoryId)
         groupScrollOffsets.remove(categoryId)
         expandTrigger.value = Unit
     }
 
     fun collapseAll() {
-        scrollPositionMutableLiveData.value = 0
+        scrollPositionMutable.value = 0
         expandedCategoryIds.clear()
         groupScrollOffsets.clear()
         expandTrigger.value = Unit
