@@ -26,11 +26,39 @@ class DragAndDropLayerDelegate(dragLayer: View) {
     private var touchLocation: PointF? = null
     private var isDragAndDropStarted: Boolean = false
 
-    private val toTargetMoveAnimator = ObjectAnimator.ofFloat(0f, 1f).apply {
-        lateinit var initialViewRect: RectF
-        doOnStart { initialViewRect = RectF(viewRect) }
+    private val startScaleAnimator = ObjectAnimator.ofFloat(1f, DRAG_START_SCALE).apply {
+        var initialHeight = 0f
+        var initialWidth = 0f
+        doOnStart {
+            initialHeight = viewRect?.height() ?: 0f
+            initialWidth = viewRect?.width() ?: 0f
+        }
+        duration = DRAG_START_DURATION
         addUpdateListener { valueAnimator ->
+            if (initialHeight == 0f) return@addUpdateListener
+            if (initialWidth == 0f) return@addUpdateListener
+            val recentViewRect = viewRect ?: return@addUpdateListener
+
+            val animatedValue = valueAnimator.animatedValue as Float
+            val dy = initialHeight * (animatedValue - 1) / 2
+            val dx = initialWidth * (animatedValue - 1) / 2
+
+            val left = recentViewRect.left - dx
+            val top = recentViewRect.top - dy
+            val right = recentViewRect.right + dx
+            val bottom = recentViewRect.bottom + dy
+            viewRect = RectF(left, top, right, bottom)
+            dragLayerRef.get()?.invalidate()
+        }
+    }
+
+    private val toTargetMoveAnimator = ObjectAnimator.ofFloat(0f, 1f).apply {
+        var initialViewRectNullable: RectF? = null
+        doOnStart { initialViewRectNullable = viewRect?.let { RectF(it) } }
+        addUpdateListener { valueAnimator ->
+            val initialViewRect = initialViewRectNullable ?: return@addUpdateListener
             val targetViewRect = targetViewRect ?: return@addUpdateListener
+
             val animatedValue = valueAnimator.animatedValue as Float
             val left = initialViewRect.left +
                 (targetViewRect.left - initialViewRect.left) * animatedValue
@@ -64,6 +92,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
         val (x, y) = xy.map(Int::toFloat)
         viewRect = RectF(x, y, x + thumbnail.width, y + thumbnail.height)
         targetViewRect = null
+        startScaleAnimator.reStart()
         listeners.forEach { listener ->
             viewRect?.let { listener.onDragStart(it.copy(), data) }
         }
@@ -72,6 +101,7 @@ class DragAndDropLayerDelegate(dragLayer: View) {
     fun stopDragAndDrop() {
         if (!isDragAndDropStarted) return
         isDragAndDropStarted = false
+        startScaleAnimator.cancel()
         if (targetViewRect != null) {
             toTargetMoveAnimator.reStart()
         } else {
@@ -125,7 +155,11 @@ class DragAndDropLayerDelegate(dragLayer: View) {
     }
 
     fun draw(canvas: Canvas?) {
-        if (!isDragAndDropStarted && !toTargetMoveAnimator.isRunning || canvas == null) {
+        if (!isDragAndDropStarted &&
+            !toTargetMoveAnimator.isRunning &&
+            !startScaleAnimator.isRunning ||
+            canvas == null
+        ) {
             return
         }
         val thumbnail = thumbnail ?: return
@@ -133,5 +167,10 @@ class DragAndDropLayerDelegate(dragLayer: View) {
         canvas.save()
         canvas.drawBitmap(thumbnail, null, viewRect, null)
         canvas.restore()
+    }
+
+    private companion object {
+        const val DRAG_START_DURATION = 150L
+        const val DRAG_START_SCALE = 1.05f
     }
 }

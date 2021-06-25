@@ -4,8 +4,7 @@ import android.Manifest
 import android.app.WallpaperManager
 import android.graphics.Rect
 import android.graphics.RectF
-import android.os.Bundle
-import android.os.Parcelable
+import android.os.*
 import android.view.View
 import android.view.WindowInsets
 import androidx.core.graphics.toRectF
@@ -62,12 +61,14 @@ class DesktopFragment : BaseFragment(R.layout.fragment_desktop), PageLocationPro
     }
 
     private fun setupListeners() {
-        flWidgets.setOnGestureScaleAndLongPress { event ->
-            flWidgets.clearParentScroll()
+        flWidgets.setOnGestureLongPress { event ->
             event?.let { ravRipple.animateRipple(it.x, it.y) }
             activity?.supportFragmentManager?.commit {
                 addWithBackStack(R.id.flContainer, DesktopOptionsFragment())
             }
+        }
+        wallpaperManager.onWallpaperChangedCompat {
+            ravRipple.animationColor = wallpaperManager.fastColor
         }
         adapter.setOnItemsCommittedListener { items ->
             val dragItem = items.find { it is DesktopWidgetFlowListItem && it.isDragging }

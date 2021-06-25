@@ -4,14 +4,13 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import android.widget.FrameLayout
 import androidx.annotation.ColorRes
 import androidx.annotation.IntRange
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 
 inline var View.topMargin: Int
     get() = (layoutParams as? ViewGroup.MarginLayoutParams)?.topMargin ?: 0
@@ -71,14 +70,13 @@ fun FrameLayout.setForegroundColorResource(
         .apply { this.alpha = alpha }
 }
 
-fun View.clearParentScroll(maxParent: Int = 2) {
-    var parent: ViewParent? = null
-    for (parentIndex in 0 until maxParent) {
-        parent = parent?.parent ?: this.parent
-        if (parent is RecyclerView) {
-            parent.suppressLayout(true)
-            parent.suppressLayout(false)
+fun View.setHierarchyViewPagerTouching(isUserInputEnabled: Boolean) {
+    var parent: View? = this
+    while (parent != null) {
+        if (parent is ViewPager2) {
+            parent.isUserInputEnabled = isUserInputEnabled
             return
         }
+        parent = parent.parent as? View ?: return
     }
 }

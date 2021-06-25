@@ -2,9 +2,8 @@ package com.chekh.paysage.core.extension
 
 import android.annotation.SuppressLint
 import android.view.*
-import android.view.MotionEvent.ACTION_DOWN
+import android.view.MotionEvent.*
 import com.chekh.paysage.core.ui.listener.SimpleGestureListener
-import com.chekh.paysage.core.ui.listener.SimpleScaleGestureListener
 import com.chekh.paysage.core.ui.tools.OnDebounceClickListener
 import kotlin.math.abs
 
@@ -27,9 +26,8 @@ fun View.onVibrateClick(
 }
 
 @SuppressLint("ClickableViewAccessibility")
-fun View.setOnGestureScaleAndLongPress(listener: (MotionEvent?) -> Unit) {
+fun View.setOnGestureLongPress(listener: (MotionEvent?) -> Unit) {
     isLongClickable = true
-    var hasDownBeforeCall = false
     var hasMoveBeforeCall = true
     var prevX = -1f
     var prevY = -1f
@@ -39,29 +37,22 @@ fun View.setOnGestureScaleAndLongPress(listener: (MotionEvent?) -> Unit) {
             override fun onLongPress(e: MotionEvent?) {
                 if (!hasMoveBeforeCall) {
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    setHierarchyViewPagerTouching(false)
                     listener(e)
                 }
             }
         }
     )
-    val scaleGestureDetector = ScaleGestureDetector(
-        context,
-        object : SimpleScaleGestureListener {
-            override fun onScaleEnd(detector: ScaleGestureDetector) {
-                if (hasDownBeforeCall) {
-                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                    listener(null)
-                    hasDownBeforeCall = false
-                }
-            }
-        }
-    )
     setOnTouchListener { _, event ->
-        if (event.action == ACTION_DOWN) {
-            hasMoveBeforeCall = false
-            hasDownBeforeCall = true
-            prevX = event.x
-            prevY = event.y
+        when (event.action) {
+            ACTION_DOWN -> {
+                hasMoveBeforeCall = false
+                prevX = event.x
+                prevY = event.y
+            }
+            ACTION_CANCEL, ACTION_UP -> {
+                setHierarchyViewPagerTouching(true)
+            }
         }
         if (abs(prevX - event.x) > AVAILABLE_MOVE_PX ||
             abs(prevY - event.y) > AVAILABLE_MOVE_PX
@@ -69,7 +60,6 @@ fun View.setOnGestureScaleAndLongPress(listener: (MotionEvent?) -> Unit) {
             hasMoveBeforeCall = true
         }
 
-        longPressGestureDetector.onTouchEvent(event) || scaleGestureDetector.onTouchEvent(event)
-        return@setOnTouchListener true
+        return@setOnTouchListener longPressGestureDetector.onTouchEvent(event)
     }
 }

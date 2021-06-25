@@ -85,8 +85,8 @@ class RevealAnimationDrawable(
         fun onRevealAnimationEnd()
     }
 
-    companion object {
-        private const val ANIMATION_DURATION_DEFAULT = 200
-        private const val DEFAULT_ALPHA = 0.2f
+    private companion object {
+        const val ANIMATION_DURATION_DEFAULT = 300
+        const val DEFAULT_ALPHA = 0.3f
     }
 }
