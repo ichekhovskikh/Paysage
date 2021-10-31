@@ -74,7 +74,7 @@ open class TooltipFragment(@LayoutRes private val layoutId: Int) : BaseFragment(
             is Args.PointArgs -> args.point.toRect()
             is Args.RectArgs -> args.rect
         }
-        val centerY = rect.centerY()
+        val centerX = rect.centerX()
 
         mcvContainer.measure()
         val tooltipHeight = mcvContainer.measuredHeight
@@ -90,28 +90,28 @@ open class TooltipFragment(@LayoutRes private val layoutId: Int) : BaseFragment(
             val topConstraint = insets.top + tooltipHeight + smallMargin
             val bottomConstraint = windowHeight - insets.bottom - tooltipHeight - smallMargin
             val center = when {
-                rect.right < rightConstraint && centerY > topConstraint -> {
+                centerX < rightConstraint && rect.top > topConstraint -> {
                     shapeBuilder.setBottomLeftCornerSize(0f)
-                    mcvContainer.translationX = rect.right
-                    mcvContainer.translationY = centerY - tooltipHeight
+                    mcvContainer.translationX = centerX
+                    mcvContainer.translationY = rect.top - tooltipHeight
                     Point(0, tooltipHeight)
                 }
-                rect.right < rightConstraint -> {
+                centerX < rightConstraint -> {
                     shapeBuilder.setTopLeftCornerSize(0f)
-                    mcvContainer.translationX = rect.right
-                    mcvContainer.translationY = min(centerY, bottomConstraint)
+                    mcvContainer.translationX = centerX
+                    mcvContainer.translationY = min(rect.bottom, bottomConstraint)
                     Point(0, 0)
                 }
-                centerY > topConstraint -> {
+                rect.top > topConstraint -> {
                     shapeBuilder.setBottomRightCornerSize(0f)
-                    mcvContainer.translationX = max(rect.left - tooltipWidth, leftConstraint)
-                    mcvContainer.translationY = centerY - tooltipHeight
+                    mcvContainer.translationX = max(centerX - tooltipWidth, leftConstraint)
+                    mcvContainer.translationY = rect.top - tooltipHeight
                     Point(tooltipWidth, tooltipHeight)
                 }
                 else -> {
                     shapeBuilder.setTopRightCornerSize(0f)
-                    mcvContainer.translationX = max(rect.left - tooltipWidth, leftConstraint)
-                    mcvContainer.translationY = min(centerY, bottomConstraint)
+                    mcvContainer.translationX = max(centerX - tooltipWidth, leftConstraint)
+                    mcvContainer.translationY = min(rect.bottom, bottomConstraint)
                     Point(tooltipWidth, 0)
                 }
             }
