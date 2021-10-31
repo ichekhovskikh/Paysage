@@ -1,7 +1,7 @@
 package com.chekh.paysage.feature.main.presentation.desktop.di
 
 import androidx.fragment.app.Fragment
-import com.chekh.paysage.core.extension.getParams
+import com.chekh.paysage.core.extension.getArgs
 import com.chekh.paysage.feature.main.presentation.desktop.DesktopFragment
 import dagger.Module
 import dagger.Provides
@@ -15,5 +15,5 @@ class DesktopFragmentModule {
 
     @FragmentScoped
     @Provides
-    fun provideParams(fragment: Fragment): DesktopFragment.Params = fragment.getParams()
+    fun provideArgs(fragment: Fragment): DesktopFragment.Args = fragment.getArgs()
 }

@@ -1,5 +1,6 @@
 package com.chekh.paysage.core.extension
 
+import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
 
@@ -39,3 +40,5 @@ fun RectF.copyOffset(
     right + horizontalOffset,
     bottom + verticalOffset
 )
+
+fun PointF.toRect() = RectF(x, y, x, y)

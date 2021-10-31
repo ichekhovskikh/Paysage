@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.chekh.paysage.R
 import com.chekh.paysage.core.extension.addOnPageChangedListener
-import com.chekh.paysage.core.extension.setParams
 import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.pager.PagerFragmentStateAdapter
@@ -90,9 +89,8 @@ class DesktopPagerFragment :
         }
         pages.sortedBy { it.position }
             .map {
-                val fragment = adapter.getFragment(it.id) ?: DesktopFragment().apply {
-                    setParams(DesktopFragment.Params(it.id))
-                }
+                val fragment = adapter.getFragment(it.id)
+                    ?: DesktopFragment.create(DesktopFragment.Args(it.id))
                 it.id to fragment
             }
             .let { adapter.setFragments(it) }

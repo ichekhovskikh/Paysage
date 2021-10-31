@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.chekh.paysage.core.ui.view.drag.DragLayerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dllContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".feature.main.presentation.DesktopActivity">
 
-    <FrameLayout
-        android:id="@+id/flContainer"
+    <com.chekh.paysage.core.ui.view.drag.DragLayerLayout
+        android:id="@+id/dllContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".feature.main.presentation.DesktopActivity">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fcvContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.chekh.paysage.core.ui.view.drag.DragLayerLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcvOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -17,13 +29,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        app:shadowDrawable="@drawable/background_status_shadow" />
+        app:shadowDrawable="@drawable/bg_status_shadow" />
 
     <com.chekh.paysage.core.ui.view.ShadowView
         android:id="@+id/swNavigationBarShadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:shadowDrawable="@drawable/background_navigation_shadow" />
+        app:shadowDrawable="@drawable/bg_navigation_shadow" />
 
-</com.chekh.paysage.core.ui.view.drag.DragLayerLayout>
+</FrameLayout>

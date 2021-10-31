@@ -11,14 +11,14 @@ fun Fragment.exit() = try {
 } catch (ignored: IllegalStateException) {
 }
 
-inline fun <reified Params : Parcelable> Fragment.getParams(): Params {
-    val tag = Params::class.simpleName
-    return arguments?.getParcelable<Params>(tag)
+inline fun <reified Args : Parcelable> Fragment.getArgs(): Args {
+    val tag = Args::class.simpleName
+    return arguments?.getParcelable<Args>(tag)
         ?: throw IllegalArgumentException("The required parameter is missing: $tag")
 }
 
-inline fun <reified Params : Parcelable> Fragment.setParams(params: Params) {
-    val tag = Params::class.simpleName
+inline fun <reified Args : Parcelable> Fragment.setArgs(params: Args) {
+    val tag = Args::class.simpleName
     val args = arguments ?: Bundle()
     arguments = args.apply { putParcelable(tag, params) }
 }

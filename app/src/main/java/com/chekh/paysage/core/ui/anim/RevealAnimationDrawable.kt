@@ -7,6 +7,17 @@ import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import com.chekh.paysage.core.ui.tools.createColorAlpha
 
+/**
+ * How to use for View (Example):
+ *
+ * override fun dispatchDraw(canvas: Canvas) {
+ *      super.dispatchDraw(canvas)
+ *      if (revealDrawable != null && revealDrawable.isAnimating) {
+ *          revealDrawable.drawAnimation(canvas)
+ *          invalidate()
+ *      }
+ * }
+ */
 class RevealAnimationDrawable(
     private val x: Float,
     private val y: Float,
@@ -40,17 +51,6 @@ class RevealAnimationDrawable(
         animationListener?.onRevealAnimationCancel()
     }
 
-    /**
-     * How to use for View (Example):
-     *
-     * override fun dispatchDraw(canvas: Canvas) {
-     *      super.dispatchDraw(canvas)
-     *      if (revealDrawable != null && revealDrawable.isAnimating) {
-     *          revealDrawable.drawAnimation(canvas)
-     *          invalidate()
-     *      }
-     * }
-     */
     fun drawAnimation(canvas: Canvas) {
         if (!isAnimating) return
         if (totalTime < duration) {

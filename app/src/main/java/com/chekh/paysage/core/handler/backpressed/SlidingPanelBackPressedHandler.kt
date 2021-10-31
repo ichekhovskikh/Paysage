@@ -10,12 +10,10 @@ class SlidingPanelBackPressedHandler(
     private val bottomSheetBehavior: CustomBottomSheetBehavior<View>?,
     private val scrollableView: RecyclerView?,
     fragmentManager: FragmentManager
-) : BackPressedHandler {
-
-    private val containerBackPressedHandler = ContainerBackPressedHandler(fragmentManager)
+) : ContainerBackPressedHandler(fragmentManager) {
 
     override fun onBackPressed() = when {
-        containerBackPressedHandler.onBackPressed() -> true
+        super.onBackPressed() -> true
         bottomSheetBehavior?.isOpened == true -> {
             scrollableView?.scrollToPosition(0)
             bottomSheetBehavior.state = CustomBottomSheetBehavior.STATE_COLLAPSED

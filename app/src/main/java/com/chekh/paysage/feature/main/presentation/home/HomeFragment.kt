@@ -3,8 +3,6 @@ package com.chekh.paysage.feature.main.presentation.home
 import android.graphics.RectF
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.view.WindowInsets
 import androidx.core.view.marginTop
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.commit
@@ -20,12 +18,12 @@ import com.chekh.paysage.core.ui.statusbar.StatusBarDecorator
 import com.chekh.paysage.core.ui.view.drag.ClipData
 import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.feature.main.presentation.DesktopActivity
-import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.apps.AppDockViewModel
 import com.chekh.paysage.feature.main.presentation.apps.AppsFragment
 import com.chekh.paysage.feature.main.presentation.pager.DesktopPagerFragment
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
 import dagger.hilt.android.AndroidEntryPoint
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -36,7 +34,6 @@ class HomeFragment :
     DragAndDropListener {
 
     private val appDockViewModel: AppDockViewModel by activityViewModels()
-    private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -49,12 +46,13 @@ class HomeFragment :
 
     private val searchHeight: Int
         get() {
-            msbSearch.measure(0, WRAP_CONTENT)
+            msbSearch.measure()
             return msbSearch.measuredHeight + 3 * msbSearch.marginTop
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyWindowInsets()
         setupSlidingPanel()
         setupListeners()
         setupViewModel()
@@ -78,7 +76,6 @@ class HomeFragment :
     }
 
     private fun setupViewModel() {
-        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
         appDockViewModel.isAppDockVisible.observe(viewLifecycleOwner, ::setAppDockVisible)
     }
 
@@ -106,11 +103,12 @@ class HomeFragment :
         setAppDockVisible(true)
     }
 
-    @Suppress("DEPRECATION")
-    private fun onApplyWindowInsets(insets: WindowInsets) {
-        val searchMarginTop = resources.getDimension(R.dimen.search_bar_margin_top).toInt()
-        val insetTop = insets.systemWindowInsetTop
-        msbSearch.topMargin = searchMarginTop + insetTop
+    private fun applyWindowInsets() {
+        msbSearch.applyInsetter {
+            type(statusBars = true) {
+                margin(animated = true)
+            }
+        }
     }
 
     private fun setAppDockVisible(isVisible: Boolean) {

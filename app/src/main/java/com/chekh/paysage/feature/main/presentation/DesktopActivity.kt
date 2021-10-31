@@ -4,7 +4,6 @@ import android.graphics.RectF
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.fragment.app.commit
 import com.chekh.paysage.R
@@ -16,6 +15,9 @@ import com.chekh.paysage.core.ui.view.drag.DragAndDropListener
 import com.chekh.paysage.core.ui.view.drag.DragResizeListener
 import com.chekh.paysage.feature.main.presentation.home.HomeFragment
 import com.chekh.paysage.feature.main.presentation.home.HomeViewModel
+import com.chekh.paysage.core.extension.applyWindowInsets
+import com.chekh.paysage.core.extension.navigationBar
+import com.chekh.paysage.core.extension.statusBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -24,7 +26,6 @@ import javax.inject.Inject
 class DesktopActivity : BaseActivity(R.layout.activity_main) {
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private val insetsViewModel: DesktopInsetsViewModel by viewModels()
 
     @Inject
     lateinit var statusBarDecorator: StatusBarDecorator
@@ -32,7 +33,7 @@ class DesktopActivity : BaseActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         statusBarDecorator.setTransparentStatusBar(this)
-        observeWindowInsets()
+        applyWindowInsets { setBarShadow(it.statusBar, it.navigationBar) }
         addHomeFragmentIfNeed()
         setupViewModel()
     }
@@ -41,21 +42,11 @@ class DesktopActivity : BaseActivity(R.layout.activity_main) {
         homeViewModel.init(Unit)
     }
 
-    @Suppress("DEPRECATION")
-    private fun observeWindowInsets() {
-        val content = findViewById<ViewGroup>(android.R.id.content)
-        content.setOnApplyWindowInsetsListener { _, insets ->
-            setBarShadow(insets.systemWindowInsetTop, insets.systemWindowInsetBottom)
-            insetsViewModel.windowInsets.value = insets
-            insets.consumeSystemWindowInsets()
-        }
-    }
-
     private fun addHomeFragmentIfNeed() {
         if (supportFragmentManager.backStackEntryCount > 0) return
         val homeFragment = HomeFragment()
         supportFragmentManager.commit {
-            add(R.id.flContainer, homeFragment)
+            add(R.id.fcvContainer, homeFragment)
         }
     }
 

@@ -7,7 +7,7 @@ import com.chekh.paysage.core.handler.backpressed.ContainerBackPressedHandler
 import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.tools.hideKeyboard
 
-abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
+abstract class BaseFragment(@LayoutRes layoutId: Int = 0) : Fragment(layoutId) {
 
     private val backPressedHandler by lazyUnsafe {
         ContainerBackPressedHandler(

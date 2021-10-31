@@ -41,7 +41,7 @@ class AppGroupDataView @JvmOverloads constructor(
         }
 
     init {
-        setBackgroundResource(R.drawable.background_grey_rounded)
+        setBackgroundResource(R.drawable.bg_grey_rounded)
         overScrollMode = View.OVER_SCROLL_NEVER
         clipToPadding = false
 

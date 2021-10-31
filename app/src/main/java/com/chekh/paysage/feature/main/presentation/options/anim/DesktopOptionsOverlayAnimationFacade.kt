@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.view.View
 import androidx.core.animation.doOnEnd
-import com.chekh.paysage.core.extension.reReverse
-import com.chekh.paysage.core.extension.reStart
 
 class DesktopOptionsOverlayAnimationFacade(
     container: View,
@@ -31,20 +29,31 @@ class DesktopOptionsOverlayAnimationFacade(
         }
     }
 
-    fun start(isReverse: Boolean = false) {
-        if (isStarted(isReverse)) return
-        this.isReverse = isReverse
-        if (isReverse) {
-            animators.forEach { it.reReverse() }
-        } else {
-            animators.forEach { it.reStart() }
-        }
-    }
-
-    private fun isStarted(isReverse: Boolean) =
-        this.isReverse == isReverse && animators.firstOrNull()?.isRunning == true
-
     fun doOnEnd(action: (isReverse: Boolean) -> Unit) {
         actionEnd = action
     }
+
+    fun start() {
+        animate(isReverse = false)
+    }
+
+    fun reverse() {
+        animate(isReverse = true)
+    }
+
+    fun cancel() {
+        animators.forEach { it.cancel() }
+    }
+
+    private fun animate(isReverse: Boolean) {
+        if (isRunning(isReverse = isReverse)) return
+        this.isReverse = isReverse
+        animators.forEach { animator ->
+            animator.pause()
+            if (isReverse) animator.reverse() else animator.start()
+        }
+    }
+
+    private fun isRunning(isReverse: Boolean) =
+        this.isReverse == isReverse && animators.firstOrNull()?.isRunning == true
 }

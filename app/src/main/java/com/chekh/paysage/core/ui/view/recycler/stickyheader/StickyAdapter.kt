@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.chekh.paysage.R
+import com.chekh.paysage.core.extension.measure
 import com.chekh.paysage.core.extension.absoluteHeight
 import com.chekh.paysage.core.extension.topMargin
 
@@ -75,7 +76,7 @@ abstract class StickyAdapter<T, HVH : RecyclerView.ViewHolder, CVH : RecyclerVie
                 marginLayoutParams.bottomMargin = resources.getDimension(R.dimen.small).toInt()
                 layoutParams = marginLayoutParams
 
-                header.itemView.measure(WRAP_CONTENT, WRAP_CONTENT)
+                header.itemView.measure()
                 content.itemView.topMargin = header.itemView.absoluteHeight
             }
         }

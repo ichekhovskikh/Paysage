@@ -15,7 +15,7 @@
         android:id="@+id/oclPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_white_top_rounded"
+        android:background="@drawable/bg_white_top_rounded"
         app:outlineRadius="@dimen/default_corner_radius">
 
         <com.chekh.paysage.core.ui.view.recycler.stickyheader.StickyRecyclerView

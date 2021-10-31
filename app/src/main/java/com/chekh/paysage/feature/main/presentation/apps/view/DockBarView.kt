@@ -21,7 +21,7 @@ class DockBarView @JvmOverloads constructor(
 
     init {
         setAdapter(adapter)
-        setBackgroundResource(R.drawable.background_grey_rounded)
+        setBackgroundResource(R.drawable.bg_grey_rounded)
         gridLayoutManager = GridLayoutManager(context, MIN_APPS_COUNT)
         layoutManager = gridLayoutManager
         overScrollMode = OVER_SCROLL_NEVER

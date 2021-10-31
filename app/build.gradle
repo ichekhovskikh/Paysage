@@ -63,6 +63,7 @@ dependencies {
     implementation libraries.lifecycleViewModel
     implementation libraries.lifecycleExtensions
     implementation libraries.dexter
+    implementation libraries.insetter
     implementation libraries.overscrollBouncy
     implementation libraries.overscrollDecor
     implementation libraries.blurView

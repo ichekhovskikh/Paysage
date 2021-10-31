@@ -3,7 +3,7 @@ package com.chekh.paysage.core.handler.backpressed
 import androidx.fragment.app.FragmentManager
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 
-class ContainerBackPressedHandler(
+open class ContainerBackPressedHandler(
     private val childFragmentManager: FragmentManager,
     private val parentFragmentManager: FragmentManager? = null
 ) : BackPressedHandler {

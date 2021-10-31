@@ -2,10 +2,7 @@ package com.chekh.paysage.feature.main.presentation.apps
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
-import androidx.core.view.updatePadding
+import androidx.core.view.*
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +16,6 @@ import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
 import com.chekh.paysage.core.ui.tools.hideKeyboard
-import com.chekh.paysage.feature.main.presentation.DesktopInsetsViewModel
 import com.chekh.paysage.feature.main.presentation.apps.adapter.AppGroupAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_apps.*
@@ -29,7 +25,6 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     private val appsViewModel: AppsViewModel by viewModels()
     private val appDockViewModel: AppDockViewModel by activityViewModels()
-    private val insetsViewModel: DesktopInsetsViewModel by activityViewModels()
 
     private val adapter: AppGroupAdapter by lazyUnsafe {
         AppGroupAdapter(appsViewModel::toggleCategory, appsViewModel::onGroupScrollOffsetChanged)
@@ -47,6 +42,7 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyWindowInsets()
         setupListView()
         setupParentSlidingPanel(view)
         setupViewModel()
@@ -56,7 +52,6 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         appsViewModel.init(Unit)
         appDockViewModel.init(Unit)
 
-        insetsViewModel.windowInsets.observe(viewLifecycleOwner, ::onApplyWindowInsets)
         appsViewModel.scrollPosition.observe(viewLifecycleOwner) { position ->
             srvCategories.smoothScrollToHeader(position)
         }
@@ -79,18 +74,17 @@ class AppsFragment : BaseFragment(R.layout.fragment_apps), BottomSheetCallback {
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun onApplyWindowInsets(insets: WindowInsets) {
+    private fun applyWindowInsets() {
         val smallDimen = resources.getDimension(R.dimen.small).toInt()
-        val insetBottom = insets.systemWindowInsetBottom
-        val insetTop = insets.systemWindowInsetTop
-        srvCategories.updatePadding(bottom = smallDimen + insetBottom)
-        appsBoardSlideHandler.setExpandedMarginTop(insetTop)
-        if (bottomSheetBehavior?.isOpened == false) {
-            dbvApps.bottomMargin = smallDimen + insetBottom
-            recalculatePeekBottomSheet()
-        } else if (bottomSheetBehavior?.state == STATE_EXPANDED) {
-            oclPanel.topMargin = insetTop
+        applyWindowInsets { insets ->
+            srvCategories.updatePadding(bottom = smallDimen + insets.navigationBar)
+            appsBoardSlideHandler.setExpandedMarginTop(insets.statusBar)
+            if (bottomSheetBehavior?.isOpened == false) {
+                dbvApps.bottomMargin = smallDimen + insets.navigationBar
+                recalculatePeekBottomSheet()
+            } else if (bottomSheetBehavior?.state == STATE_EXPANDED) {
+                oclPanel.topMargin = insets.statusBar
+            }
         }
     }
 
