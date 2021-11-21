@@ -1,7 +1,7 @@
 package com.chekh.paysage.di.activity
 
-import com.chekh.paysage.feature.main.data.HomeGatewayImpl
-import com.chekh.paysage.feature.main.domain.gateway.HomeGateway
+import com.chekh.paysage.feature.main.common.data.HomeGatewayImpl
+import com.chekh.paysage.feature.main.common.domain.gateway.HomeGateway
 import com.chekh.paysage.feature.widget.data.WidgetGatewayImpl
 import com.chekh.paysage.feature.widget.domain.gateway.WidgetGateway
 import dagger.Binds

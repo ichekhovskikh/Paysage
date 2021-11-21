@@ -17,8 +17,11 @@ inline fun <reified Args : Parcelable> Fragment.getArgs(): Args {
         ?: throw IllegalArgumentException("The required parameter is missing: $tag")
 }
 
-inline fun <reified Args : Parcelable> Fragment.setArgs(params: Args) {
+inline fun <reified Args : Parcelable> Fragment.putArgs(args: Args) {
     val tag = Args::class.simpleName
-    val args = arguments ?: Bundle()
-    arguments = args.apply { putParcelable(tag, params) }
+    arguments = (arguments ?: Bundle()).apply { putParcelable(tag, args) }
 }
+
+inline fun <reified Args : Parcelable> Fragment.applyArgs(args: Args) = apply { putArgs(args) }
+
+fun <Args> Fragment.lazyArgs(): Lazy<Args> = lazy(LazyThreadSafetyMode.NONE, getArgs())

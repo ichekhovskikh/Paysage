@@ -1,35 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="180dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llContent"
+    android:layout_width="@dimen/widget_tooltip_width"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ТЕКСТ 1"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:textSize="32sp" />
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ТЕКСТ 2"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:textSize="32sp" />
+        <ImageView
+            android:id="@+id/ivAppIcon"
+            android:layout_width="@dimen/medium_icon_size"
+            android:layout_height="@dimen/medium_icon_size"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/small"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_launcher_background" />
 
-    <TextView
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginEnd="@dimen/small"
+            android:background="@drawable/bg_grey_rounded"
+            android:clickable="true"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:lines="1"
+            android:padding="@dimen/micro"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            tools:text="Paysage" />
+
+    </LinearLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ТЕКСТ 3"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="?attr/selectableItemBackground"
-        android:textSize="32sp" />
+        android:layout_height="@dimen/point"
+        android:layout_marginHorizontal="@dimen/small"
+        android:background="@color/dividerColor" />
 
 </LinearLayout>

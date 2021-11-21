@@ -4,6 +4,10 @@
 
     <dimen name="default_corner_radius">25dp</dimen>
 
+    <dimen name="widget_tooltip_width">240dp</dimen>
+
+    <dimen name="small_icon_size">20dp</dimen>
+    <dimen name="medium_icon_size">48dp</dimen>
     <dimen name="large_icon_size">80dp</dimen>
     <dimen name="thumbnail_size">160dp</dimen>
 
@@ -16,8 +20,8 @@
     <dimen name="medium">16dp</dimen>
     <dimen name="xmedium">18dp</dimen>
     <dimen name="large">24dp</dimen>
+    <dimen name="xlarge">36dp</dimen>
     <dimen name="xxlarge">64dp</dimen>
     <dimen name="xxxlarge">92dp</dimen>
-
 
 </resources>

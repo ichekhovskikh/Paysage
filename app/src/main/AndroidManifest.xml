@@ -24,8 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".feature.main.presentation.DesktopActivity"
-            android:excludeFromRecents="true">
+            android:name="com.chekh.paysage.feature.main.home.presentation.HomeActivity"
+            android:excludeFromRecents="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

@@ -2,7 +2,7 @@ package com.chekh.paysage.di.activity
 
 import com.chekh.paysage.common.data.datasource.SettingsDataSource
 import com.chekh.paysage.common.data.datasource.SettingsDataSourceImpl
-import com.chekh.paysage.feature.main.data.datasource.*
+import com.chekh.paysage.feature.main.common.data.datasource.*
 import com.chekh.paysage.feature.widget.data.datasource.*
 import dagger.Binds
 import dagger.Module

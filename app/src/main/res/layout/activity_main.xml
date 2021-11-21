@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature.main.presentation.DesktopActivity">
+    tools:context=".feature.main.home.presentation.HomeActivity">
 
     <com.chekh.paysage.core.ui.view.drag.DragLayerLayout
         android:id="@+id/dllContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.main.presentation.DesktopActivity">
+        tools:context=".feature.main.home.presentation.HomeActivity">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fcvContainer"

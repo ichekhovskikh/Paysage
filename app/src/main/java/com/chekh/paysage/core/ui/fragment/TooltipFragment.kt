@@ -19,14 +19,13 @@ import com.chekh.paysage.core.handler.backpressed.BackPressedHandler
 import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.anim.CircularRevealAnimation
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.fragment_desktop_options.*
 import kotlinx.android.synthetic.main.fragment_tooltip.*
 import kotlin.math.min
 import kotlin.math.max
 
 open class TooltipFragment(@LayoutRes private val layoutId: Int) : BaseFragment() {
 
-    protected open val args: Args by lazyUnsafe(::getArgs)
+    protected open val args by lazyArgs<Args>()
 
     private val tooltipAnimation by lazyUnsafe {
         CircularRevealAnimation(mcvContainer)
@@ -138,10 +137,9 @@ open class TooltipFragment(@LayoutRes private val layoutId: Int) : BaseFragment(
             @IdRes containerViewId: Int,
             @LayoutRes layoutId: Int,
             args: Args
-        ) = TooltipFragment(layoutId).apply {
-            setArgs(args)
+        ) {
             fragmentManager.commit {
-                addWithBackStack(containerViewId, this@apply)
+                addWithBackStack(containerViewId, TooltipFragment(layoutId).applyArgs(args))
             }
         }
     }

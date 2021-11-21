@@ -3,6 +3,8 @@ package com.chekh.paysage.core.extension
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 fun Context.startApp(packageName: String, className: String) {
     val intent = Intent(Intent.ACTION_MAIN).apply {
@@ -22,4 +24,8 @@ fun Context.startActivityIfFound(intent: Intent): Boolean {
         return true
     }
     return false
+}
+
+fun Context.hasPermissions(vararg permissions: String) = permissions.all {
+    ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
 }

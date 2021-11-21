@@ -8,7 +8,7 @@ import com.chekh.paysage.core.extension.*
 import com.chekh.paysage.core.tools.lazyUnsafe
 import com.chekh.paysage.core.ui.behavior.CustomBottomSheetBehavior.*
 import com.chekh.paysage.core.ui.fragment.BaseFragment
-import com.chekh.paysage.feature.main.presentation.DesktopActivity
+import com.chekh.paysage.feature.main.home.presentation.HomeActivity
 import com.chekh.paysage.feature.widget.domain.model.WidgetModel
 import com.chekh.paysage.feature.widget.presentation.widgetboard.adapter.WidgetGroupAdapter
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.toClipData
@@ -53,7 +53,7 @@ class WidgetBoardFragment : BaseFragment(R.layout.fragment_widget_board), Bottom
     }
 
     private fun startDragAndDrop(view: View, widget: WidgetModel) {
-        val activity = activity as? DesktopActivity ?: return
+        val activity = activity as? HomeActivity ?: return
         activity.startDragAndDrop(view, data = widget.toClipData())
         exit()
     }

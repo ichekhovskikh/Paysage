@@ -25,4 +25,9 @@
     <string name="wallpaper">Обои</string>
     <string name="widgets">Виджеты</string>
     <string name="settings">Настройки</string>
+
+    <string name="widget_tooltip_edit">Настроить</string>
+    <string name="widget_tooltip_crop">Изменить размер</string>
+    <string name="widget_tooltip_remove">Убрать</string>
+    <string name="widget_tooltip_info">О приложении</string>
 </resources>

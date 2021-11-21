@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import com.chekh.paysage.common.data.dao.AppDao
 import com.chekh.paysage.core.extension.foreachMap
 import com.chekh.paysage.core.extension.map
-import com.chekh.paysage.feature.main.tools.onAppsChanged
+import com.chekh.paysage.feature.main.common.tools.onAppsChanged
 import com.chekh.paysage.feature.widget.data.mapper.AppForWidgetModelMapper
 import com.chekh.paysage.feature.widget.data.mapper.WidgetModelMapper
 import com.chekh.paysage.feature.widget.domain.model.AppForWidgetModel
