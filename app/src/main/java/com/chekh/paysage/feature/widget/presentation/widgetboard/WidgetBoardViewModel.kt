@@ -2,13 +2,15 @@ package com.chekh.paysage.feature.widget.presentation.widgetboard
 
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.core.extension.*
-import androidx.hilt.lifecycle.ViewModelInject
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.widget.domain.model.WidgetsGroupByAppModel
 import com.chekh.paysage.feature.widget.domain.usecase.GetSortedWidgetsGroupByAppScenario
 import com.chekh.paysage.feature.widget.presentation.widgetboard.mapper.WidgetGroupModelMapper
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class WidgetBoardViewModel @ViewModelInject constructor(
+@HiltViewModel
+class WidgetBoardViewModel @Inject constructor(
     private val getSortedWidgetsGroupByAppScenario: GetSortedWidgetsGroupByAppScenario,
     private val widgetGroupMapper: WidgetGroupModelMapper
 ) : BaseViewModel<Unit>() {

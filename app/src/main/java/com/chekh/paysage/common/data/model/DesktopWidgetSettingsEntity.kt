@@ -7,7 +7,17 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "desktop_widget")
+@Entity(
+    tableName = "desktop_widget",
+    foreignKeys = [
+        ForeignKey(
+            entity = DesktopPageEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["pageId"],
+            onDelete = CASCADE
+        )
+    ]
+)
 data class DesktopWidgetSettingsEntity(
     @PrimaryKey
     var id: String = "",
@@ -15,12 +25,6 @@ data class DesktopWidgetSettingsEntity(
     var className: String = "",
     var label: String = "",
     var type: DesktopWidgetType = DesktopWidgetType.WIDGET,
-    @ForeignKey(
-        entity = DesktopPageEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["pageId"],
-        onDelete = CASCADE
-    )
     var pageId: Long = 0,
     var bounds: Rect = Rect(),
     var minHeight: Int = 0,

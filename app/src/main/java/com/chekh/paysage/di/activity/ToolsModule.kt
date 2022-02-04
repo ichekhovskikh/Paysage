@@ -6,18 +6,18 @@ import com.chekh.paysage.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 class ToolsModule {
 
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun provideAppWidgetHost(
-        @ActivityContext
+        @ApplicationContext
         context: Context
     ): AppWidgetHost = AppWidgetHost(context, R.id.app_widget_host)
 }

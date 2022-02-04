@@ -6,7 +6,15 @@ import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     tableName = "app",
-    indices = [Index(value = ["packageName", "className"], unique = true)]
+    indices = [Index(value = ["packageName", "className"], unique = true)],
+    foreignKeys = [
+        ForeignKey(
+            entity = CategorySettingsEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = CASCADE
+        )
+    ]
 )
 data class AppSettingsEntity(
     @PrimaryKey
@@ -14,12 +22,6 @@ data class AppSettingsEntity(
     var title: String = "",
     var packageName: String = "",
     var className: String = "",
-    @ForeignKey(
-        entity = CategorySettingsEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["categoryId"],
-        onDelete = CASCADE
-    )
     var categoryId: String = "",
     var boardPosition: Int = Int.MAX_VALUE,
     var dockPosition: Int = -1,

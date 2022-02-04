@@ -1,6 +1,5 @@
 package com.chekh.paysage.feature.main.home.presentation
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.viewModelScope
 import com.chekh.paysage.core.provider.back
 import com.chekh.paysage.core.provider.ui
@@ -12,9 +11,12 @@ import com.chekh.paysage.feature.main.common.domain.usecase.widget.PullDesktopWi
 import com.chekh.paysage.feature.main.common.domain.usecase.widget.StartObserveWidgetEventsUseCase
 import com.chekh.paysage.feature.main.common.domain.usecase.widget.StopObserveWidgetEventsUseCase
 import com.chekh.paysage.feature.main.common.tools.onAppsChanged
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val startObserveAppUpdatesUseCase: StartObserveAppUpdatesUseCase,
     private val stopObserveAppUpdatesUseCase: StopObserveAppUpdatesUseCase,
     private val startObserveWidgetEventsUseCase: StartObserveWidgetEventsUseCase,

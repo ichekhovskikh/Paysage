@@ -2,7 +2,6 @@ package com.chekh.paysage.feature.main.pager.presentation
 
 import android.graphics.PointF
 import android.graphics.Rect
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,9 +14,12 @@ import com.chekh.paysage.feature.main.common.domain.usecase.page.GetDesktopPages
 import com.chekh.paysage.feature.main.common.domain.usecase.page.RemoveDesktopPageByPositionUseCase
 import com.chekh.paysage.feature.main.pager.presentation.factory.DesktopPageModelFactory
 import com.chekh.paysage.feature.main.pager.presentation.tools.DesktopPagerSwitcherDragHandler
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DesktopPagerViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DesktopPagerViewModel @Inject constructor(
     private val getDesktopPagesUseCase: GetDesktopPagesUseCase,
     private val addDesktopPageUseCase: AddDesktopPageUseCase,
     private val removeDesktopPageByPositionUseCase: RemoveDesktopPageByPositionUseCase,

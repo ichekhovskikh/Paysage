@@ -7,21 +7,21 @@ import com.chekh.paysage.feature.main.desktop.presentation.tools.DesktopWidgetHo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 abstract class HomeActivityModule {
 
     @Binds
-    @ActivityScoped
+    @ActivityRetainedScoped
     abstract fun bindDesktopWidgetHostManager(
         desktopWidgetHostManager: DesktopWidgetHostManagerImpl
     ): DesktopWidgetHostManager
 
     @Binds
-    @ActivityScoped
+    @ActivityRetainedScoped
     abstract fun bindDesktopWidgetModelFactory(
         desktopWidgetModelFactory: DesktopWidgetModelFactoryImpl
     ): DesktopWidgetModelFactory

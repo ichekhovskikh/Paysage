@@ -7,18 +7,18 @@ import com.chekh.paysage.feature.widget.domain.gateway.WidgetGateway
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 abstract class GatewayModule {
 
     @Binds
-    @ActivityScoped
+    @ActivityRetainedScoped
     abstract fun bindHomeGateway(gateway: HomeGatewayImpl): HomeGateway
 
     @Binds
-    @ActivityScoped
+    @ActivityRetainedScoped
     abstract fun bindWidgetGateway(gateway: WidgetGatewayImpl): WidgetGateway
 }

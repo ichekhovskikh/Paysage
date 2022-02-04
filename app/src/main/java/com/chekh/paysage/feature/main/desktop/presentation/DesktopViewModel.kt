@@ -1,7 +1,6 @@
 package com.chekh.paysage.feature.main.desktop.presentation
 
 import android.graphics.Rect
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -18,9 +17,12 @@ import com.chekh.paysage.feature.main.desktop.presentation.tools.sorted
 import com.chekh.paysage.feature.main.desktop.presentation.factory.DesktopWidgetModelFactory
 import com.chekh.paysage.feature.main.desktop.presentation.mapper.DesktopWidgetFlowListItemMapper
 import com.chekh.paysage.feature.widget.presentation.widgetboard.data.WidgetClipData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DesktopViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DesktopViewModel @Inject constructor(
     getDesktopGridSizeUseCase: GetDesktopGridSizeUseCase,
     private val getDesktopWidgetsByPageUseCase: GetDesktopWidgetsByPageUseCase,
     private val updateDesktopWidgetUseCase: UpdateDesktopWidgetUseCase,

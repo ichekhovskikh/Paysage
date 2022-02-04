@@ -3,14 +3,16 @@ package com.chekh.paysage.feature.main.apps.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chekh.paysage.core.extension.*
-import androidx.hilt.lifecycle.ViewModelInject
 import com.chekh.paysage.core.ui.viewmodel.BaseViewModel
 import com.chekh.paysage.feature.main.common.domain.model.AppsGroupByCategoryModel
 import com.chekh.paysage.feature.main.common.domain.usecase.app.GetAppsGroupByCategoriesScenario
 import com.chekh.paysage.feature.main.common.domain.usecase.settings.GetBoardAppSettingsUseCase
 import com.chekh.paysage.feature.main.apps.presentation.mapper.AppGroupsModelMapper
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AppsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class AppsViewModel @Inject constructor(
     private val getAppsGroupByCategoriesScenario: GetAppsGroupByCategoriesScenario,
     private val getBoardAppSettingsUseCase: GetBoardAppSettingsUseCase,
     private val appGroupsMapper: AppGroupsModelMapper

@@ -10,7 +10,7 @@ import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
@@ -22,12 +22,14 @@ open class ArrowItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : RelativeLayout(context, attrs, defStyle) {
+) : LinearLayout(context, attrs, defStyle) {
 
     var onExpandedListener: OnExpandedClickListener? = null
 
     var isExpanded = false
         private set
+
+    private var view: View? = null
 
     init {
         initView()
@@ -35,7 +37,13 @@ open class ArrowItemView @JvmOverloads constructor(
     }
 
     private fun initView() {
-        LayoutInflater.from(context).inflate(R.layout.view_arrow_item, this)
+        view = LayoutInflater.from(context).inflate(R.layout.view_arrow_item, this)
+        orientation = HORIZONTAL
+    }
+
+    override fun onDetachedFromWindow() {
+        view = null
+        super.onDetachedFromWindow()
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyle: Int) {
@@ -52,6 +60,7 @@ open class ArrowItemView @JvmOverloads constructor(
     }
 
     private fun setTittleAttributes(attributes: TypedArray) {
+        val tvTitle = view?.tvTitle ?: return
         tvTitle.text = attributes.getString(R.styleable.ArrowItemView_titleText)
         if (attributes.hasValue(R.styleable.ArrowItemView_colorTitleText)) {
             tvTitle.setTextColor(attributes.getColor(R.styleable.ArrowItemView_colorTitleText, -1))
@@ -67,6 +76,7 @@ open class ArrowItemView @JvmOverloads constructor(
     }
 
     private fun setIconAttributes(attributes: TypedArray) {
+        val ivIcon = view?.ivIcon ?: return
         if (attributes.hasValue(R.styleable.ArrowItemView_icon)) {
             ivIcon.setImageDrawable(attributes.getDrawable(R.styleable.ArrowItemView_icon))
             ivIcon.visibility = View.VISIBLE
@@ -77,40 +87,40 @@ open class ArrowItemView @JvmOverloads constructor(
         isArrowVisible = attributes.getBoolean(R.styleable.ArrowItemView_isArrowVisible, true)
         if (attributes.hasValue(R.styleable.ArrowItemView_arrowTint)) {
             val tintColor = attributes.getColor(R.styleable.ArrowItemView_arrowTint, -1)
-            ivArrow.imageTintList = ColorStateList.valueOf(tintColor)
+            view?.ivArrow?.imageTintList = ColorStateList.valueOf(tintColor)
         }
     }
 
     var title: CharSequence?
-        get() = tvTitle.text
+        get() = view?.tvTitle?.text
         set(value) {
-            tvTitle.text = value
+            view?.tvTitle?.text = value
         }
 
     var icon: Drawable?
-        get() = ivIcon.drawable
+        get() = view?.ivIcon?.drawable
         set(value) {
-            ivIcon.setImageDrawable(value)
-            ivIcon.visibility = View.VISIBLE
+            view?.ivIcon?.setImageDrawable(value)
+            view?.ivIcon?.visibility = View.VISIBLE
         }
 
     var isArrowVisible: Boolean
-        get() = ivArrow.isVisible
+        get() = view?.ivArrow?.isVisible ?: false
         set(value) {
-            ivArrow.isVisible = value
+            view?.ivArrow?.isVisible = value
         }
 
     fun setTitle(@StringRes resId: Int) {
-        tvTitle.setText(resId)
+        view?.tvTitle?.setText(resId)
     }
 
     fun setTextSize(size: Float, typedValue: Int = COMPLEX_UNIT_SP) {
-        tvTitle.setTextSize(typedValue, size)
+        view?.tvTitle?.setTextSize(typedValue, size)
     }
 
     fun setIcon(@DrawableRes resId: Int) {
-        ivIcon.setImageResource(resId)
-        ivIcon.visibility = View.VISIBLE
+        view?.ivIcon?.setImageResource(resId)
+        view?.ivIcon?.visibility = View.VISIBLE
     }
 
     fun expand(
@@ -118,6 +128,7 @@ open class ArrowItemView @JvmOverloads constructor(
         isAnimate: Boolean = false,
         duration: Long = ANIMATION_DURATION_DEFAULT
     ) {
+        val ivArrow = view?.ivArrow ?: return
         if (this.isExpanded == expanded) return
         this.isExpanded = expanded
         val newRotation = if (expanded) 90f else 0f

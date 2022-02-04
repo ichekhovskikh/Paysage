@@ -7,7 +7,7 @@ ext {
 
         kotlinVersion = '1.6.0',
         gradleVersion = '7.0.2',
-        hiltVersion = '2.40.1',
+        hiltVersion = '2.40.5',
 
         fragmentktxVersion = '1.4.0',
         appCompatVersion = '1.2.0',
@@ -23,8 +23,8 @@ ext {
         picassoVersion = '2.71828',
         lifecycleVersion = '2.2.0',
         lifecyclektxVersion = '2.3.0-beta01',
-        hiltLifecycleVersion = '1.0.0-alpha02',
-        roomVersion = '2.2.5',
+        hiltLifecycleVersion = '1.0.0-alpha03',
+        roomVersion = '2.4.0-alpha03',
         dexterVersion = '6.2.2',
         insetterVersion = '0.6.0',
         additiveAnimationsVersion = '1.6.0',
